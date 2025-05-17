@@ -1,29 +1,25 @@
-import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { create } from "zustand";
 
-const useDetailStore = create(
-    persist(
-        (set) => ({
-        detail: [],
-        addDetail: (detail) =>
-            set((state) => ({
-            detail: [...state.detail, detail],
-            })),
-        updateDetail: (id, updatedDetail) =>
-            set((state) => ({
-            detail: state.detail.map((det) =>
-                det.id === id ? updatedDetail : det
-            ),
-            })),
-        deleteDetail: (id) =>
-            set((state) => ({
-            detail: state.detail.filter((det) => det.id !== id),
-            })),
-        }),
-        {
-        name: 'detail-storage',
-        }
-    )
-    );
+const useDetailsStore = create((set) => ({
+  details: [],
 
-export default useDetailStore;
+  adddetails: (detail) => set((state) => ({ details: [...state.details, detail] })),
+
+  updatedetails: (placeId, updatedDetail) =>
+    set((state) => ({
+      details: state.details.map((detail) =>
+        detail.placeId === placeId ? updatedDetail : detail
+      ),
+    })),
+
+  deletedetails: (placeId) =>
+    set((state) => ({
+      details: state.details.filter((detail) => detail.placeId !== placeId),
+    })),
+
+  getDetailsByPlace: (placeId) => {
+    return (state) => state.details.filter((detail) => detail.placeId === placeId);
+  },
+}));
+
+export default useDetailsStore;
