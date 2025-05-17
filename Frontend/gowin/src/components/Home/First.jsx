@@ -93,7 +93,7 @@ export default function First() {
   const formatIndex = (index) => (index + 1).toString().padStart(2, "0");
 
   return (
-    <div className="relative w-screen h-screen bg-black text-white font-sans overflow-hidden">
+    <div className="relative w-screen h-screen bg-black text-white font-sans overflow-hidden ">
       <style jsx global>{`
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap');
         body {
