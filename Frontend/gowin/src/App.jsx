@@ -10,7 +10,6 @@ import Home from './components/Home/Home';
 function App() {
   return (
     <Router>
-      <div className="flex">
         
           <Routes>
             <Route path="/admin" element={<Sidebar />} />
@@ -21,7 +20,6 @@ function App() {
             <Route path="/" element={<Home />} />
             
           </Routes>
-        </div>
     </Router>
   );
 }
