@@ -3,10 +3,10 @@ import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Sidebar from './components/admin/Sidebar';
 import AddCategory from './components/admin/AddCategory';
+import FetchDestinationDetails from '../../gowin/src/components/Details/FetchDestinationDetails'
 import AddDetail from './components/admin/AddDetail';
 import AddPlace from './components/admin/AddPlace';
 import Home from './components/Home/Home';
-
 function App() {
   return (
     <Router>
@@ -16,6 +16,11 @@ function App() {
             <Route path="/admin/add-category" element={<AddCategory />} />
             <Route path="/admin/add-place" element={<AddPlace />} />
             <Route path="/admin/add-detail" element={<AddDetail />} />
+            <Route path="/details" element={<FetchDestinationDetails />} />
+          
+            {/* Add other routes here */}
+            
+            {/* Home route */}
 
             <Route path="/" element={<Home />} />
             
