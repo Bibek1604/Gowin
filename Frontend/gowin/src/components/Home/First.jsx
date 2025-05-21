@@ -457,7 +457,7 @@ export default function Place() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              {destinations[activeDestination].title}
+              {destinations[activeDestination].title}www
             </motion.h1>
             <motion.p
               className="mt-4 text-base sm:text-lg text-white leading-relaxed max-w-md mx-auto lg:mx-0 transition-colors duration-300 ease-in-out hover:text-white"
