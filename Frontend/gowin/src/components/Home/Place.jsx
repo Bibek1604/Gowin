@@ -2,12 +2,18 @@
 
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Star, MapPin, Calendar, Heart } from "lucide-react";
-import { Link } from 'react-router-dom';
-import usePlaceStore from "../Store/PlaceStore"; // Adjust the path as needed
+import {
+  ChevronLeft,
+  ChevronRight,
+  Star,
+  MapPin,
+  Calendar,
+  Heart,
+} from "lucide-react";
+import { Link } from "react-router-dom";
+import usePlaceStore from "../Store/PlaceStore";
 import React from "react";
 
-// Destination Card Component
 function DestinationCard({ destination }) {
   const [isFavorite, setIsFavorite] = useState(false);
 
@@ -15,7 +21,10 @@ function DestinationCard({ destination }) {
     <div className="relative h-full flex flex-col bg-white rounded-2xl shadow-lg overflow-hidden">
       <div className="relative h-64 overflow-hidden">
         <img
-          src={destination.image || "/placeholder.svg?height=400&width=600&text=Placeholder"}
+          src={
+            destination.image ||
+            "/placeholder.svg?height=400&width=600&text=Placeholder"
+          }
           alt={destination.placeName}
           className="w-full h-full object-cover"
           loading="lazy"
@@ -29,36 +38,48 @@ function DestinationCard({ destination }) {
           className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/40 transition-colors"
           aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
         >
-          <Heart className={`w-5 h-5 ${isFavorite ? "text-red-500 fill-red-500" : "text-white"}`} />
+          <Heart
+            className={`w-5 h-5 ${
+              isFavorite ? "text-red-500 fill-red-500" : "text-white"
+            }`}
+          />
         </button>
         <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
           <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-bold text-teal-700">
-            {destination.price || "$2,199"} {/* Default price if not in store */}
+            {destination.price || "$2,199"}
           </div>
-          <div className="flex items-center bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full">
-            <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-            <span className="text-sm font-medium text-teal-700 ml-1">
-              {destination.rating || 4.8} {/* Default rating if not in store */}
-            </span>
-          </div>
+
         </div>
       </div>
       <div className="p-5 flex-grow flex flex-col">
-        <h3 className="text-xl font-bold text-teal-800">{destination.placeName}</h3>
-        <p className="text-teal-600 mt-2 flex-grow text-sm">{destination.description}</p>
+        <h3 className="text-xl font-bold text-teal-800">
+          {destination.placeName}
+        </h3>
+        <p className="text-teal-600 mt-2 flex-grow text-sm">
+          {destination.description}
+        </p>
         <div className="mt-4 space-y-2 pt-3 border-t border-teal-100">
           <div className="flex items-center text-sm text-teal-700">
             <MapPin className="w-4 h-4 mr-2 text-cyan-500" />
             <span>{destination.continent}</span>
           </div>
+                    <div className="flex items-center text-sm text-teal-700">
+            <MapPin className="w-4 h-4 mr-2 text-cyan-500" />
+            <span>{destination.country}</span>
+          </div>
           <div className="flex items-center text-sm text-teal-700">
             <Calendar className="w-4 h-4 mr-2 text-cyan-500" />
-            <span>Best time: {destination.bestTime || "Spring & Fall"}</span> {/* Default bestTime */}
+            <span>Best time: {destination.bestTime || "Spring & Fall"}</span>
           </div>
           <div className="flex items-center bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full">
             <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-            <Link href={`/details/${destination.id}`}>
-              <span className="text-sm font-medium text-red-700 ml-1">Details</span>
+            <Link
+              to="/details"
+              className="text-sm font-medium text-teal-700 ml-1"
+            >
+              <span className="text-sm font-medium text-red-700 ml-1">
+                Details
+              </span>
             </Link>
           </div>
         </div>
@@ -75,24 +96,20 @@ export default function DestinationsCarousel() {
   const [visibleCount, setVisibleCount] = useState(3);
   const carouselRef = useRef(null);
 
-  // Fetch destinations from Zustand store
   const places = usePlaceStore((state) => state.places);
 
   useEffect(() => {
-    // Simulate loading and set destinations from store
     const loadDestinations = async () => {
       try {
         if (places.length === 0) {
           // Add Kyoto as a default place if store is empty
-
         } else {
-          // Map store places to carousel format
           setDestinations(
             places.map((place) => ({
               ...place,
-              rating: place.rating || 4.8, // Default rating
-              price: place.price || "$2,199", // Default price
-              bestTime: place.bestTime || "Spring & Fall", // Default best time
+              rating: place.rating || 4.8,
+              price: place.price || "$2,199",
+              bestTime: place.bestTime || "Spring & Fall",
             }))
           );
         }
@@ -106,8 +123,6 @@ export default function DestinationsCarousel() {
 
     loadDestinations();
   }, [places]);
-
-  // Handle responsive visible count
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 640) {
@@ -123,13 +138,11 @@ export default function DestinationsCarousel() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
-  // Carousel navigation
   const nextSlide = () => {
     if (currentIndex < destinations.length - visibleCount) {
       setCurrentIndex(currentIndex + 1);
     } else {
-      setCurrentIndex(0); // Loop back to start
+      setCurrentIndex(0);
     }
   };
 
@@ -137,7 +150,7 @@ export default function DestinationsCarousel() {
     if (currentIndex > 0) {
       setCurrentIndex(currentIndex - 1);
     } else {
-      setCurrentIndex(destinations.length - visibleCount); // Loop to end
+      setCurrentIndex(destinations.length - visibleCount);
     }
   };
 
@@ -172,7 +185,6 @@ export default function DestinationsCarousel() {
           </div>
         ) : (
           <div className="relative">
-            {/* Navigation Arrows */}
             <button
               onClick={prevSlide}
               className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-cyan-50 rounded-full p-4 shadow-lg text-teal-700 -ml-6 border border-cyan-100 focus:outline-none focus:ring-2 focus:ring-cyan-400"
@@ -181,7 +193,6 @@ export default function DestinationsCarousel() {
               <ChevronLeft className="w-6 h-6" />
             </button>
 
-            {/* Carousel Container */}
             <div className="overflow-hidden">
               <motion.div
                 ref={carouselRef}
@@ -211,7 +222,6 @@ export default function DestinationsCarousel() {
               <ChevronRight className="w-6 h-6" />
             </button>
 
-            {/* Pagination Indicators */}
             <div className="flex justify-center mt-8 space-x-2">
               {Array.from({ length: totalPages }).map((_, index) => (
                 <button
@@ -229,15 +239,7 @@ export default function DestinationsCarousel() {
           </div>
         )}
 
-        {/* Call to Action */}
-        <div className="mt-12 text-center">
-          <Link
-            href="/destinations"
-            className="inline-block bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-white px-8 py-3 rounded-full font-semibold transition shadow-md"
-          >
-            View All Destinations
-          </Link>
-        </div>
+
       </div>
     </section>
   );

@@ -19,7 +19,7 @@ const PlaceManager = () => {
   const updatePlace = usePlaceStore((state) => state.updatePlace);
   const deletePlace = usePlaceStore((state) => state.deletePlace);
 
-  // Pre-fill form with Kyoto details as default
+  // Pre-fill form with Kyoto details as default when not editing
   useEffect(() => {
     if (!editingId) {
       setPlaceName("Kyoto");
@@ -102,13 +102,24 @@ const PlaceManager = () => {
 
   // Reset form fields and editing state
   const resetForm = () => {
-    setPlaceName("Kyoto");
-    setDescription("Immerse yourself in ancient temples, traditional gardens, and serene Zen culture.");
-    setCountry("Japan");
-    setContinent("Asia");
-    setImage(null);
-    setImagePreview("https://images.unsplash.com/photo-1542051841857-7347e4e83db1");
-    setEditingId(null);
+    if (editingId) {
+      // Reset to Kyoto defaults when canceling an edit
+      setPlaceName("Kyoto");
+      setDescription("Immerse yourself in ancient temples, traditional gardens, and serene Zen culture.");
+      setCountry("Japan");
+      setContinent("Asia");
+      setImage(null);
+      setImagePreview("https://images.unsplash.com/photo-1542051841857-7347e4e83db1");
+      setEditingId(null);
+    } else {
+      // Clear form completely after submission
+      setPlaceName("");
+      setDescription("");
+      setCountry("");
+      setContinent("");
+      setImage(null);
+      setImagePreview(null);
+    }
   };
 
   // Start editing a place
