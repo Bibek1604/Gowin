@@ -8,9 +8,11 @@ import AddPlace from './components/admin/AddPlace';
 import Home from './components/Home/Home';
 import Dashboard from './components/admin/Dashboard';
 import Place from './components/Home/Place';
-import DestinationDetails from './components/Details/FetchDestinationDetails'; // Assuming this is the correct import
+import DestinationDetails from './components/Details/FetchDestinationDetails'; 
+import NotFound from './components/Layout/Notfound';
+import BookingForm from './components/Layout/Booking';
+import Booking from "./components/admin/AddBooking"
 
-// Admin layout component to wrap admin routes with Sidebar
 function AdminLayout({ children }) {
   return (
     <div className="flex">
@@ -26,7 +28,6 @@ function App() {
   return (
     <Router>
       <Routes>
-        {/* Admin routes with Sidebar layout */}
         <Route
           path="/admin"
           element={
@@ -40,6 +41,14 @@ function App() {
           element={
             <AdminLayout>
               <AddCategory />
+            </AdminLayout>
+          }
+        />
+                <Route
+          path="/admin/add-booking"
+          element={
+            <AdminLayout>
+              <Booking />
             </AdminLayout>
           }
         />
@@ -68,13 +77,13 @@ function App() {
           }
         />
 
-        {/* Public routes */}
         <Route path="/" element={<Home />} />
         <Route path="/places" element={<Place />} />
         <Route path="/places/:placeId" element={<DestinationDetails />} />
-        <Route path="/details/:placeId" element={<DestinationDetails />} />
 
-        {/* Catch-all route for 404 */}
+        <Route path="/details/:placeId" element={<DestinationDetails />} />
+        <Route path="/booking" element={<BookingForm />} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </Router>
   );
