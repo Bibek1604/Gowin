@@ -30,10 +30,7 @@ async function fetchDestinationDetails(id) {
         { day: 4, title: "Arashiyama & Departure", description: "Tour the bamboo grove and depart." },
       ],
       inclusions: ["4-star accommodation", "Daily breakfast", "Guided tours", "Transportation"],
-      reviews: [
-        { user: "Emma S.", rating: 5, comment: "An unforgettable journey through Japan's cultural heart!" },
-        { user: "Liam T.", rating: 4.5, comment: "Loved the temples, but the itinerary was packed." },
-      ],
+
     },
     // Add more destinations as needed
   ];

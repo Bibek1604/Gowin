@@ -1,10 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Sidebar from "./Sidebar";
 import usePlaceStore from "../Store/PlaceStore"; // Adjust the path as needed
 import toast, { Toaster } from "react-hot-toast";
 
-const PlaceManager = () => {
-  // Form state for adding or editing
+class ErrorBoundary extends React.Component {
+  state = { hasError: false };
+
+  static getDerivedStateFromError(error) {
+    return { hasError: true };
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div className="text-center text-red-600 p-6">
+          <h2 className="text-2xl font-bold">Something went wrong.</h2>
+          <p>Please refresh the page or try again later.</p>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
+const AddPlace = () => {
   const [placeName, setPlaceName] = useState("");
   const [description, setDescription] = useState("");
   const [country, setCountry] = useState("");
@@ -12,28 +31,23 @@ const PlaceManager = () => {
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [editingId, setEditingId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [errors, setErrors] = useState({});
 
-  // Zustand store
   const places = usePlaceStore((state) => state.places);
   const addPlace = usePlaceStore((state) => state.addPlace);
   const updatePlace = usePlaceStore((state) => state.updatePlace);
   const deletePlace = usePlaceStore((state) => state.deletePlace);
 
-  // Pre-fill form with Kyoto details as default when not editing
-  useEffect(() => {
-    if (!editingId) {
-      setPlaceName("Kyoto");
-      setDescription("Immerse yourself in ancient temples, traditional gardens, and serene Zen culture.");
-      setCountry("Japan");
-      setContinent("Asia");
-      setImage(null);
-      setImagePreview("https://images.unsplash.com/photo-1542051841857-7347e4e83db1"); // Placeholder Kyoto image
-    }
-  }, [editingId]);
-
   // Handle image change and preview
   const handleImageChange = (e) => {
     const file = e.target.files[0];
+    if (file && file.size > 2 * 1024 * 1024) {
+      toast.error("Image size must be less than 2MB!", {
+        style: { background: "#fef2f2", color: "#b91c1c" },
+      });
+      return;
+    }
     setImage(file);
     if (file) {
       const reader = new FileReader();
@@ -46,21 +60,33 @@ const PlaceManager = () => {
     }
   };
 
-  // Handle form submission for adding or updating
+  // Form validation
+  const validateForm = () => {
+    const newErrors = {};
+    if (!placeName.trim()) newErrors.placeName = "Place name is required";
+    if (!description.trim()) newErrors.description = "Description is required";
+    if (!country.trim()) newErrors.country = "Country is required";
+    if (!continent.trim()) newErrors.continent = "Continent is required";
+    if (!image && !editingId) newErrors.image = "Image is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!placeName || !description || !country || !continent || (!image && !editingId)) {
-      toast.error("All fields are required!", {
+    if (!validateForm()) {
+      toast.error("Please fill all required fields!", {
         style: { background: "#fef2f2", color: "#b91c1c" },
       });
       return;
     }
 
     const placeData = {
-      placeName,
-      description,
-      country,
-      continent,
+      placeName: placeName.trim(),
+      description: description.trim(),
+      country: country.trim(),
+      continent: continent.trim(),
     };
 
     if (image) {
@@ -88,10 +114,17 @@ const PlaceManager = () => {
         });
       };
     } else if (editingId) {
+      const existingPlace = places.find((p) => p.id === editingId);
+      if (!existingPlace) {
+        toast.error("Place not found!", {
+          style: { background: "#fef2f2", color: "#b91c1c" },
+        });
+        return;
+      }
       updatePlace(editingId, {
         id: editingId,
         ...placeData,
-        image: places.find((p) => p.id === editingId).image,
+        image: existingPlace.image,
       });
       toast.success("Place updated successfully!", {
         style: { background: "#dcfce7", color: "#15803d" },
@@ -100,37 +133,34 @@ const PlaceManager = () => {
     }
   };
 
-  // Reset form fields and editing state
+  // Reset form fields
   const resetForm = () => {
-    if (editingId) {
-      // Reset to Kyoto defaults when canceling an edit
-      setPlaceName("Kyoto");
-      setDescription("Immerse yourself in ancient temples, traditional gardens, and serene Zen culture.");
-      setCountry("Japan");
-      setContinent("Asia");
-      setImage(null);
-      setImagePreview("https://images.unsplash.com/photo-1542051841857-7347e4e83db1");
-      setEditingId(null);
-    } else {
-      // Clear form completely after submission
-      setPlaceName("");
-      setDescription("");
-      setCountry("");
-      setContinent("");
-      setImage(null);
-      setImagePreview(null);
-    }
+    setPlaceName("");
+    setDescription("");
+    setCountry("");
+    setContinent("");
+    setImage(null);
+    setImagePreview(null);
+    setEditingId(null);
+    setErrors({});
   };
 
   // Start editing a place
   const startEditing = (place) => {
-    setPlaceName(place.placeName);
-    setDescription(place.description);
-    setCountry(place.country);
-    setContinent(place.continent);
+    if (!place || !place.id) {
+      toast.error("Invalid place data!", {
+        style: { background: "#fef2f2", color: "#b91c1c" },
+      });
+      return;
+    }
+    setPlaceName(place.placeName || "");
+    setDescription(place.description || "");
+    setCountry(place.country || "");
+    setContinent(place.continent || "");
     setImage(null);
-    setImagePreview(place.image);
+    setImagePreview(place.image || null);
     setEditingId(place.id);
+    setErrors({});
   };
 
   // Handle deletion
@@ -143,146 +173,203 @@ const PlaceManager = () => {
     }
   };
 
+  // Filter places with defensive checks
+  const filteredPlaces = places.filter((place) => {
+    if (!place || typeof place !== "object") return false;
+    const placeName = place.placeName || "";
+    const country = place.country || "";
+    const continent = place.continent || "";
+    const query = searchQuery.toLowerCase();
+    return (
+      placeName.toLowerCase().includes(query) ||
+      country.toLowerCase().includes(query) ||
+      continent.toLowerCase().includes(query)
+    );
+  });
+
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      <Sidebar />
-      <div className="flex-1 p-6 lg:p-8 max-w-7xl mx-auto">
-        <Toaster position="top-right" reverseOrder={false} />
-        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
-          {editingId ? "Edit Place" : "Add Place"}
-        </h2>
-        {/* Form */}
-        <div className="bg-white rounded-2xl shadow-lg p-8 mb-10 max-w-lg mx-auto">
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Place Name</label>
-              <input
-                type="text"
-                className="mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                value={placeName}
-                onChange={(e) => setPlaceName(e.target.value)}
-                placeholder="e.g., Kyoto"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Description</label>
-              <textarea
-                className="mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                placeholder="e.g., Immerse yourself in ancient temples..."
-                rows="4"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Country</label>
-              <input
-                type="text"
-                className="mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                value={country}
-                onChange={(e) => setCountry(e.target.value)}
-                placeholder="e.g., Japan"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">Continent</label>
-              <input
-                type="text"
-                className="mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
-                value={continent}
-                onChange={(e) => setContinent(e.target.value)}
-                placeholder="e.g., Asia"
-                required
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700">
-                {editingId ? "Upload New Image (Optional)" : "Upload Image"}
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                className="mt-1 w-full p-3 border rounded-lg text-gray-500"
-                onChange={handleImageChange}
-                required={!editingId}
-              />
-              {(imagePreview || (editingId && places.find((p) => p.id === editingId)?.image)) && (
-                <img
-                  src={imagePreview || places.find((p) => p.id === editingId)?.image}
-                  alt="Preview"
-                  className="mt-4 w-full h-48 object-cover rounded-lg shadow-sm"
+    <ErrorBoundary>
+      <div className="flex min-h-screen bg-gray-100">
+        <Sidebar />
+        <div className="flex-1 p-6 lg:p-8 max-w-7xl mx-auto">
+          <Toaster position="top-right" reverseOrder={false} />
+          <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">
+            {editingId ? "Edit Place" : "Add Place"}
+          </h2>
+          {/* Form */}
+          <div className="bg-white rounded-2xl shadow-lg p-8 mb-10 max-w-lg mx-auto">
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Place Name</label>
+                <input
+                  type="text"
+                  className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                    errors.placeName ? "border-red-500" : ""
+                  }`}
+                  value={placeName}
+                  onChange={(e) => setPlaceName(e.target.value)}
+                  placeholder="Enter place name"
                 />
-              )}
-            </div>
-            <div className="flex space-x-4">
-              <button
-                type="submit"
-                className="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition duration-200"
-              >
-                {editingId ? "Update Place" : "Add Place"}
-              </button>
-              <button
-                type="button"
-                className="w-full bg-gray-300 text-gray-800 py-3 rounded-lg font-medium hover:bg-gray-400 transition duration-200"
-                onClick={resetForm}
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
-        </div>
-        {/* Places List */}
-        <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Places</h2>
-        {places.length === 0 ? (
-          <div className="text-center text-gray-500">
-            <p>No places added yet. Add Kyoto or other destinations above!</p>
+                {errors.placeName && (
+                  <p className="text-red-500 text-sm mt-1">{errors.placeName}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Description</label>
+                <textarea
+                  className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                    errors.description ? "border-red-500" : ""
+                  }`}
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  placeholder="Enter description"
+                  rows="4"
+                />
+                {errors.description && (
+                  <p className="text-red-500 text-sm mt-1">{errors.description}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Country</label>
+                <input
+                  type="text"
+                  className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                    errors.country ? "border-red-500" : ""
+                  }`}
+                  value={country}
+                  onChange={(e) => setCountry(e.target.value)}
+                  placeholder="Enter country"
+                />
+                {errors.country && (
+                  <p className="text-red-500 text-sm mt-1">{errors.country}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Continent</label>
+                <select
+                  className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 ${
+                    errors.continent ? "border-red-500" : ""
+                  }`}
+                  value={continent}
+                  onChange={(e) => setContinent(e.target.value)}
+                >
+                  <option value="">Select continent</option>
+                  <option value="Africa">Africa</option>
+                  <option value="Antarctica">Antarctica</option>
+                  <option value="Asia">Asia</option>
+                  <option value="Australia">Australia</option>
+                  <option value="Europe">Europe</option>
+                  <option value="North America">North America</option>
+                  <option value="South America">South America</option>
+                </select>
+                {errors.continent && (
+                  <p className="text-red-500 text-sm mt-1">{errors.continent}</p>
+                )}
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  {editingId ? "Upload New Image (Optional)" : "Upload Image"}
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className={`mt-1 w-full p-3 border rounded-lg text-gray-500 ${
+                    errors.image ? "border-red-500" : ""
+                  }`}
+                  onChange={handleImageChange}
+                />
+                {errors.image && (
+                  <p className="text-red-500 text-sm mt-1">{errors.image}</p>
+                )}
+                {imagePreview && (
+                  <img
+                    src={imagePreview}
+                    alt="Preview"
+                    className="mt-4 w-full h-48 object-cover rounded-lg shadow-sm"
+                  />
+                )}
+              </div>
+              <div className="flex space-x-4">
+                <button
+                  type="submit"
+                  className="w-full bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition duration-200"
+                >
+                  {editingId ? "Update Place" : "Add Place"}
+                </button>
+                <button
+                  type="button"
+                  className="w-full bg-gray-300 text-gray-800 py-3 rounded-lg font-medium hover:bg-gray-400 transition duration-200"
+                  onClick={resetForm}
+                >
+                  Reset
+                </button>
+              </div>
+            </form>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {places.map((place) => (
-              <div
-                key={place.id}
-                className="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300"
-              >
-                <img
-                  src={place.image}
-                  alt={place.placeName}
-                  className="w-full h-56 object-cover"
-                />
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-800">{place.placeName}</h3>
-                  <p className="text-gray-600 mt-2">{place.description}</p>
-                  <p className="text-gray-500 mt-1">
-                    <span className="font-medium">Country:</span> {place.country}
-                  </p>
-                  <p className="text-gray-500">
-                    <span className="font-medium">Continent:</span> {place.continent}
-                  </p>
-                  <div className="flex justify-between mt-4">
-                    <button
-                      className="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition duration-200"
-                      onClick={() => startEditing(place)}
-                    >
-                      Edit
-                    </button>
-                    <button
-                      className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-200"
-                      onClick={() => handleDelete(place.id)}
-                    >
-                      Delete
-                    </button>
+          {/* Search Bar */}
+          <div className="mb-8 max-w-lg mx-auto">
+            <input
+              type="text"
+              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+              placeholder="Search places by name, country, or continent"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          {/* Places List */}
+          <h2 className="text-3xl font-bold text-gray-800 mb-8 text-center">Places</h2>
+          {filteredPlaces.length === 0 ? (
+            <div className="text-center text-gray-500">
+              <p>No places found. Add a new destination above!</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredPlaces.map((place) => (
+                <div
+                  key={place.id}
+                  className="bg-white rounded-2xl shadow-lg overflow-hidden transform hover:scale-105 transition duration-300"
+                >
+                  <img
+                    src={place.image || "https://via.placeholder.com/400x200"}
+                    alt={place.placeName || "Place"}
+                    className="w-full h-56 object-cover"
+                  />
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-gray-800">
+                      {place.placeName || "Unknown Place"}
+                    </h3>
+                    <p className="text-gray-600 mt-2 line-clamp-3">
+                      {place.description || "No description available"}
+                    </p>
+                    <p className="text-gray-500 mt-1">
+                      <span className="font-medium">Country:</span> {place.country || "Unknown"}
+                    </p>
+                    <p className="text-gray-500">
+                      <span className="font-medium">Continent:</span> {place.continent || "Unknown"}
+                    </p>
+                    <div className="flex justify-between mt-4">
+                      <button
+                        className="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition duration-200"
+                        onClick={() => startEditing(place)}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-200"
+                        onClick={() => handleDelete(place.id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
-          </div>
-        )}
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </ErrorBoundary>
   );
 };
 
-export default PlaceManager;
+export default AddPlace;

@@ -1,24 +1,29 @@
 import { create } from "zustand";
 
-const useDetailsStore = create((set) => ({
+const useDetailsStore = create((set, get) => ({
   details: [],
-
-  adddetails: (detail) => set((state) => ({ details: [...state.details, detail] })),
-
-  updatedetails: (placeId, updatedDetail) =>
+  adddetails: (newDetail) => {
+    console.log("Adding detail:", newDetail);
+    set((state) => ({ details: [...state.details, newDetail] }));
+  },
+  updatedetails: (id, updatedDetail) => {
+    console.log("Updating detail for id:", id);
     set((state) => ({
-      details: state.details.map((detail) =>
-        detail.placeId === placeId ? updatedDetail : detail
+      details: state.details.map((d) =>
+        d.id === id ? { ...d, ...updatedDetail } : d
       ),
-    })),
-
-  deletedetails: (placeId) =>
+    }));
+  },
+  deletedetails: (id) => {
+    console.log("Deleting detail for id:", id);
     set((state) => ({
-      details: state.details.filter((detail) => detail.placeId !== placeId),
-    })),
-
-  getDetailsByPlace: (placeId) => {
-    return (state) => state.details.filter((detail) => detail.placeId === placeId);
+      details: state.details.filter((d) => d.id !== id),
+    }));
+  },
+  getDetailsByPlace: (placeId) => () => {
+    const { details } = get();
+    console.log("Fetching details for placeId:", placeId);
+    return details.filter((d) => d.placeId === placeId);
   },
 }));
 

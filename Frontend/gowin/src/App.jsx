@@ -7,6 +7,7 @@ import FetchDestinationDetails from '../../gowin/src/components/Details/FetchDes
 import AddDetail from './components/admin/AddDetail';
 import AddPlace from './components/admin/AddPlace';
 import Home from './components/Home/Home';
+import Dashboard from './components/admin/Dashboard';
 function App() {
   return (
     <Router>
@@ -17,6 +18,7 @@ function App() {
             <Route path="/admin/add-place" element={<AddPlace />} />
             <Route path="/admin/add-detail" element={<AddDetail />} />
             <Route path="/details" element={<FetchDestinationDetails />} />
+            <Route path="/admin/dashboard" element={<Dashboard />} />
           
             {/* Add other routes here */}
             
