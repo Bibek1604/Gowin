@@ -48,7 +48,6 @@ function DestinationCard({ destination }) {
           <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-bold text-teal-700">
             {destination.price || "$2,199"}
           </div>
-
         </div>
       </div>
       <div className="p-5 flex-grow flex flex-col">
@@ -63,7 +62,7 @@ function DestinationCard({ destination }) {
             <MapPin className="w-4 h-4 mr-2 text-cyan-500" />
             <span>{destination.continent}</span>
           </div>
-                    <div className="flex items-center text-sm text-teal-700">
+          <div className="flex items-center text-sm text-teal-700">
             <MapPin className="w-4 h-4 mr-2 text-cyan-500" />
             <span>{destination.country}</span>
           </div>
@@ -74,7 +73,7 @@ function DestinationCard({ destination }) {
           <div className="flex items-center bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full">
             <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
             <Link
-              to="/details"
+              to={`/details/${destination.id}`} // Updated to include placeId
               className="text-sm font-medium text-teal-700 ml-1"
             >
               <span className="text-sm font-medium text-red-700 ml-1">
@@ -102,7 +101,20 @@ export default function DestinationsCarousel() {
     const loadDestinations = async () => {
       try {
         if (places.length === 0) {
-          // Add Kyoto as a default place if store is empty
+          // Add default place if store is empty
+          setDestinations([
+            {
+              id: "1",
+              placeName: "Kyoto",
+              description: "Experience the charm of traditional Japan.",
+              continent: "Asia",
+              country: "Japan",
+              image: "https://via.placeholder.com/600x400?text=Kyoto",
+              rating: 4.8,
+              price: "$2,199",
+              bestTime: "Spring & Fall",
+            },
+          ]);
         } else {
           setDestinations(
             places.map((place) => ({
@@ -123,6 +135,7 @@ export default function DestinationsCarousel() {
 
     loadDestinations();
   }, [places]);
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 640) {
@@ -138,6 +151,7 @@ export default function DestinationsCarousel() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
   const nextSlide = () => {
     if (currentIndex < destinations.length - visibleCount) {
       setCurrentIndex(currentIndex + 1);
@@ -158,7 +172,6 @@ export default function DestinationsCarousel() {
     setCurrentIndex(index);
   };
 
-  // Calculate total pages for pagination
   const totalPages = Math.ceil(destinations.length / visibleCount);
   const currentPage = Math.floor(currentIndex / visibleCount);
 
@@ -238,8 +251,6 @@ export default function DestinationsCarousel() {
             </div>
           </div>
         )}
-
-
       </div>
     </section>
   );
