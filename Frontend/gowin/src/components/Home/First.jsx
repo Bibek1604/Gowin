@@ -16,7 +16,6 @@ const destinations = [
       "Immerse yourself in a paradise of lush landscapes, ancient temples, and pristine beaches. Experience the perfect blend of relaxation and adventure.",
     image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=1200&auto=format&fit=crop",
     price: 1200,
-    rating: 4.9,
     featured: true,
   },
   {
@@ -27,7 +26,6 @@ const destinations = [
       "Explore vibrant cities, golden temples, and idyllic islands. Thailand offers an unforgettable journey through rich culture and natural beauty.",
     image: "https://images.unsplash.com/photo-1528181304800-259b08848526?q=80&w=1200&auto=format&fit=crop",
     price: 950,
-    rating: 4.7,
     featured: false,
   },
   {
@@ -38,7 +36,6 @@ const destinations = [
       "Experience the breathtaking beauty of white-washed buildings against the deep blue Aegean Sea. A perfect romantic getaway with stunning sunsets.",
     image: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?q=80&w=1200&auto=format&fit=crop",
     price: 1350,
-    rating: 4.8,
     featured: false,
   },
 ]

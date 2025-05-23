@@ -14,14 +14,12 @@ const poppins = Poppins({
   variable: "--font-poppins",
 });
 
-// Metadata configuration
 export const metadata = {
   title: "Explore Destinations | Modern Tourism",
   description: "Discover breathtaking destinations around the world",
   generator: "v0.dev",
 };
 
-// Root Layout Component
 function RootLayout({ children }) {
   return (
     <html lang="en" className={`${caveat.variable} ${poppins.variable}`}>
