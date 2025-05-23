@@ -10,7 +10,6 @@ function Home() {
         <First />
         <Place />
         <Map />
-        <Footer />  
     </div>
   )
 }

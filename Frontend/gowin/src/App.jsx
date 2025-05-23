@@ -11,11 +11,12 @@ import Place from './components/Home/Place';
 import DestinationDetails from './components/Details/FetchDestinationDetails'; 
 import NotFound from './components/Layout/Notfound';
 import BookingForm from './components/Layout/Booking';
-import Booking from "./components/admin/AddBooking"
+import Booking from './components/admin/AddBooking';
+import Footer from './components/Home/Footer';
 
 function AdminLayout({ children }) {
   return (
-    <div className="flex">
+    <div className="flex min-h-screen">
       <Sidebar />
       <div className="flex-1 p-4">
         {children}
@@ -27,64 +28,65 @@ function AdminLayout({ children }) {
 function App() {
   return (
     <Router>
-      <Routes>
-        <Route
-          path="/admin"
-          element={
-            <AdminLayout>
-              <Dashboard />
-            </AdminLayout>
-          }
-        />
-        <Route
-          path="/admin/add-category"
-          element={
-            <AdminLayout>
-              <AddCategory />
-            </AdminLayout>
-          }
-        />
-                <Route
-          path="/admin/add-booking"
-          element={
-            <AdminLayout>
-              <Booking />
-            </AdminLayout>
-          }
-        />
-        <Route
-          path="/admin/add-place"
-          element={
-            <AdminLayout>
-              <AddPlace />
-            </AdminLayout>
-          }
-        />
-        <Route
-          path="/admin/add-detail"
-          element={
-            <AdminLayout>
-              <AddDetail />
-            </AdminLayout>
-          }
-        />
-        <Route
-          path="/admin/dashboard"
-          element={
-            <AdminLayout>
-              <Dashboard />
-            </AdminLayout>
-          }
-        />
-
-        <Route path="/" element={<Home />} />
-        <Route path="/places" element={<Place />} />
-        <Route path="/places/:placeId" element={<DestinationDetails />} />
-
-        <Route path="/details/:placeId" element={<DestinationDetails />} />
-        <Route path="/booking" element={<BookingForm />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+      <div className="flex flex-col min-h-screen">
+        <Routes>
+          <Route
+            path="/admin"
+            element={
+              <AdminLayout>
+                <Dashboard />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin/add-category"
+            element={
+              <AdminLayout>
+                <AddCategory />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin/add-booking"
+            element={
+              <AdminLayout>
+                <Booking />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin/add-place"
+            element={
+              <AdminLayout>
+                <AddPlace />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin/add-detail"
+            element={
+              <AdminLayout>
+                <AddDetail />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/admin/dashboard"
+            element={
+              <AdminLayout>
+                <Dashboard />
+              </AdminLayout>
+            }
+          />
+          <Route path="/" element={<Home />} />
+          <Route path="/places" element={<Place />} />
+          <Route path="/places/:placeId" element={<DestinationDetails />} />
+          <Route path="/details/:placeId" element={<DestinationDetails />} />
+          <Route path="/booking" element={<BookingForm />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        <Footer />
+      </div>
     </Router>
   );
 }
