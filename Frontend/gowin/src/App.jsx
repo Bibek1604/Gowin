@@ -17,6 +17,8 @@ import Footer from './components/Home/Footer';
 import Login from './components/Layout/Login';
 import ProtectedRoute from './components/Layout/ProtectedRoute';
 import Navbar from './components/Home/Navbar';
+import Aboutus from './components/Layout/Aboutus';
+import ContactUs from './components/Layout/ContactUs';
 
 // Admin layout with sidebar
 function AdminLayout({ children }) {
@@ -108,6 +110,10 @@ function AppContent() {
         <Route path="/details/:placeId" element={<DestinationDetails />} />
         <Route path="/booking" element={<BookingForm />} />
         <Route path="/navbar" element={<Navbar />} />
+        <Route path="/aboutus" element={<Aboutus />} />
+        <Route path="/contactus" element={<ContactUs />} />
+
+        {/* Catch-all for 404 Not Found */}
         <Route path="*" element={<NotFound />} />
       </Routes>
 
