@@ -19,7 +19,7 @@ function Footer() {
         {/* Branding */}
         <div className="space-y-3">
           <img src={gowin} alt="Gowin Travel " className="h-8 w-auto sm:h-10" />
-          <p className="text-xs sm:text-sm text-gray-300">Gowin Travel - Empowering journeys from Kathmandu since 2020.</p>
+          <p className="text-xs sm:text-sm text-gray-300">Gowin Travel - Empowering journeys from Kathmandu since 2024.</p>
           <p className="text-xs text-gray-300">Location: Kathmandu, Nepal</p>
           <p className="text-xs text-gray-300">Phone: +977-1-1234567</p>
           <p className="text-xs text-gray-300">Email: info@gowintravel.com</p>

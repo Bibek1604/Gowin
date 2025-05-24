@@ -7,18 +7,6 @@ const Sidebar = () => {
 
   const navItems = [
     {
-      name: 'Dashboard',
-      to: '/admin/dashboard',
-      icon: 'M3 12h18M3 6h18M3 18h18',
-      active: false,
-    },
-    {
-      name: 'Categories',
-      to: '/admin/add-category',
-      icon: 'M4 6h16M4 12h16m-7 6h7',
-      active: true,
-    },
-    {
       name: 'Add Place',
       to: '/admin/add-place',
       icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z',
@@ -28,12 +16,11 @@ const Sidebar = () => {
       to: '/admin/add-detail',
       icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
     },
-        {
+    {
       name: 'Bookings',
       to: '/admin/add-booking',
       icon: 'M19 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
     },
-    
   ];
 
   const sidebarVariants = {
@@ -61,7 +48,7 @@ const Sidebar = () => {
 
   return (
     <motion.div
-      className="h-screen w-64 bg-teal-800 text-white flex flex-col p-6 fixed top-0 left-0 shadow-2xl"
+      className="h-screen w-64 bg-gradient-to-b from-teal-800 to-teal-900 text-white flex flex-col p-6 fixed top-0 left-0 shadow-2xl z-50"
       variants={sidebarVariants}
       initial="hidden"
       animate="visible"
@@ -86,11 +73,8 @@ const Sidebar = () => {
             >
               <Link
                 to={item.to}
-                className={`flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 ${
-                  item.active
-                    ? 'bg-teal-700 text-coral-400 shadow-md'
-                    : 'hover:bg-teal-700 hover:text-coral-300'
-                }`}
+                className="flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 hover:bg-teal-700 hover:text-coral-300 focus:outline-none focus:ring-2 focus:ring-coral-500"
+                aria-label={`Navigate to ${item.name}`}
               >
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path
@@ -112,6 +96,8 @@ const Sidebar = () => {
           whileTap={{ scale: 0.95 }}
           className="flex items-center space-x-3 p-3 rounded-lg hover:bg-teal-700 transition-all duration-200 cursor-pointer"
           onClick={() => setIsProfileOpen(!isProfileOpen)}
+          aria-expanded={isProfileOpen}
+          aria-controls="profile-menu"
         >
           <div className="w-10 h-10 bg-coral-500 rounded-full flex items-center justify-center">
             <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -124,16 +110,23 @@ const Sidebar = () => {
           </div>
         </motion.div>
         <motion.div
+          id="profile-menu"
           variants={profileVariants}
           initial="collapsed"
           animate={isProfileOpen ? 'expanded' : 'collapsed'}
           className="overflow-hidden"
         >
           <div className="p-3 bg-teal-700 rounded-lg mt-2">
-            <button className="w-full text-left text-sm hover:text-coral-300 transition">
+            <button
+              className="w-full text-left text-sm hover:text-coral-300 transition focus:outline-none focus:ring-2 focus:ring-coral-500"
+              aria-label="Profile Settings"
+            >
               Profile Settings
             </button>
-            <button className="w-full text-left text-sm hover:text-coral-300 transition mt-2">
+            <button
+              className="w-full text-left text-sm hover:text-coral-300 transition mt-2 focus:outline-none focus:ring-2 focus:ring-coral-500"
+              aria-label="Logout"
+            >
               Logout
             </button>
           </div>
