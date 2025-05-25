@@ -6,14 +6,14 @@ import { Link } from 'react-router-dom';
 
 const Navbar = () => {
   const { isAdmin, login, logout } = useAdminStore();
-  const [showModal, setShowModal] = useState(false);
   const [password, setPassword] = useState('');
+  const [showInput, setShowInput] = useState(false);
 
   const handleLogin = () => {
-    if (password) {
+    if (password.trim()) {
       login(password);
       setPassword('');
-      setShowModal(false);
+      setShowInput(false);
     }
   };
 
@@ -41,18 +41,34 @@ const Navbar = () => {
             </div>
 
             {/* Login/Logout Button */}
-            <button
-              onClick={isAdmin ? logout : () => setShowModal(true)}
-              className="px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 
-              backdrop-blur-md text-gray-800 font-semibold shadow-sm transition"
-            >
-              {isAdmin ? 'Logout' : 'Admin Login'}
-            </button>
+            <div className="flex items-center gap-2">
+              {!isAdmin && showInput && (
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter Admin Password"
+                  className="px-2 py-1 rounded-md border border-white/30 bg-white/20 text-gray-800"
+                />
+              )}
+              <button
+                onClick={() => {
+                  if (isAdmin) {
+                    logout();
+                  } else {
+                    if (!showInput) setShowInput(true);
+                    else handleLogin();
+                  }
+                }}
+                className="px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 
+                backdrop-blur-md text-gray-800 font-semibold shadow-sm transition"
+              >
+                {isAdmin ? 'Logout' : showInput ? 'Submit' : 'Admin Login'}
+              </button>
+            </div>
           </nav>
         </div>
       </div>
-
-      {/* Modal (not shown here, but can be styled too if you want) */}
     </>
   );
 };
