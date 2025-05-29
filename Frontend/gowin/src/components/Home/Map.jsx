@@ -7,16 +7,29 @@ import React from "react"
 
 // Define sample locations
 const locations = [
-  { name: "Kathmandu, Nepal", lat: 27.6264, lng: 83.3789, color: "#4A8EBC", isHighlighted: true },
-  { name: "New York", lat: 40.7128, lng: -74.006, color: "#3B5488" },
-  { name: "London", lat: 51.5074, lng: -0.1278, color: "#5A9ECC" },
-  { name: "Tokyo", lat: 35.6762, lng: 139.6503, color: "#6AAEDC" },
-  { name: "Sydney", lat: -33.8688, lng: 151.2093, color: "#7ABCEC" },
-  { name: "Cape Town", lat: -33.9249, lng: 18.4241, color: "#8ACAFC" },
-  { name: "Rio de Janeiro", lat: -22.9068, lng: -43.1729, color: "#5A9ECC" },
-  { name: "Moscow", lat: 55.7558, lng: 37.6173, color: "#6AAEDC" },
-  { name: "Dubai", lat: 25.2048, lng: 55.2708, color: "#7ABCEC" },
-  { name: "Singapore", lat: 1.3521, lng: 103.8198, color: "#8ACAFC" },
+  {name: "Kathmandu, Nepal", lat: 27.6264, lng: 83.3789, color: "#4A8EBC", isHighlighted: true },
+  {name: "London", lat: 51.5074, lng: -0.1278, color: "#5A9ECC",isHighlighted: true },
+  {name: "Dubai", lat: 25.2048, lng: 55.2708, color: "#7ABCEC", isHighlighted: true },
+  {name:"Itly", lat: 41.9028, lng: 12.4964, color: "#5A9ECC", isHighlighted: true},
+  {name:"France", lat: 48.8566, lng: 2.3522, color: "#3B5488", isHighlighted: true},
+  {name:"Germany", lat: 52.5200, lng: 13.4050, color: "#4A8EBC", isHighlighted: true},
+  {name:"Switzerland", lat: 46.9480, lng: 7.4474, color: "#5A9ECC", isHighlighted: true},
+  {name:"Luxembourg", lat: 49.6118, lng: 6.1319, color: "#3B5488", isHighlighted: true},
+  {name:"Netherlands", lat: 52.3676, lng: 4.9041, color: "#4A8EBC", isHighlighted: true},
+  {name:"Belgium", lat: 50.8503, lng: 4.3517, color: "#5A9ECC", isHighlighted: true},
+  {name:"Spain", lat: 40.4168, lng: -3.7038, color: "#3B5488", isHighlighted: true},
+  {name: "China", lat: 35.8617, lng: 104.1954, color: "#3B5488", isHighlighted: true },
+  {name:"Austria", lat: 47.5162, lng: 14.5501, color: "#5A9ECC", isHighlighted: true},
+  {name:"Sweden", lat: 59.3293, lng: 18.0686, color: "#3B5488", isHighlighted: true},
+  {name:"Finland", lat: 60.1695, lng: 24.9354, color: "#4A8EBC", isHighlighted: true},
+  {name:"Norway", lat: 59.9139, lng: 10.7522, color: "#5A9ECC", isHighlighted: true},
+  {name:"Denmark", lat: 55.6761, lng: 12.5683, color: "#3B5488", isHighlighted: true},
+  {name:"Portugal", lat: 38.7223, lng: -9.1393, color: "#4A8EBC", isHighlighted: true},
+  {name:"Ireland", lat: 53.3498, lng: -6.2603, color: "#5A9ECC", isHighlighted: true},
+  {name:"greece", lat: 37.9838, lng: 23.7275, color: "#3B5488", isHighlighted: true},
+  {name:"thailand", lat: 13.7563, lng: 100.5018, color: "#4A8EBC", isHighlighted: true },
+  {name:"Indonesia", lat: -6.2088, lng: 106.8456, color: "#5A9ECC", isHighlighted: true},
+
 ]
 
 export default function WorldMap() {

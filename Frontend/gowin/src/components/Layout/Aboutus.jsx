@@ -35,6 +35,13 @@ const AboutUs = () => {
               <h2 className="text-2xl font-semibold text-gray-800">Travel Support</h2>
               <p>Comprehensive support from flight booking to hotel accommodations and itinerary planning.</p>
             </div>
+            
+            <div>
+              <h2 className="text-2xl font-semibold text-gray-800">VFS Appointment</h2>
+              <p>We support visa applicants through the entire application process.
+
+If you’re ready to arrange your visa application appointment.</p>
+            </div>
           </div>
         </div>
       </div>

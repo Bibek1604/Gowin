@@ -9,32 +9,46 @@ function Footer() {
         <div className="space-y-3">
           <img src={gowin} alt="Gowin Travel" className="h-10 w-auto" />
           <p className="text-sm text-gray-300">
-            Gowin Travel - Empowering journeys from Kathmandu since 2024.
+            Gowin International-Explore Beyond Borders.
           </p>
           <p className="text-sm text-gray-300">📍 Location: Kathmandu, Nepal (Shankhamul)</p>
           <p className="text-sm text-gray-300">📞 Phone: +977-9851410966</p>
           <p className="text-sm text-gray-300">✉️ Email: info@gowintravel.com</p>
-          <p className="text-xs text-gray-500">© 2025 Gowin Travel. All rights reserved.</p>
+          <p className="text-xs text-gray-500">© 2025 Gowin International. All rights reserved.</p>
         </div>
 
         {/* Company Links */}
-        <div>
-          <h4 className="text-lg font-semibold mb-4">Company</h4>
-          <ul className="space-y-2">
-            {['About', 'Careers', 'Contact'].map((item) => (
-              <li key={item}>
-                <a
-                  href={`/${item.toLowerCase()}`}
-                  className="text-sm text-gray-300 hover:text-blue-400 transition"
-                >
-                  {item}
-                </a>
-              </li>
-            ))}
-          </ul>
+{/* Company Links */}
+<div>
+  <h4 className="text-lg font-semibold mb-4">Company</h4>
+  <ul className="space-y-2">
+    <li>
+      <a
+        href="/aboutus"
+        className="text-sm text-gray-300 hover:text-blue-400 transition"
+      >
+        About
+      </a>
+    </li>
+    <li>
+      <a
+        href="/careers"
+        className="text-sm text-gray-300 hover:text-blue-400 transition"
+      >
+        Careers
+      </a>
+    </li>
+    <li>
+      <a
+        href="/contactus"
+        className="text-sm text-gray-300 hover:text-blue-400 transition"
+      >
+        Contact
+      </a>
+    </li>
+  </ul>
+</div>
 
-
-        </div>
 
         {/* Embedded Google Map */}
         <div className="w-full">

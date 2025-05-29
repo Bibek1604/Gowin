@@ -3,6 +3,8 @@ import Sidebar from './Sidebar';
 import usePlaceStore from '../Store/PlaceStore';
 import { Toaster, toast } from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import { v4 as uuidv4 } from 'uuid';
+
 
 class ErrorBoundary extends React.Component {
   state = { hasError: false };
@@ -103,7 +105,7 @@ const AddPlace = () => {
               className: 'toast-success',
             });
           } else {
-            addPlace({ id: crypto.randomUUID(), ...placeData });
+addPlace({ id: uuidv4(), ...placeData });
             toast.success('Place added successfully!', {
               className: 'toast-success',
             });

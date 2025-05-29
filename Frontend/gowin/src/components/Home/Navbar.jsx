@@ -29,7 +29,10 @@ const Navbar = () => {
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-2">
               <img src={gowin} alt="gowin" className="h-10 w-10 rounded-full" />
-              <div className="text-2xl font-bold">Gowin</div>
+<div className="text-2xl font-bold">
+  <span className="text-blue-400">Gowin</span>{' '}
+  <span className="text-orange-400">International</span>
+</div>
             </Link>
 
             {/* Navigation Links */}

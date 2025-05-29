@@ -15,7 +15,6 @@ const destinations = [
     description:
       "Immerse yourself in a paradise of lush landscapes, ancient temples, and pristine beaches. Experience the perfect blend of relaxation and adventure.",
     image: "https://images.unsplash.com/photo-1537996194471-e657df975ab4?q=80&w=1200&auto=format&fit=crop",
-    price: 1200,
     featured: true,
   },
   {
@@ -25,7 +24,6 @@ const destinations = [
     description:
       "Explore vibrant cities, golden temples, and idyllic islands. Thailand offers an unforgettable journey through rich culture and natural beauty.",
     image: "https://images.unsplash.com/photo-1528181304800-259b08848526?q=80&w=1200&auto=format&fit=crop",
-    price: 950,
     featured: false,
   },
   {
@@ -35,7 +33,6 @@ const destinations = [
     description:
       "Experience the breathtaking beauty of white-washed buildings against the deep blue Aegean Sea. A perfect romantic getaway with stunning sunsets.",
     image: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?q=80&w=1200&auto=format&fit=crop",
-    price: 1350,
     featured: false,
   },
 ]
@@ -577,7 +574,6 @@ const DestinationCard = ({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 via-gray-800/40 to-transparent"></div>
         {destination.featured && <div className="ribbon">Featured</div>}
-        <div className="price-badge">${destination.price}</div>
         <div className="absolute bottom-4 sm:bottom-6 left-4 sm:left-6 text-white space-y-1 sm:space-y-2">
           <h3 className="text-lg sm:text-xl lg:text-2xl font-bold drop-shadow-md">{destination.name}</h3>
           <p className="text-xs sm:text-sm text-gray-300">{destination.rating} ★</p>
