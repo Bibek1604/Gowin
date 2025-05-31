@@ -9,7 +9,7 @@ function Footer() {
         <div className="space-y-3">
           <img src={gowin} alt="Gowin Travel" className="h-10 w-auto" />
           <p className="text-sm text-gray-300">
-            Gowin International-Explore Beyond Borders.
+            Gowin International-Explore Beyond Borders , Win Every Journey with Gowin .
           </p>
           <p className="text-sm text-gray-300">📍 Location: Kathmandu, Nepal (Shankhamul)</p>
           <p className="text-sm text-gray-300">📞 Phone: +977-9851410966</p>
@@ -30,14 +30,7 @@ function Footer() {
         About
       </a>
     </li>
-    <li>
-      <a
-        href="/careers"
-        className="text-sm text-gray-300 hover:text-blue-400 transition"
-      >
-        Careers
-      </a>
-    </li>
+    <li>    </li>
     <li>
       <a
         href="/contactus"

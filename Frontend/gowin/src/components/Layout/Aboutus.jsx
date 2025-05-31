@@ -38,7 +38,8 @@ const AboutUs = () => {
             
             <div>
               <h2 className="text-2xl font-semibold text-gray-800">VFS Appointment</h2>
-              <p>We support visa applicants through the entire application process.
+              <p>Wa
+              e support visa applicants through the entire application process.
 
 If you’re ready to arrange your visa application appointment.</p>
             </div>
