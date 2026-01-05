@@ -19,13 +19,14 @@ import ProtectedRoute from './components/Layout/ProtectedRoute';
 import Navbar from './components/Home/Navbar';
 import Aboutus from './components/Layout/Aboutus';
 import ContactUs from './components/Layout/ContactUs';
+import colors from './theme/colors';
 
 // Admin layout with sidebar
 function AdminLayout({ children }) {
   return (
-    <div className="flex min-h-screen">
+    <div className="flex min-h-screen" style={{ background: colors.neutral.offWhite }}>
       <Sidebar />
-      <div className="flex-1 p-4">
+      <div className="flex-1 ml-64">
         {children}
       </div>
     </div>
@@ -36,9 +37,13 @@ function AdminLayout({ children }) {
 function AppContent() {
   const location = useLocation();
   const isAdminRoute = location.pathname.startsWith('/admin');
+  const isLoginRoute = location.pathname === '/login';
 
   return (
     <div className="flex flex-col min-h-screen">
+      {/* Navbar on all pages except admin and login */}
+      {!isAdminRoute && !isLoginRoute && <Navbar />}
+      
       <Routes>
         {/* Admin Routes (Protected) */}
         <Route

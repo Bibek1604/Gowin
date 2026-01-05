@@ -1,13 +1,33 @@
-// src/components/Navbar.js
 import React, { useState } from 'react';
 import { useAdminStore } from '../Store/AdminStore';
 import gowin from '../../assets/gowin.jpg';
 import { Link } from 'react-router-dom';
+import colors from '../../theme/colors';
+import { Button } from '../ui';
+
+const NavLink = ({ href, icon, children }) => (
+  <a 
+    href={href} 
+    className="flex items-center gap-2 font-medium transition-all duration-300 relative group"
+    style={{ 
+      color: colors.neutral.darkGray,
+      fontFamily: 'Inter, Roboto, sans-serif',
+    }}
+  >
+    <i className={`${icon} text-lg`} style={{ color: colors.primary.teal }}></i>
+    <span className="hidden lg:inline">{children}</span>
+    <span 
+      className="absolute bottom-0 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-300"
+      style={{ background: colors.primary.teal }}
+    />
+  </a>
+);
 
 const Navbar = () => {
   const { isAdmin, login, logout } = useAdminStore();
   const [password, setPassword] = useState('');
   const [showInput, setShowInput] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const handleLogin = () => {
     if (password.trim()) {
@@ -17,44 +37,90 @@ const Navbar = () => {
     }
   };
 
+  const navLinks = [
+    { href: '/', icon: 'fas fa-home', text: 'Home' },
+    { href: '/aboutus', icon: 'fas fa-info-circle', text: 'About Us' },
+    { href: '/contactus', icon: 'fas fa-envelope', text: 'Contact' },
+    ...(isAdmin ? [{ href: '/admin', icon: 'fas fa-user-shield', text: 'Admin Panel' }] : []),
+  ];
+
   return (
     <>
-      {/* Sticky & Glassy Navbar */}
-      <div className="sticky top-0 z-50 px-4">
-        <div className="p-[1px] rounded-2xl bg-gradient-to-r from-white/20 to-white/5 shadow-xl">
-          <nav className="w-full flex justify-between items-center px-6 py-4 
-            bg-white/10 backdrop-blur-lg border border-white/20 rounded-2xl 
-            text-gray-800">
-
+      {/* Professional Navbar */}
+      <nav 
+        className="sticky top-0 z-50 bg-white backdrop-blur-lg"
+        style={{ 
+          boxShadow: colors.shadows.sm,
+          borderBottom: `1px solid ${colors.neutral.lightGray}`,
+        }}
+      >
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex justify-between items-center h-20">
+            
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-2">
-              <img src={gowin} alt="gowin" className="h-10 w-10 rounded-full" />
-<div className="text-2xl font-bold">
-  <span className="text-blue-400">Gowin</span>{' '}
-  <span className="text-orange-400">International</span>
-</div>
+            <Link to="/" className="flex items-center gap-3 group">
+              <img 
+                src={gowin} 
+                alt="Gowin Travel" 
+                className="h-12 w-12 rounded-full transition-transform duration-300 group-hover:scale-105" 
+                style={{ boxShadow: colors.shadows.sm }}
+              />
+              <div>
+                <div 
+                  className="text-2xl font-bold heading-font"
+                  style={{ 
+                    fontFamily: 'Playfair Display, Georgia, serif',
+                    color: colors.neutral.charcoal,
+                  }}
+                >
+                  Gowin<span style={{ color: colors.primary.teal }}> International</span>
+                </div>
+                <div 
+                  className="text-xs tracking-wide"
+                  style={{ 
+                    color: colors.neutral.gray,
+                    fontFamily: 'Inter, Roboto, sans-serif',
+                  }}
+                >
+                  Explore Beyond Borders
+                </div>
+              </div>
             </Link>
 
-            {/* Navigation Links */}
-            <div className="space-x-6">
-              <a href="/" className="hover:text-black/90 transition-all duration-200">Home</a>
-              <a href="/aboutus" className="hover:text-black/90 transition-all duration-200">About Us</a>
-              <a href="/contactus" className="hover:text-black/90 transition-all duration-200">Contact</a>
-              {isAdmin && <a href="/admin" className="hover:text-black/90 transition-all duration-200">Admin Panel</a>}
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center gap-8">
+              {navLinks.map((link, index) => (
+                <NavLink 
+                  key={index}
+                  href={link.href}
+                  icon={link.icon}
+                >
+                  {link.text}
+                </NavLink>
+              ))}
             </div>
 
-            {/* Login/Logout Button */}
-            <div className="flex items-center gap-2">
+            {/* Desktop Login/Logout */}
+            <div className="hidden md:flex items-center gap-3">
               {!isAdmin && showInput && (
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter Admin Password"
-                  className="px-2 py-1 rounded-md border border-white/30 bg-white/20 text-gray-800"
+                  placeholder="Enter Password"
+                  className="px-4 py-2 rounded-lg border-2 focus:outline-none transition-all"
+                  style={{ 
+                    borderColor: colors.neutral.lightGray,
+                    fontFamily: 'Inter, Roboto, sans-serif',
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = colors.primary.teal}
+                  onBlur={(e) => e.target.style.borderColor = colors.neutral.lightGray}
+                  onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
                 />
               )}
-              <button
+              <Button
+                variant="primary"
+                size="md"
                 onClick={() => {
                   if (isAdmin) {
                     logout();
@@ -63,15 +129,87 @@ const Navbar = () => {
                     else handleLogin();
                   }
                 }}
-                className="px-4 py-2 rounded-xl bg-white/20 hover:bg-white/30 
-                backdrop-blur-md text-gray-800 font-semibold shadow-sm transition"
               >
                 {isAdmin ? 'Logout' : showInput ? 'Submit' : 'Admin Login'}
-              </button>
+              </Button>
             </div>
-          </nav>
+
+            {/* Mobile Hamburger */}
+            <button 
+              className="md:hidden text-2xl transition-transform duration-300 hover:scale-110"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              aria-label="Toggle menu"
+            >
+              <i 
+                className={`fas ${isMobileMenuOpen ? 'fa-times' : 'fa-bars'}`}
+                style={{ color: colors.primary.teal }}
+              ></i>
+            </button>
+          </div>
         </div>
-      </div>
+
+        {/* Mobile Menu */}
+        {isMobileMenuOpen && (
+          <div 
+            className="md:hidden bg-white p-4 space-y-4 animate-fadeIn"
+            style={{ 
+              boxShadow: colors.shadows.md,
+              borderTop: `1px solid ${colors.neutral.lightGray}`
+            }}
+          >
+            {navLinks.map((link, index) => (
+              <a 
+                key={index}
+                href={link.href} 
+                className="flex items-center gap-3 transition-all duration-200 font-medium py-2"
+                onClick={() => setIsMobileMenuOpen(false)}
+                style={{ 
+                  color: colors.neutral.darkGray,
+                  fontFamily: 'Inter, Roboto, sans-serif',
+                }}
+              >
+                <i className={`${link.icon} text-xl`} style={{ color: colors.primary.teal }}></i>
+                {link.text}
+              </a>
+            ))}
+            
+            <div className="pt-4 border-t" style={{ borderColor: colors.neutral.lightGray }}>
+              {!isAdmin && showInput && (
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="Enter Password"
+                  className="w-full px-4 py-2 rounded-lg border-2 focus:outline-none mb-2 transition-all"
+                  style={{ 
+                    borderColor: colors.neutral.lightGray,
+                    fontFamily: 'Inter, Roboto, sans-serif',
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = colors.primary.teal}
+                  onBlur={(e) => e.target.style.borderColor = colors.neutral.lightGray}
+                  onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                />
+              )}
+              <Button
+                variant="primary"
+                size="md"
+                className="w-full"
+                onClick={() => {
+                  if (isAdmin) {
+                    logout();
+                    setIsMobileMenuOpen(false);
+                  } else {
+                    if (!showInput) setShowInput(true);
+                    else handleLogin();
+                  }
+                }}
+              >
+                {isAdmin ? 'Logout' : showInput ? 'Submit' : 'Admin Login'}
+              </Button>
+            </div>
+          </div>
+        )}
+      </nav>
     </>
   );
 };

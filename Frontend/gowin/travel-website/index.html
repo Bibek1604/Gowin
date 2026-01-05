@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nepal Adventures - Explore the Himalayas | Travel Agency Shankhamul</title>
+    <meta name="description" content="Premier travel agency in Shankhamul, Kathmandu offering trekking, cultural tours, and wildlife safaris across Nepal.">
+    
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@400;600;700&family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="index.html">
+                <i class="fas fa-mountain text-primary me-2"></i>
+                <span class="brand-text">Nepal Adventures</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="index.html">
+                            <i class="fas fa-home me-1"></i> Home
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="about.html">
+                            <i class="fas fa-info-circle me-1"></i> About Us
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="destinations.html">
+                            <i class="fas fa-map-marked-alt me-1"></i> Destinations
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="packages.html">
+                            <i class="fas fa-suitcase me-1"></i> Packages
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.html">
+                            <i class="fas fa-envelope me-1"></i> Contact
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-cta ms-lg-3" href="packages.html">
+                            <i class="fas fa-calendar-check me-1"></i> Book Now
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <div class="row justify-content-center text-center">
+                <div class="col-lg-10">
+                    <h1 class="hero-title animate-fade-in">Explore Nepal's Adventures</h1>
+                    <p class="hero-subtitle animate-fade-in-delay">Trek, Discover, Experience!</p>
+                    <div class="hero-icons animate-fade-in-delay-2">
+                        <i class="fas fa-mountain"></i>
+                        <i class="fas fa-hiking"></i>
+                        <i class="fas fa-camera"></i>
+                        <i class="fas fa-compass"></i>
+                    </div>
+                    
+                    <!-- Search Bar -->
+                    <div class="search-container animate-fade-in-delay-3">
+                        <form class="search-form">
+                            <div class="row g-2">
+                                <div class="col-md-5">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white">
+                                            <i class="fas fa-map-marker-alt text-primary"></i>
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="Search destinations...">
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <div class="input-group">
+                                        <span class="input-group-text bg-white">
+                                            <i class="fas fa-tag text-secondary"></i>
+                                        </span>
+                                        <input type="text" class="form-control" placeholder="Search packages...">
+                                    </div>
+                                </div>
+                                <div class="col-md-2">
+                                    <button type="submit" class="btn btn-search w-100">
+                                        <i class="fas fa-search me-1"></i> Search
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="hero-scroll-indicator">
+            <i class="fas fa-chevron-down"></i>
+        </div>
+    </section>
+
+    <!-- Quick Stats Section -->
+    <section class="stats-section py-5 bg-light">
+        <div class="container">
+            <div class="row text-center g-4">
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <i class="fas fa-users stat-icon" style="color: #00A896;"></i>
+                        <h3 class="stat-number">5000+</h3>
+                        <p class="stat-label">Happy Travelers</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <i class="fas fa-mountain stat-icon" style="color: #FF6B35;"></i>
+                        <h3 class="stat-number">50+</h3>
+                        <p class="stat-label">Destinations</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <i class="fas fa-award stat-icon" style="color: #FFD23F;"></i>
+                        <h3 class="stat-number">15+</h3>
+                        <p class="stat-label">Years Experience</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3">
+                    <div class="stat-card">
+                        <i class="fas fa-star stat-icon" style="color: #56CFE1;"></i>
+                        <h3 class="stat-number">4.9/5</h3>
+                        <p class="stat-label">Customer Rating</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Adventures Section -->
+    <section class="adventures-section py-5">
+        <div class="container">
+            <div class="section-header text-center mb-5">
+                <h2 class="section-title">Adventure Categories</h2>
+                <p class="section-subtitle">Choose your perfect Nepal experience</p>
+                <div class="title-underline"></div>
+            </div>
+
+            <div class="row g-4">
+                <!-- Trekking Adventures -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="adventure-card trekking-card">
+                        <div class="adventure-icon">
+                            <i class="fas fa-hiking"></i>
+                        </div>
+                        <h3 class="adventure-title">Trekking Adventures</h3>
+                        <p class="adventure-desc">Conquer the world's highest peaks including Everest Base Camp, Annapurna Circuit, and more.</p>
+                        <ul class="adventure-features">
+                            <li><i class="fas fa-check-circle"></i> Expert Guides</li>
+                            <li><i class="fas fa-check-circle"></i> Safe Routes</li>
+                            <li><i class="fas fa-check-circle"></i> All Equipment</li>
+                        </ul>
+                        <a href="destinations.html" class="btn btn-adventure">
+                            Explore Treks <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Cultural Heritage -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="adventure-card cultural-card">
+                        <div class="adventure-icon">
+                            <i class="fas fa-gopuram"></i>
+                        </div>
+                        <h3 class="adventure-title">Cultural Heritage</h3>
+                        <p class="adventure-desc">Discover ancient temples, monasteries, and UNESCO World Heritage sites in Kathmandu Valley.</p>
+                        <ul class="adventure-features">
+                            <li><i class="fas fa-check-circle"></i> Temple Tours</li>
+                            <li><i class="fas fa-check-circle"></i> Local Experiences</li>
+                            <li><i class="fas fa-check-circle"></i> Cultural Insights</li>
+                        </ul>
+                        <a href="destinations.html" class="btn btn-adventure">
+                            Discover Culture <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Wildlife Safaris -->
+                <div class="col-md-6 col-lg-4">
+                    <div class="adventure-card wildlife-card">
+                        <div class="adventure-icon">
+                            <i class="fas fa-paw"></i>
+                        </div>
+                        <h3 class="adventure-title">Wildlife Safaris</h3>
+                        <p class="adventure-desc">Spot rare wildlife including Bengal tigers, rhinos, and elephants in Chitwan National Park.</p>
+                        <ul class="adventure-features">
+                            <li><i class="fas fa-check-circle"></i> Jungle Safaris</li>
+                            <li><i class="fas fa-check-circle"></i> Bird Watching</li>
+                            <li><i class="fas fa-check-circle"></i> Canoe Rides</li>
+                        </ul>
+                        <a href="destinations.html" class="btn btn-adventure">
+                            View Wildlife <i class="fas fa-arrow-right ms-1"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Packages Section -->
+    <section class="packages-section py-5 bg-light">
+        <div class="container">
+            <div class="section-header text-center mb-5">
+                <h2 class="section-title">Featured Packages</h2>
+                <p class="section-subtitle">Handpicked adventures for unforgettable experiences</p>
+                <div class="title-underline"></div>
+            </div>
+
+            <div class="row g-4">
+                <!-- Package 1: Everest Base Camp -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="package-card">
+                        <div class="package-image">
+                            <img src="images/everest-trek.jpg" alt="Everest Base Camp Trek">
+                            <div class="package-badge">Popular</div>
+                            <div class="package-duration">
+                                <i class="fas fa-clock"></i> 14 Days
+                            </div>
+                        </div>
+                        <div class="package-content">
+                            <div class="package-icons">
+                                <i class="fas fa-mountain" style="color: #00A896;"></i>
+                                <i class="fas fa-hiking" style="color: #FF6B35;"></i>
+                                <i class="fas fa-camera" style="color: #56CFE1;"></i>
+                            </div>
+                            <h4 class="package-title">Everest Base Camp Trek</h4>
+                            <p class="package-description">
+                                Journey to the base of the world's highest peak. Experience Sherpa culture, stunning mountain views.
+                            </p>
+                            <ul class="package-features">
+                                <li><i class="fas fa-check"></i> Accommodation</li>
+                                <li><i class="fas fa-check"></i> Meals Included</li>
+                                <li><i class="fas fa-check"></i> Expert Guide</li>
+                                <li><i class="fas fa-check"></i> Permits</li>
+                            </ul>
+                            <div class="package-footer">
+                                <div class="package-price">
+                                    <span class="price-label">From</span>
+                                    <span class="price-amount">$1,299</span>
+                                </div>
+                                <a href="packages.html" class="btn btn-package">
+                                    Book Now <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package 2: Kathmandu Valley Tour -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="package-card">
+                        <div class="package-image">
+                            <img src="images/kathmandu-valley.jpg" alt="Kathmandu Valley Cultural Tour">
+                            <div class="package-badge cultural-badge">Cultural</div>
+                            <div class="package-duration">
+                                <i class="fas fa-clock"></i> 5 Days
+                            </div>
+                        </div>
+                        <div class="package-content">
+                            <div class="package-icons">
+                                <i class="fas fa-gopuram" style="color: #FF6B35;"></i>
+                                <i class="fas fa-camera" style="color: #FFD23F;"></i>
+                                <i class="fas fa-map-marked-alt" style="color: #00A896;"></i>
+                            </div>
+                            <h4 class="package-title">Kathmandu Valley Cultural Tour</h4>
+                            <p class="package-description">
+                                Explore UNESCO heritage sites, ancient temples, and vibrant local markets in the heart of Nepal.
+                            </p>
+                            <ul class="package-features">
+                                <li><i class="fas fa-check"></i> Hotel Stay</li>
+                                <li><i class="fas fa-check"></i> Breakfast</li>
+                                <li><i class="fas fa-check"></i> City Guide</li>
+                                <li><i class="fas fa-check"></i> Entry Fees</li>
+                            </ul>
+                            <div class="package-footer">
+                                <div class="package-price">
+                                    <span class="price-label">From</span>
+                                    <span class="price-amount">$499</span>
+                                </div>
+                                <a href="packages.html" class="btn btn-package">
+                                    Book Now <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package 3: Chitwan Jungle Safari -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="package-card">
+                        <div class="package-image">
+                            <img src="images/chitwan-safari.jpg" alt="Chitwan Jungle Safari">
+                            <div class="package-badge wildlife-badge">Wildlife</div>
+                            <div class="package-duration">
+                                <i class="fas fa-clock"></i> 4 Days
+                            </div>
+                        </div>
+                        <div class="package-content">
+                            <div class="package-icons">
+                                <i class="fas fa-paw" style="color: #00A896;"></i>
+                                <i class="fas fa-binoculars" style="color: #56CFE1;"></i>
+                                <i class="fa-solid fa-crow" style="color: #FF6B35;"></i>
+                            </div>
+                            <h4 class="package-title">Chitwan Jungle Safari</h4>
+                            <p class="package-description">
+                                Wildlife adventure in Chitwan National Park. Spot rhinos, tigers, elephants, and exotic birds.
+                            </p>
+                            <ul class="package-features">
+                                <li><i class="fas fa-check"></i> Resort Stay</li>
+                                <li><i class="fas fa-check"></i> All Meals</li>
+                                <li><i class="fas fa-check"></i> Safari Tours</li>
+                                <li><i class="fas fa-check"></i> Activities</li>
+                            </ul>
+                            <div class="package-footer">
+                                <div class="package-price">
+                                    <span class="price-label">From</span>
+                                    <span class="price-amount">$399</span>
+                                </div>
+                                <a href="packages.html" class="btn btn-package">
+                                    Book Now <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Package 4: Pokhara Adventure -->
+                <div class="col-md-6 col-lg-3">
+                    <div class="package-card">
+                        <div class="package-image">
+                            <img src="images/pokhara-adventure.jpg" alt="Pokhara Adventure">
+                            <div class="package-badge adventure-badge">Adventure</div>
+                            <div class="package-duration">
+                                <i class="fas fa-clock"></i> 7 Days
+                            </div>
+                        </div>
+                        <div class="package-content">
+                            <div class="package-icons">
+                                <i class="fas fa-parachute-box" style="color: #56CFE1;"></i>
+                                <i class="fas fa-water" style="color: #00A896;"></i>
+                                <i class="fas fa-mountain" style="color: #FFD23F;"></i>
+                            </div>
+                            <h4 class="package-title">Pokhara Adventure</h4>
+                            <p class="package-description">
+                                Paragliding, boating, hiking to World Peace Pagoda, and breathtaking Annapurna views.
+                            </p>
+                            <ul class="package-features">
+                                <li><i class="fas fa-check"></i> Lake View Hotel</li>
+                                <li><i class="fas fa-check"></i> Breakfast</li>
+                                <li><i class="fas fa-check"></i> Adventure Activities</li>
+                                <li><i class="fas fa-check"></i> Transport</li>
+                            </ul>
+                            <div class="package-footer">
+                                <div class="package-price">
+                                    <span class="price-label">From</span>
+                                    <span class="price-amount">$699</span>
+                                </div>
+                                <a href="packages.html" class="btn btn-package">
+                                    Book Now <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-5">
+                <a href="packages.html" class="btn btn-cta-large">
+                    View All Packages <i class="fas fa-arrow-right ms-2"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us Section -->
+    <section class="why-choose-section py-5">
+        <div class="container">
+            <div class="section-header text-center mb-5">
+                <h2 class="section-title">Why Choose Nepal Adventures?</h2>
+                <p class="section-subtitle">Your trusted travel partner since 2009</p>
+                <div class="title-underline"></div>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-box">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #00A896, #56CFE1);">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h4 class="feature-title">Expert Guides</h4>
+                        <p class="feature-desc">Licensed, experienced local guides with deep knowledge of Nepal's terrain and culture.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-box">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #FF6B35, #F26430);">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h4 class="feature-title">Safety First</h4>
+                        <p class="feature-desc">Comprehensive travel insurance, emergency support, and safety protocols on every trip.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-box">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #FFD23F, #FF6B35);">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <h4 class="feature-title">Best Prices</h4>
+                        <p class="feature-desc">Competitive rates with no hidden costs. Value-packed packages for every budget.</p>
+                    </div>
+                </div>
+
+                <div class="col-md-6 col-lg-3">
+                    <div class="feature-box">
+                        <div class="feature-icon" style="background: linear-gradient(135deg, #56CFE1, #00A896);">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h4 class="feature-title">24/7 Support</h4>
+                        <p class="feature-desc">Round-the-clock customer service before, during, and after your journey.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section py-5 bg-light">
+        <div class="container">
+            <div class="section-header text-center mb-5">
+                <h2 class="section-title">What Our Travelers Say</h2>
+                <p class="section-subtitle">Real experiences from real adventurers</p>
+                <div class="title-underline"></div>
+            </div>
+
+            <div id="testimonialsCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="0" class="active"></button>
+                    <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="1"></button>
+                    <button type="button" data-bs-target="#testimonialsCarousel" data-bs-slide-to="2"></button>
+                </div>
+
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8">
+                                <div class="testimonial-card">
+                                    <div class="testimonial-stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <p class="testimonial-text">
+                                        "The Everest Base Camp trek was absolutely life-changing! Our guide was knowledgeable, patient, and made sure we were safe every step of the way. The team at Nepal Adventures handled everything perfectly. Highly recommended!"
+                                    </p>
+                                    <div class="testimonial-author">
+                                        <img src="images/testimonial-1.jpg" alt="Sarah Johnson" class="author-image">
+                                        <div class="author-info">
+                                            <h5 class="author-name">Sarah Johnson</h5>
+                                            <p class="author-location">
+                                                <i class="fas fa-map-marker-alt"></i> United States
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-item">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8">
+                                <div class="testimonial-card">
+                                    <div class="testimonial-stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <p class="testimonial-text">
+                                        "Amazing cultural tour of Kathmandu Valley! We visited incredible temples, met wonderful local people, and learned so much about Nepali culture. The itinerary was well-planned and our guide was fantastic."
+                                    </p>
+                                    <div class="testimonial-author">
+                                        <img src="images/testimonial-2.jpg" alt="David Chen" class="author-image">
+                                        <div class="author-info">
+                                            <h5 class="author-name">David Chen</h5>
+                                            <p class="author-location">
+                                                <i class="fas fa-map-marker-alt"></i> Singapore
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="carousel-item">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8">
+                                <div class="testimonial-card">
+                                    <div class="testimonial-stars">
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                        <i class="fas fa-star"></i>
+                                    </div>
+                                    <p class="testimonial-text">
+                                        "Chitwan safari exceeded all expectations! Saw rhinos up close, beautiful birds, and even spotted a tiger. The resort was comfortable and the staff were incredibly friendly. Best wildlife experience ever!"
+                                    </p>
+                                    <div class="testimonial-author">
+                                        <img src="images/testimonial-3.jpg" alt="Emma Wilson" class="author-image">
+                                        <div class="author-info">
+                                            <h5 class="author-name">Emma Wilson</h5>
+                                            <p class="author-location">
+                                                <i class="fas fa-map-marker-alt"></i> Australia
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="carousel-control-prev" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#testimonialsCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Newsletter Section -->
+    <section class="newsletter-section py-5">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <div class="newsletter-content">
+                        <i class="fas fa-paper-plane newsletter-icon"></i>
+                        <h2 class="newsletter-title">Subscribe to Our Newsletter</h2>
+                        <p class="newsletter-subtitle">
+                            Get exclusive deals, travel tips, and adventure inspiration delivered to your inbox!
+                        </p>
+                        <form class="newsletter-form" id="newsletterForm">
+                            <div class="input-group">
+                                <input type="email" class="form-control" placeholder="Enter your email address" required>
+                                <button class="btn btn-newsletter" type="submit">
+                                    <i class="fas fa-envelope me-2"></i> Subscribe
+                                </button>
+                            </div>
+                        </form>
+                        <p class="newsletter-privacy">
+                            <i class="fas fa-lock me-1"></i> We respect your privacy. No spam, ever.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="row g-4">
+                <!-- Company Info -->
+                <div class="col-lg-4 col-md-6">
+                    <div class="footer-widget">
+                        <h4 class="footer-title">
+                            <i class="fas fa-mountain me-2"></i> Nepal Adventures
+                        </h4>
+                        <p class="footer-desc">
+                            Your trusted travel partner for unforgettable Nepal experiences. Based in Shankhamul, Kathmandu, we specialize in trekking, cultural tours, and wildlife safaris.
+                        </p>
+                        <div class="social-links">
+                            <a href="#" class="social-link" style="background-color: #1877F2;">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="#" class="social-link" style="background-color: #E4405F;">
+                                <i class="fab fa-instagram"></i>
+                            </a>
+                            <a href="#" class="social-link" style="background-color: #1DA1F2;">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="#" class="social-link" style="background-color: #0077B5;">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                            <a href="#" class="social-link" style="background-color: #FF0000;">
+                                <i class="fab fa-youtube"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Links -->
+                <div class="col-lg-2 col-md-6">
+                    <div class="footer-widget">
+                        <h5 class="footer-widget-title">Quick Links</h5>
+                        <ul class="footer-links">
+                            <li><a href="index.html"><i class="fas fa-chevron-right"></i> Home</a></li>
+                            <li><a href="about.html"><i class="fas fa-chevron-right"></i> About Us</a></li>
+                            <li><a href="destinations.html"><i class="fas fa-chevron-right"></i> Destinations</a></li>
+                            <li><a href="packages.html"><i class="fas fa-chevron-right"></i> Packages</a></li>
+                            <li><a href="contact.html"><i class="fas fa-chevron-right"></i> Contact</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Popular Destinations -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h5 class="footer-widget-title">Popular Destinations</h5>
+                        <ul class="footer-links">
+                            <li><a href="destinations.html"><i class="fas fa-map-marker-alt"></i> Everest Region</a></li>
+                            <li><a href="destinations.html"><i class="fas fa-map-marker-alt"></i> Annapurna</a></li>
+                            <li><a href="destinations.html"><i class="fas fa-map-marker-alt"></i> Pokhara</a></li>
+                            <li><a href="destinations.html"><i class="fas fa-map-marker-alt"></i> Chitwan</a></li>
+                            <li><a href="destinations.html"><i class="fas fa-map-marker-alt"></i> Lumbini</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contact Info -->
+                <div class="col-lg-3 col-md-6">
+                    <div class="footer-widget">
+                        <h5 class="footer-widget-title">Contact Info</h5>
+                        <ul class="footer-contact">
+                            <li>
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>Shankhamul, Kathmandu<br>Nepal</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-phone"></i>
+                                <span>+977-1-4123456<br>+977-9801234567</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-envelope"></i>
+                                <span>info@nepaladventures.com<br>booking@nepaladventures.com</span>
+                            </li>
+                            <li>
+                                <i class="fas fa-clock"></i>
+                                <span>Mon - Sat: 9:00 AM - 6:00 PM</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <p class="copyright">
+                            &copy; 2026 Nepal Adventures. All rights reserved.
+                        </p>
+                    </div>
+                    <div class="col-md-6 text-md-end">
+                        <div class="footer-payment">
+                            <span class="me-2">We Accept:</span>
+                            <i class="fab fa-cc-visa"></i>
+                            <i class="fab fa-cc-mastercard"></i>
+                            <i class="fab fa-cc-paypal"></i>
+                            <i class="fab fa-cc-amex"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollTopBtn" class="scroll-top-btn">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Bootstrap 5 JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JavaScript -->
+    <script src="js/script.js"></script>
+</body>
+</html>

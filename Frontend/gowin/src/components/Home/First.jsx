@@ -5,6 +5,8 @@ import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-mo
 import { ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline"
 import { useSwipeable } from "react-swipeable"
 import React from "react"
+import { Button } from "../ui"
+import colors from "../../theme/colors"
 
 // Updated destinations array with HD images
 const destinations = [
@@ -64,12 +66,18 @@ const AnimatedBackground = () => {
 
       for (let i = 0; i < particleCount; i++) {
         const size = Math.random() * 3 + 1
+        const colors = [
+          `rgba(0, 168, 150, ${Math.random() * 0.4 + 0.1})`, // teal
+          `rgba(255, 107, 53, ${Math.random() * 0.4 + 0.1})`, // orange
+          `rgba(86, 207, 225, ${Math.random() * 0.4 + 0.1})`, // sky blue
+          `rgba(255, 210, 63, ${Math.random() * 0.4 + 0.1})`, // yellow
+        ]
         particles.push({
           x: Math.random() * canvas.width,
           y: Math.random() * canvas.height,
           radius: size,
           originalRadius: size,
-          color: `rgba(59, 130, 246, ${Math.random() * 0.4 + 0.1})`, // blue-500
+          color: colors[Math.floor(Math.random() * colors.length)],
           speedX: Math.random() * 0.5 - 0.25,
           speedY: Math.random() * 0.5 - 0.25,
           opacity: Math.random() * 0.5 + 0.1,
@@ -113,7 +121,7 @@ const AnimatedBackground = () => {
 
           if (distance < 100) {
             ctx.beginPath()
-            ctx.strokeStyle = `rgba(59, 130, 246, ${0.2 * (1 - distance / 100)})` // blue-500
+            ctx.strokeStyle = `rgba(0, 168, 150, ${0.2 * (1 - distance / 100)})` // teal
             ctx.lineWidth = 0.5
             ctx.moveTo(particle.x, particle.y)
             ctx.lineTo(particles[j].x, particles[j].y)
@@ -158,8 +166,8 @@ const ProgressBar = ({ isPaused, activeDestination }) => {
   return (
     <div className="w-full h-1.5 bg-gray-600 rounded-full mt-2 overflow-hidden">
       <motion.div
-        className="h-full bg-blue-500 rounded-full"
-        style={{ width: `${progress}%` }}
+        className="h-full rounded-full"
+        style={{ width: `${progress}%`, background: 'linear-gradient(90deg, #00A896, #56CFE1)' }}
         transition={{ ease: "linear" }}
       />
     </div>
@@ -242,17 +250,11 @@ export default function Place() {
   }
 
   return (
-    <div className="relative w-full min-h-screen bg-gray-900 text-white font-sans overflow-hidden">
-      <style jsx global>{`
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap');
-        body {
-          font-family: 'Poppins', sans-serif;
-          margin: 0;
-          padding: 0;
-        }
-        h1, h2, h3 {
-          font-family: 'Playfair Display', serif;
-        }
+    <div 
+      className="relative w-full min-h-screen text-white font-sans overflow-hidden"
+      style={{ background: colors.neutral.charcoal }}
+    >
+      <style>{`
         .perspective {
           perspective: 1200px;
         }
@@ -262,10 +264,10 @@ export default function Place() {
           border: 1px solid rgba(255, 255, 255, 0.2);
         }
         .glow {
-          box-shadow: 0 4px 20px rgba(59, 130, 246, 0.3);
+          box-shadow: 0 4px 20px rgba(0, 168, 150, 0.5);
         }
         .hover-glow:hover {
-          box-shadow: 0 8px 32px rgba(59, 130, 246, 0.4);
+          box-shadow: 0 8px 32px rgba(0, 168, 150, 0.6);
         }
         @keyframes floating {
           0% { transform: translateY(0px); }
@@ -275,45 +277,26 @@ export default function Place() {
         .floating {
           animation: floating 3s ease-in-out infinite;
         }
-        .gradient-button {
-          background: linear-gradient(45deg, #3b82f6, #60a5fa);
-          background-size: 200% 200%;
-          transition: all 0.4s ease;
-        }
-        .gradient-button:hover {
-          background-position: right center;
-          transform: scale(1.05);
-          box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
-        }
-        .outline-button {
-          background: rgba(255, 255, 255, 0.1);
-          border: 1px solid rgba(59, 130, 246, 0.3);
-          backdrop-filter: blur(4px);
-          transition: all 0.3s ease;
-        }
-        .outline-button:hover {
-          background: rgba(59, 130, 246, 0.1);
-          border-color: rgba(59, 130, 246, 0.5);
-          box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.2);
-        }
         @keyframes textGradient {
           0% { background-position: 0% 50%; }
           50% { background-position: 100% 50%; }
           100% { background-position: 0% 50%; }
         }
         .animated-gradient-text {
-          background: linear-gradient(to right, #1e40af, #3b82f6, #1e40af);
+          background: linear-gradient(to right, #00A896, #56CFE1, #FFD23F, #FF6B35);
           background-size: 200% auto;
           -webkit-background-clip: text;
           background-clip: text;
+          -webkit-text-fill-color: transparent;
           animation: textGradient 5s ease infinite;
         }
         @media (prefers-reduced-motion: reduce) {
           .animated-gradient-text {
             animation: none;
-            background: #3b82f6;
+            background: #00A896;
             -webkit-background-clip: text;
             background-clip: text;
+            -webkit-text-fill-color: transparent;
           }
           .floating {
             animation: none;
@@ -324,7 +307,7 @@ export default function Place() {
           top: 10px;
           left: -5px;
           padding: 3px 8px;
-          background-color: #3b82f6;
+          background-color: #FF6B35;
           color: white;
           font-size: 0.75rem;
           font-weight: 600;
@@ -335,7 +318,7 @@ export default function Place() {
           position: absolute;
           left: 0;
           bottom: -5px;
-          border-top: 5px solid #1e40af;
+          border-top: 5px solid #F26430;
           border-left: 5px solid transparent;
         }
         .price-badge {
@@ -343,7 +326,7 @@ export default function Place() {
           top: 10px;
           right: 10px;
           padding: 4px 8px;
-          background: linear-gradient(45deg, #3b82f6, #60a5fa);
+          background: linear-gradient(45deg, #00A896, #56CFE1);
           color: white;
           font-size: 0.75rem;
           font-weight: 600;
@@ -370,7 +353,7 @@ export default function Place() {
           transition: all 0.3s ease;
         }
         .card-shadow:hover {
-          box-shadow: 0 20px 40px -5px rgba(59, 130, 246, 0.3);
+          box-shadow: 0 20px 40px -5px rgba(0, 168, 150, 0.4);
         }
         .text-shadow {
           text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
@@ -421,7 +404,8 @@ export default function Place() {
             className="max-w-6xl mx-auto text-center lg:text-left"
           >
             <motion.h1
-              className={`text-3xl sm:text-4xl lg:text-6xl font-extrabold leading-tight text-white text-shadow ${prefersReducedMotion ? "text-blue-400" : "animated-gradient-text"}`}
+              className={`text-3xl sm:text-4xl lg:text-6xl font-extrabold leading-tight text-white text-shadow ${prefersReducedMotion ? "" : "animated-gradient-text"}`}
+              style={{ fontFamily: 'Pacifico, cursive' }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
@@ -430,6 +414,7 @@ export default function Place() {
             </motion.h1>
             <motion.p
               className="mt-3 text-sm sm:text-base text-gray-300 leading-relaxed max-w-md mx-auto lg:mx-0 transition-colors duration-300 ease-in-out hover:text-white"
+              style={{ fontFamily: 'Poppins, Montserrat, sans-serif' }}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
@@ -442,7 +427,23 @@ export default function Place() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-
+              <Button
+                variant="primary"
+                size="lg"
+                icon="fas fa-plane-departure"
+                iconRight="fas fa-arrow-right"
+                className="shadow-2xl"
+              >
+                Book Now
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                icon="fas fa-compass"
+                className="shadow-2xl"
+              >
+                Explore More
+              </Button>
             </motion.div>
           </motion.div>
         </AnimatePresence>
@@ -501,8 +502,9 @@ export default function Place() {
                 <motion.button
                   key={index}
                   className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
-                    index === activeDestination ? "bg-blue-500 scale-125 glow" : "bg-gray-600"
+                    index === activeDestination ? "scale-125 glow" : "bg-gray-600"
                   }`}
+                  style={index === activeDestination ? {background: 'linear-gradient(135deg, #00A896, #56CFE1)'} : {}}
                   onClick={() => setActiveDestination(index)}
                   whileHover={{ scale: 1.4 }}
                   whileTap={{ scale: 1.1 }}

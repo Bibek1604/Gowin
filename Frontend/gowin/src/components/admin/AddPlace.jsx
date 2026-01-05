@@ -192,10 +192,40 @@ addPlace({ id: uuidv4(), ...placeData });
 
   return (
     <ErrorBoundary>
-      <div className={`flex min-h-screen ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}>
-        <Sidebar toggleDarkMode={toggleDarkMode} isDarkMode={isDarkMode} />
-        <div className="flex-1 p-6 lg:p-8 max-w-7xl mx-auto pl-64 lg:pl-72">
+      <div className="flex min-h-screen" style={{ background: colors.neutral.offWhite }}>
+        <div className="flex-1 p-8 max-w-7xl mx-auto">
+          <style>{`
+            input:focus, textarea:focus, select:focus {
+              outline: none;
+              border-color: ${colors.primary.teal};
+              box-shadow: 0 0 0 3px ${colors.primary.teal}20;
+            }
+          `}</style>
           <Toaster position="top-right" reverseOrder={false} />
+          
+          {/* Page Header */}
+          <div className="mb-8">
+            <motion.h1
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-4xl font-bold mb-2 flex items-center gap-3"
+              style={{ 
+                fontFamily: 'Playfair Display, Georgia, serif',
+                color: colors.neutral.charcoal
+              }}
+            >
+              <div className="w-12 h-12 rounded-xl flex items-center justify-center"
+                style={{ background: `linear-gradient(135deg, ${colors.primary.teal} 0%, ${colors.accent.orange} 100%)` }}
+              >
+                <i className="fas fa-map-marked-alt text-white"></i>
+              </div>
+              Manage Destinations
+            </motion.h1>
+            <p style={{ color: colors.neutral.gray, fontFamily: 'Inter, Roboto, sans-serif' }}>
+              Add, edit, and manage travel destinations for your platform
+            </p>
+          </div>
+
           <motion.h2
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}

@@ -7,7 +7,6 @@ import Navbar from './Navbar'
 function Home() {
   return (
     <div>
-        <Navbar />
         <First />
         <Place />
         <Map />

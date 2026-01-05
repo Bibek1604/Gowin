@@ -1,25 +1,45 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useAdminStore } from '../Store/AdminStore';
+import colors from '../../theme/colors';
+import gowin from '../../assets/gowin.jpg';
 
 const Sidebar = () => {
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const location = useLocation();
+  const { logout } = useAdminStore();
 
   const navItems = [
     {
+      name: 'Dashboard',
+      to: '/admin',
+      icon: 'fas fa-chart-line',
+      color: colors.accent.orange,
+    },
+    {
       name: 'Add Place',
       to: '/admin/add-place',
-      icon: 'M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z',
+      icon: 'fas fa-map-marked-alt',
+      color: colors.primary.teal,
     },
     {
       name: 'Add Details',
       to: '/admin/add-detail',
-      icon: 'M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
+      icon: 'fas fa-info-circle',
+      color: colors.accent.skyBlue,
+    },
+    {
+      name: 'Add Category',
+      to: '/admin/add-category',
+      icon: 'fas fa-tags',
+      color: colors.accent.yellow,
     },
     {
       name: 'Bookings',
       to: '/admin/add-booking',
-      icon: 'M19 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2',
+      icon: 'fas fa-calendar-check',
+      color: colors.accent.coral,
     },
   ];
 
@@ -41,96 +61,160 @@ const Sidebar = () => {
     }),
   };
 
-  const profileVariants = {
-    collapsed: { height: 0, opacity: 0 },
-    expanded: { height: 'auto', opacity: 1, transition: { duration: 0.3, ease: 'easeOut' } },
-  };
-
   return (
     <motion.div
-      className="h-screen w-64 bg-gradient-to-b from-teal-800 to-teal-900 text-white flex flex-col p-6 fixed top-0 left-0 shadow-2xl z-50"
+      className="h-screen w-64 text-white flex flex-col fixed top-0 left-0 shadow-2xl z-50"
+      style={{ 
+        background: `linear-gradient(180deg, ${colors.neutral.charcoal} 0%, ${colors.neutral.darkGray} 100%)`,
+        fontFamily: 'Inter, Roboto, sans-serif',
+        borderRight: `1px solid ${colors.neutral.gray}40`
+      }}
       variants={sidebarVariants}
       initial="hidden"
       animate="visible"
     >
-      <div className="flex items-center space-x-3 mb-10">
-        <svg className="w-8 h-8 text-coral-500" fill="currentColor" viewBox="0 0 20 20">
-          <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
-        </svg>
-        <h2 className="text-2xl font-bold tracking-tight">Gowin Travel</h2>
-      </div>
-      <nav className="flex-1">
+      {/* Logo */}
+      <Link to="/admin" className="flex items-center gap-3 p-6 border-b group" style={{ borderColor: `${colors.neutral.gray}30` }}>
+        <div className="relative">
+          <img 
+            src={gowin} 
+            alt="Gowin Travel" 
+            className="w-12 h-12 rounded-full shadow-lg group-hover:scale-110 transition-transform duration-300 ring-2"
+            style={{ ringColor: colors.primary.teal }}
+          />
+          <div 
+            className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white"
+            style={{ background: colors.accent.orange }}
+          />
+        </div>
+        <div>
+          <h2 
+            className="text-2xl font-bold"
+            style={{ fontFamily: 'Playfair Display, Georgia, serif', color: colors.primary.teal }}
+          >
+            Gowin
+          </h2>
+          <p className="text-xs" style={{ color: colors.accent.orange }}>Admin Dashboard</p>
+        </div>
+      </Link>
+
+      {/* Navigation */}
+      <nav className="flex-1 px-3 py-6 overflow-y-auto"
+        style={{
+          scrollbarWidth: 'thin',
+          scrollbarColor: `${colors.primary.teal} transparent`
+        }}
+      >
         <ul className="space-y-2">
-          {navItems.map((item, index) => (
-            <motion.li
-              key={item.name}
-              custom={index}
-              variants={navItemVariants}
-              initial="hidden"
-              animate="visible"
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <Link
-                to={item.to}
-                className="flex items-center space-x-3 p-3 rounded-lg transition-all duration-200 hover:bg-teal-700 hover:text-coral-300 focus:outline-none focus:ring-2 focus:ring-coral-500"
-                aria-label={`Navigate to ${item.name}`}
+          {navItems.map((item, index) => {
+            const isActive = location.pathname === item.to;
+            return (
+              <motion.li
+                key={item.name}
+                custom={index}
+                variants={navItemVariants}
+                initial="hidden"
+                animate="visible"
+                whileHover={{ x: 4 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d={item.icon}
-                  />
-                </svg>
-                <span className="font-medium">{item.name}</span>
-              </Link>
-            </motion.li>
-          ))}
+                <Link
+                  to={item.to}
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden"
+                  style={{
+                    background: isActive 
+                      ? `linear-gradient(135deg, ${colors.primary.teal}30 0%, ${colors.primary.teal}20 100%)` 
+                      : 'transparent',
+                    borderLeft: isActive ? `3px solid ${colors.primary.teal}` : '3px solid transparent',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
+                      e.currentTarget.style.borderLeftColor = colors.accent.orange;
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.background = 'transparent';
+                      e.currentTarget.style.borderLeftColor = 'transparent';
+                    }
+                  }}
+                >
+                  <div 
+                    className="w-10 h-10 rounded-lg flex items-center justify-center transition-all"
+                    style={{ 
+                      background: isActive ? item.color : 'rgba(255, 255, 255, 0.1)',
+                    }}
+                  >
+                    <i 
+                      className={`${item.icon} text-lg`}
+                      style={{ color: isActive ? 'white' : item.color }}
+                    ></i>
+                  </div>
+                  <span 
+                    className="font-medium text-sm"
+                    style={{ 
+                      color: isActive ? colors.primary.teal : 'rgba(255, 255, 255, 0.9)',
+                      fontFamily: 'Inter, Roboto, sans-serif'
+                    }}
+                  >
+                    {item.name}
+                  </span>
+                  {isActive && (
+                    <motion.div
+                      layoutId="activeIndicator"
+                      className="absolute right-0 top-0 bottom-0 w-1 rounded-l"
+                      style={{ background: colors.accent.orange }}
+                      transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+                    />
+                  )}
+                </Link>
+              </motion.li>
+            );
+          })}
         </ul>
       </nav>
-      <div className="mt-auto">
-        <motion.div
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="flex items-center space-x-3 p-3 rounded-lg hover:bg-teal-700 transition-all duration-200 cursor-pointer"
-          onClick={() => setIsProfileOpen(!isProfileOpen)}
-          aria-expanded={isProfileOpen}
-          aria-controls="profile-menu"
+
+      {/* User Profile Section */}
+      <div className="p-4 border-t" style={{ borderColor: `${colors.neutral.gray}30` }}>
+        <div 
+          className="p-4 rounded-xl mb-3"
+          style={{ background: `linear-gradient(135deg, ${colors.primary.teal}20 0%, ${colors.accent.orange}20 100%)` }}
         >
-          <div className="w-10 h-10 bg-coral-500 rounded-full flex items-center justify-center">
-            <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-              <path d="M10 10a3 3 0 100-6 3 3 0 000 6zm-7 4a7 7 0 0114 0H3z" />
-            </svg>
+          <div className="flex items-center gap-3">
+            <div 
+              className="w-12 h-12 rounded-full flex items-center justify-center ring-2 ring-white/30"
+              style={{ background: `linear-gradient(135deg, ${colors.primary.teal} 0%, ${colors.accent.orange} 100%)` }}
+            >
+              <i className="fas fa-user-shield text-white text-lg"></i>
+            </div>
+            <div className="flex-1">
+              <p className="font-semibold text-sm" style={{ color: 'white' }}>Admin User</p>
+              <p className="text-xs" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Administrator</p>
+            </div>
           </div>
-          <div>
-            <p className="font-semibold text-sm">Travel Admin</p>
-            <p className="text-xs text-teal-200">admin@gowintravel.com</p>
-          </div>
-        </motion.div>
-        <motion.div
-          id="profile-menu"
-          variants={profileVariants}
-          initial="collapsed"
-          animate={isProfileOpen ? 'expanded' : 'collapsed'}
-          className="overflow-hidden"
+        </div>
+        
+        <button
+          onClick={logout}
+          className="w-full py-3 px-4 rounded-lg font-medium transition-all flex items-center justify-center gap-2 group"
+          style={{
+            background: `linear-gradient(135deg, ${colors.accent.orange} 0%, ${colors.accent.orangeDark} 100%)`,
+            color: 'white',
+            boxShadow: colors.shadows.md
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = colors.shadows.lg;
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = colors.shadows.md;
+          }}
         >
-          <div className="p-3 bg-teal-700 rounded-lg mt-2">
-            <button
-              className="w-full text-left text-sm hover:text-coral-300 transition focus:outline-none focus:ring-2 focus:ring-coral-500"
-              aria-label="Profile Settings"
-            >
-              Profile Settings
-            </button>
-            <button
-              className="w-full text-left text-sm hover:text-coral-300 transition mt-2 focus:outline-none focus:ring-2 focus:ring-coral-500"
-              aria-label="Logout"
-            >
-              Logout
-            </button>
-          </div>
-        </motion.div>
+          <i className="fas fa-sign-out-alt group-hover:translate-x-1 transition-transform"></i>
+          Logout
+        </button>
       </div>
     </motion.div>
   );

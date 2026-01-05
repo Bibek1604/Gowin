@@ -1,86 +1,86 @@
-"use client";
-
 import { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
-import {
-  ChevronLeft,
-  ChevronRight,
-  Star,
-  MapPin,
-  Calendar,
-  Heart,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
 import { Link } from "react-router-dom";
-import usePlaceStore from "../Store/PlaceStore";
 import React from "react";
+import usePlaceStore from "../Store/PlaceStore";
+import { Button, SectionHeader } from "../ui";
+import colors from "../../theme/colors";
 
 function DestinationCard({ destination }) {
   const [isFavorite, setIsFavorite] = useState(false);
 
   return (
-    <div className="relative h-full flex flex-col bg-white rounded-2xl shadow-lg overflow-hidden">
-      <div className="relative h-64 overflow-hidden">
+    <div className="relative h-full flex flex-col bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+      <div className="relative h-64 overflow-hidden group">
         <img
-          src={
-            destination.image ||
-            "/placeholder.svg?height=400&width=600&text=Placeholder"
-          }
+          src={destination.image || "/placeholder.svg"}
           alt={destination.placeName}
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+        
+        {/* Favorite Button */}
         <button
           onClick={(e) => {
             e.stopPropagation();
             setIsFavorite(!isFavorite);
           }}
-          className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/40 transition-colors"
+          className="absolute top-4 right-4 z-10 p-2 rounded-full backdrop-blur-sm transition-all transform hover:scale-110"
+          style={{
+            background: isFavorite ? colors.gradients.vibrant : 'rgba(255, 255, 255, 0.2)'
+          }}
           aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
         >
-          <Heart
-            className={`w-5 h-5 ${
-              isFavorite ? "text-red-500 fill-red-500" : "text-white"
-            }`}
-          />
+          <Heart className={`w-5 h-5 ${isFavorite ? "text-white fill-white" : "text-white"}`} />
         </button>
-        <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
-          <div className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-sm font-bold text-teal-700">
+        
+        {/* Price Badge */}
+        <div className="absolute bottom-4 left-4">
+          <div 
+            className="px-4 py-2 rounded-full text-sm font-bold text-white backdrop-blur-sm shadow-lg"
+            style={{ background: colors.gradients.warm }}
+          >
+            <i className="fas fa-tag mr-2"></i>
             {destination.price || "$2,199"}
           </div>
         </div>
       </div>
+      
       <div className="p-5 flex-grow flex flex-col">
-        <h3 className="text-xl font-bold text-teal-800">
+        <h3 
+          className="text-xl font-bold subheading-font mb-2"
+          style={{ color: colors.primary.teal }}
+        >
           {destination.placeName}
         </h3>
-        <p className="text-teal-600 mt-2 flex-grow text-sm">
+        
+        <p className="flex-grow text-sm mb-4 line-clamp-2 leading-relaxed" style={{ color: colors.neutral.gray }}>
           {destination.description}
         </p>
-        <div className="mt-4 space-y-2 pt-3 border-t border-teal-100">
-          <div className="flex items-center text-sm text-teal-700">
-            <MapPin className="w-4 h-4 mr-2 text-cyan-500" />
+        
+        <div className="space-y-2 pt-3 border-t" style={{ borderColor: colors.accent.skyBlue }}>
+          <div className="flex items-center text-sm" style={{ color: colors.neutral.darkGray }}>
+            <i className="fas fa-globe w-4 mr-2" style={{ color: colors.accent.skyBlue }}></i>
             <span>{destination.continent}</span>
           </div>
-          <div className="flex items-center text-sm text-teal-700">
-            <MapPin className="w-4 h-4 mr-2 text-cyan-500" />
+          
+          <div className="flex items-center text-sm" style={{ color: colors.neutral.darkGray }}>
+            <i className="fas fa-flag w-4 mr-2" style={{ color: colors.primary.teal }}></i>
             <span>{destination.country}</span>
           </div>
-          <div className="flex items-center text-sm text-teal-700">
-            <Calendar className="w-4 h-4 mr-2 text-cyan-500" />
-            <span>Best time: {destination.bestTime || "Spring & Fall"}</span>
+          
+          <div className="flex items-center text-sm" style={{ color: colors.neutral.darkGray }}>
+            <i className="fas fa-calendar-alt w-4 mr-2" style={{ color: colors.accent.yellow }}></i>
+            <span>Best: {destination.bestTime || "Spring & Fall"}</span>
           </div>
-          <div className="flex items-center bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full">
-            <Star className="w-4 h-4 text-amber-500 fill-amber-500" />
-            <Link
-              to={`/details/${destination.id}`} // Updated to include placeId
-              className="text-sm font-medium text-teal-700 ml-1"
-            >
-              <span className="text-sm font-medium text-red-700 ml-1">
-                Details
-              </span>
-            </Link>
-          </div>
+          
+          <Link to={`/details/${destination.id}`} className="block mt-3">
+            <Button variant="primary" size="sm" className="w-full" icon="fas fa-info-circle" iconRight="fas fa-arrow-right">
+              View Details
+            </Button>
+          </Link>
         </div>
       </div>
     </div>
@@ -101,7 +101,6 @@ export default function DestinationsCarousel() {
     const loadDestinations = async () => {
       try {
         if (places.length === 0) {
-          // Add default place if store is empty
           setDestinations([
             {
               id: "1",
@@ -109,7 +108,7 @@ export default function DestinationsCarousel() {
               description: "Experience the charm of traditional Japan.",
               continent: "Asia",
               country: "Japan",
-              image: "https://via.placeholder.com/600x400?text=Kyoto",
+              image: "https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600",
               rating: 4.8,
               price: "$2,199",
               bestTime: "Spring & Fall",
@@ -153,73 +152,91 @@ export default function DestinationsCarousel() {
   }, []);
 
   const nextSlide = () => {
-    if (currentIndex < destinations.length - visibleCount) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
-      setCurrentIndex(0);
-    }
+    setCurrentIndex((prev) => 
+      prev < destinations.length - visibleCount ? prev + 1 : 0
+    );
   };
 
   const prevSlide = () => {
-    if (currentIndex > 0) {
-      setCurrentIndex(currentIndex - 1);
-    } else {
-      setCurrentIndex(destinations.length - visibleCount);
-    }
-  };
-
-  const goToSlide = (index) => {
-    setCurrentIndex(index);
+    setCurrentIndex((prev) => 
+      prev > 0 ? prev - 1 : destinations.length - visibleCount
+    );
   };
 
   const totalPages = Math.ceil(destinations.length / visibleCount);
   const currentPage = Math.floor(currentIndex / visibleCount);
 
+  const headerIcons = [
+    { name: 'fas fa-plane', color: colors.accent.orange },
+    { name: 'fas fa-hotel', color: colors.primary.teal },
+    { name: 'fas fa-mountain', color: colors.accent.skyBlue },
+    { name: 'fas fa-camera', color: colors.accent.yellow },
+  ];
+
   return (
-    <section className="py-16 px-4 bg-gradient-to-r from-cyan-50 to-teal-50">
+    <section 
+      className="py-16 px-4"
+      style={{ background: `linear-gradient(135deg, ${colors.neutral.white} 0%, ${colors.neutral.offWhite} 100%)` }}
+    >
       <div className="max-w-7xl mx-auto">
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-bold mb-4 bg-gradient-to-r from-cyan-700 to-teal-700 bg-clip-text text-transparent">
-            Explore Dream Destinations
-          </h2>
-          <p className="text-lg text-teal-600 max-w-2xl mx-auto">
-            Discover breathtaking locations from around the world
-          </p>
-        </div>
+        <SectionHeader
+          title="Explore Dream Destinations"
+          subtitle={
+            <>
+              <i className="fas fa-compass mr-2" style={{ color: colors.accent.orange }}></i>
+              Discover breathtaking locations from around the world
+              <i className="fas fa-map-marked-alt ml-2" style={{ color: colors.accent.skyBlue }}></i>
+            </>
+          }
+          icons={headerIcons}
+        />
 
         {loading ? (
           <div className="flex justify-center items-center h-96">
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-cyan-200 border-t-cyan-600"></div>
+            <div 
+              className="animate-spin rounded-full h-16 w-16 border-4 border-t-4"
+              style={{ borderColor: colors.neutral.lightGray, borderTopColor: colors.primary.teal }}
+            />
           </div>
         ) : error ? (
-          <div className="text-center text-red-500 bg-red-50 p-6 rounded-xl shadow-sm max-w-xl mx-auto">
-            <div className="text-xl font-semibold mb-2">Oops!</div>
+          <div 
+            className="text-center bg-red-50 p-6 rounded-xl shadow-sm max-w-xl mx-auto"
+            style={{ color: colors.accent.coral }}
+          >
+            <div className="text-xl font-semibold mb-2">
+              <i className="fas fa-exclamation-triangle mr-2"></i>
+              Oops!
+            </div>
             {error}
           </div>
         ) : (
           <div className="relative">
+            {/* Navigation Buttons */}
             <button
               onClick={prevSlide}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-cyan-50 rounded-full p-4 shadow-lg text-teal-700 -ml-6 border border-cyan-100 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-4 shadow-lg -ml-6 focus:outline-none focus:ring-2 transition-all duration-300 transform hover:scale-110"
+              style={{ 
+                color: colors.primary.teal,
+                borderColor: colors.accent.skyBlue,
+                border: '2px solid'
+              }}
               aria-label="Previous destination"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
 
+            {/* Carousel */}
             <div className="overflow-hidden">
               <motion.div
                 ref={carouselRef}
                 className="flex gap-6"
-                animate={{
-                  x: `-${currentIndex * (100 / visibleCount)}%`,
-                }}
+                animate={{ x: `-${currentIndex * (100 / visibleCount)}%` }}
                 transition={{ type: "spring", stiffness: 300, damping: 30 }}
               >
                 {destinations.map((destination) => (
                   <div
                     key={destination.id}
                     className="flex-none w-full sm:w-1/2 lg:w-1/3 px-2"
-                    style={{ paddingBottom: "1rem" }}
                   >
                     <DestinationCard destination={destination} />
                   </div>
@@ -229,22 +246,28 @@ export default function DestinationsCarousel() {
 
             <button
               onClick={nextSlide}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white hover:bg-cyan-50 rounded-full p-4 shadow-lg text-teal-700 -mr-6 border border-cyan-100 focus:outline-none focus:ring-2 focus:ring-cyan-400"
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-4 shadow-lg -mr-6 focus:outline-none focus:ring-2 transition-all duration-300 transform hover:scale-110"
+              style={{ 
+                color: colors.primary.teal,
+                borderColor: colors.accent.skyBlue,
+                border: '2px solid'
+              }}
               aria-label="Next destination"
             >
               <ChevronRight className="w-6 h-6" />
             </button>
 
+            {/* Pagination Dots */}
             <div className="flex justify-center mt-8 space-x-2">
               {Array.from({ length: totalPages }).map((_, index) => (
                 <button
                   key={index}
-                  onClick={() => goToSlide(index * visibleCount)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 focus:outline-none ${
-                    currentPage === index
-                      ? "bg-gradient-to-r from-cyan-500 to-teal-500 w-8"
-                      : "bg-cyan-200 hover:bg-cyan-300"
-                  }`}
+                  onClick={() => setCurrentIndex(index * visibleCount)}
+                  className="h-3 rounded-full transition-all duration-300 focus:outline-none hover:opacity-80"
+                  style={{
+                    width: currentPage === index ? '32px' : '12px',
+                    background: currentPage === index ? colors.gradients.primary : colors.neutral.lightGray
+                  }}
                   aria-label={`Go to page ${index + 1}`}
                 />
               ))}
