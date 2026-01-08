@@ -427,23 +427,7 @@ export default function Place() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.4 }}
             >
-              <Button
-                variant="primary"
-                size="lg"
-                icon="fas fa-plane-departure"
-                iconRight="fas fa-arrow-right"
-                className="shadow-2xl"
-              >
-                Book Now
-              </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                icon="fas fa-compass"
-                className="shadow-2xl"
-              >
-                Explore More
-              </Button>
+
             </motion.div>
           </motion.div>
         </AnimatePresence>

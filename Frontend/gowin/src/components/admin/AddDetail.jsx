@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Plus, Edit, Trash2, X, Save, MapPin, Calendar, DollarSign, Star } from "lucide-react";
 import usePlaceStore from "../Store/PlaceStore"; // Adjust path as needed
 import Sidebar from "./Sidebar";
+import colors from "../../theme/colors";
 import toast, { Toaster } from "react-hot-toast";
 
 // Animation variants for Framer Motion

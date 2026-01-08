@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import Sidebar from './Sidebar';
 import useCategoryStore from '../Store/CategoryStore';
+import colors from '../../theme/colors';
 
 const AddCategory = () => {
   const [category, setCategory] = useState('');

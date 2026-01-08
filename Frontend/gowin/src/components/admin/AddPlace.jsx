@@ -3,6 +3,7 @@ import Sidebar from './Sidebar';
 import usePlaceStore from '../Store/PlaceStore';
 import { Toaster, toast } from 'react-hot-toast';
 import { motion } from 'framer-motion';
+import colors from '../../theme/colors';
 import { v4 as uuidv4 } from 'uuid';
 
 

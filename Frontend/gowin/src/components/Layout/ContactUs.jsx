@@ -1,5 +1,8 @@
 import React from 'react';
-import Contact from '../../assets/Contact.png';
+import baliHero from '../../assets/bali-hero.jpeg';
+import thilandHero from '../../assets/thiland-hero.jpeg';
+import kerelaHero from '../../assets/kerela-hero.jpeg';
+import gowinImg from '../../assets/gowin.jpg';
 import { Card, SectionHeader } from '../ui';
 import colors from '../../theme/colors';
 
@@ -49,11 +52,26 @@ const ContactUs = () => {
         />
 
         <div className="flex flex-col md:flex-row gap-8 items-center">
-          <div className="w-full md:w-1/2">
+          <div className="w-full md:w-1/2 grid grid-cols-2 gap-4">
             <img
-              src={Contact}
-              alt="Go Win Travels"
-              className="w-full rounded-2xl shadow-2xl transform hover:scale-105 transition-all duration-300"
+              src={baliHero}
+              alt="Beautiful Bali Destination"
+              className="rounded-2xl shadow-xl object-cover h-36 md:h-44 w-full hover:scale-105 transition-all duration-300"
+            />
+            <img
+              src={thilandHero}
+              alt="Thailand Beach"
+              className="rounded-2xl shadow-xl object-cover h-36 md:h-44 w-full hover:scale-105 transition-all duration-300"
+            />
+            <img
+              src={kerelaHero}
+              alt="Kerala Backwaters"
+              className="rounded-2xl shadow-xl object-cover h-36 md:h-44 w-full hover:scale-105 transition-all duration-300"
+            />
+            <img
+              src={gowinImg}
+              alt="Gowin Travels"
+              className="rounded-2xl shadow-xl object-cover h-36 md:h-44 w-full hover:scale-105 transition-all duration-300"
             />
           </div>
 

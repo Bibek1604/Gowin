@@ -3,6 +3,7 @@
 import React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Trash2, MapPin, Calendar, Users, Mail } from "lucide-react"
+import colors from "../../theme/colors"
 import { Link } from "react-router-dom"
 import useBookingStore from "../Store/BookingStore" // Adjust path based on your project structure
 import usePlaceStore from "../Store/PlaceStore" // Adjust path based on your project structure

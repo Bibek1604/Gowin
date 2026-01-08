@@ -16,7 +16,7 @@ export const useAdminStore = create(
       logout: () => set({ isAdmin: false }),
     }),
     {
-      name: 'admin-auth', // key in localStorage
+      name: 'admin-auth', 
     }
   )
 )

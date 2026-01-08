@@ -15,7 +15,7 @@ const useBookingStore = create(
             booking.bookingId === bookingId ? { ...booking, ...updatedBooking } : booking
           ),
         })),
-      deleteBooking: (bookingId) =>
+        deleteBooking: (bookingId) =>
         set((state) => ({
           bookings: state.bookings.filter((booking) => booking.bookingId !== bookingId),
         })),
