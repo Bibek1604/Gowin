@@ -1,0 +1,6 @@
+serve.json
+.git
+.gitignore
+node_modules
+dist
+*.md
