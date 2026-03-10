@@ -1,6 +1,7 @@
 import './App.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { useAdminStore } from './components/Store/AdminStore';
 
 import Sidebar from './components/admin/Sidebar';
 import AddCategory from './components/admin/AddCategory';
@@ -43,7 +44,7 @@ function AppContent() {
     <div className="flex flex-col min-h-screen">
       {/* Navbar on all pages except admin and login */}
       {!isAdminRoute && !isLoginRoute && <Navbar />}
-      
+
       <Routes>
         {/* Admin Routes (Protected) */}
         <Route
@@ -130,6 +131,12 @@ function AppContent() {
 
 // Main App component with Router wrapper
 function App() {
+  const initializeAuth = useAdminStore((state) => state.initialize);
+
+  useEffect(() => {
+    initializeAuth();
+  }, [initializeAuth]);
+
   return (
     <Router>
       <AppContent />

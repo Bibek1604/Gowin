@@ -14,7 +14,7 @@ function Booking() {
   const { places } = usePlaceStore()
   const { addBooking } = useBookingStore()
   const location = useLocation()
-  
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -82,43 +82,35 @@ function Booking() {
   }
 
   return (
-    <section className="py-16 px-4 md:px-6 bg-gradient-to-br from-teal-50 via-blue-50 to-white min-h-screen">
+    <section
+      className="py-20 px-4 md:px-6 min-h-screen"
+      style={{ background: colors.neutral.offWhite, fontFamily: 'Outfit, sans-serif' }}
+    >
       <div className="max-w-3xl mx-auto">
         {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: -50 }}
+          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
-          className="text-center mb-12"
+          transition={{ duration: 0.6 }}
+          className="text-center mb-16"
         >
-          <div className="inline-flex items-center justify-center mb-4">
-            <div className="p-3 rounded-full" style={{ background: colors.gradients.primary }}>
-              <MapPin className="w-8 h-8 text-white" />
-            </div>
-          </div>
-          <h1 className="text-4xl sm:text-5xl font-extrabold text-gray-900 tracking-tight mb-2">Book Your Adventure</h1>
-          <p className="text-lg text-gray-700">
-            {location.state?.destinationName 
-              ? `Get ready to explore ${location.state.destinationName}!` 
-              : "Fill in your details to start your journey!"}
+          <h1
+            className="text-4xl sm:text-6xl font-bold uppercase tracking-tight mb-4"
+            style={{ color: colors.primary.navy }}
+          >
+            Start Your Journey
+          </h1>
+          <p className="text-sm uppercase tracking-widest opacity-60" style={{ color: colors.primary.navy }}>
+            {location.state?.destinationName
+              ? `Booking for ${location.state.destinationName}`
+              : "Reservation Form"}
           </p>
-          {location.state?.destinationName && (
-            <motion.p 
-              className="mt-3 inline-block px-4 py-2 rounded-full text-sm font-semibold"
-              style={{ background: colors.gradients.warm, color: 'white' }}
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              ✓ Destination Selected: {location.state.destinationName}
-            </motion.p>
-          )}
         </motion.div>
 
         {/* Booking Form */}
         <motion.form
           onSubmit={handleSubmit}
-          className="bg-white rounded-3xl shadow-xl p-8 md:p-10 border border-teal-100/50 hover:shadow-2xl transition duration-300"
+          className="bg-white rounded-2xl shadow-sm p-8 md:p-12 border border-slate-200"
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
@@ -141,10 +133,9 @@ function Booking() {
                   name="name"
                   value={formData.name}
                   onChange={handleInputChange}
-                  className={`w-full p-4 pl-12 rounded-xl border ${errors.name ? "border-red-400 bg-red-50" : "border-teal-200 bg-white"} focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition duration-300`}
-                  placeholder="Enter your full name"
+                  className={`w-full p-4 rounded-xl border ${errors.name ? "border-red-400 bg-red-50" : "border-slate-200 bg-slate-50"} focus:outline-none focus:ring-1 focus:ring-sky-500 transition-all`}
+                  placeholder="e.g. John Doe"
                 />
-                <Users className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-teal-500" />
               </div>
               {errors.name && (
                 <motion.p
@@ -174,10 +165,9 @@ function Booking() {
                   name="email"
                   value={formData.email}
                   onChange={handleInputChange}
-                  className={`w-full p-4 pl-12 rounded-xl border ${errors.email ? "border-red-400 bg-red-50" : "border-teal-200 bg-white"} focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition duration-300`}
-                  placeholder="Enter your email"
+                  className={`w-full p-4 rounded-xl border ${errors.email ? "border-red-400 bg-red-50" : "border-slate-200 bg-slate-50"} focus:outline-none focus:ring-1 focus:ring-sky-500 transition-all`}
+                  placeholder="email@example.com"
                 />
-                <Mail className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-teal-500" />
               </div>
               {errors.email && (
                 <motion.p
@@ -207,10 +197,9 @@ function Booking() {
                   name="phone"
                   value={formData.phone}
                   onChange={handleInputChange}
-                  className={`w-full p-4 pl-12 rounded-xl border ${errors.phone ? "border-red-400 bg-red-50" : "border-teal-200 bg-white"} focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition duration-300`}
-                  placeholder="Enter your phone number"
+                  className={`w-full p-4 rounded-xl border ${errors.phone ? "border-red-400 bg-red-50" : "border-slate-200 bg-slate-50"} focus:outline-none focus:ring-1 focus:ring-sky-500 transition-all`}
+                  placeholder="+977-..."
                 />
-                <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-teal-500" />
               </div>
               {errors.phone && (
                 <motion.p
@@ -240,10 +229,9 @@ function Booking() {
                   name="address"
                   value={formData.address}
                   onChange={handleInputChange}
-                  className={`w-full p-4 pl-12 rounded-xl border ${errors.address ? "border-red-400 bg-red-50" : "border-teal-200 bg-white"} focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition duration-300`}
-                  placeholder="Enter your address"
+                  className={`w-full p-4 rounded-xl border ${errors.address ? "border-red-400 bg-red-50" : "border-slate-200 bg-slate-50"} focus:outline-none focus:ring-1 focus:ring-sky-500 transition-all`}
+                  placeholder="Your Residence Address"
                 />
-                <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-teal-500" />
               </div>
               {errors.address && (
                 <motion.p
@@ -272,17 +260,16 @@ function Booking() {
                   name="destination"
                   value={formData.destination}
                   onChange={handleInputChange}
-                  className={`w-full p-4 pl-12 rounded-xl border ${errors.destination ? "border-red-400 bg-red-50" : "border-teal-200 bg-white"} focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition duration-300 appearance-none`}
+                  className={`w-full p-4 rounded-xl border ${errors.destination ? "border-red-400 bg-red-50" : "border-slate-200 bg-slate-50"} focus:outline-none focus:ring-1 focus:ring-sky-500 transition-all appearance-none`}
                 >
-                  <option value="">Select a destination</option>
+                  <option value="">Choose Destination</option>
                   {places.map((place) => (
                     <option key={place.id} value={place.id}>
                       {place.placeName || place.title || "Unknown Destination"}
                     </option>
                   ))}
                 </select>
-                <MapPin className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-teal-500 pointer-events-none" />
-                <ChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-teal-500 pointer-events-none" />
+                <ChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 opacity-30 pointer-events-none" />
               </div>
               {errors.destination && (
                 <motion.p
@@ -312,9 +299,8 @@ function Booking() {
                   name="travelDate"
                   value={formData.travelDate}
                   onChange={handleInputChange}
-                  className={`w-full p-4 pl-12 rounded-xl border ${errors.travelDate ? "border-red-400 bg-red-50" : "border-teal-200 bg-white"} focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition duration-300`}
+                  className={`w-full p-4 rounded-xl border ${errors.travelDate ? "border-red-400 bg-red-50" : "border-slate-200 bg-slate-50"} focus:outline-none focus:ring-1 focus:ring-sky-500 transition-all`}
                 />
-                <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-teal-500 pointer-events-none" />
               </div>
               {errors.travelDate && (
                 <motion.p
@@ -345,10 +331,8 @@ function Booking() {
                   value={formData.travelers}
                   onChange={handleInputChange}
                   min="1"
-                  className={`w-full p-4 pl-12 rounded-xl border ${errors.travelers ? "border-red-400 bg-red-50" : "border-teal-200 bg-white"} focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent transition duration-300`}
-                  placeholder="Enter number of travelers"
+                  className={`w-full p-4 rounded-xl border ${errors.travelers ? "border-red-400 bg-red-50" : "border-slate-200 bg-slate-50"} focus:outline-none focus:ring-1 focus:ring-sky-500 transition-all`}
                 />
-                <Users className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-teal-500" />
               </div>
               {errors.travelers && (
                 <motion.p
@@ -366,10 +350,9 @@ function Booking() {
           <motion.button
             type="submit"
             disabled={isSubmitting}
-            className={`w-full mt-8 py-4 rounded-xl font-bold text-lg text-white transition duration-300 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 relative overflow-hidden group ${
-              isSubmitting ? "opacity-75 cursor-not-allowed" : "hover:scale-105"
-            }`}
-            style={{ background: isSubmitting ? colors.primary.tealMuted : colors.gradients.warm }}
+            className={`w-full mt-12 py-5 rounded-xl font-bold uppercase tracking-widest text-white transition-all shadow-lg active:scale-95 ${isSubmitting ? "opacity-75 cursor-not-allowed" : "hover:brightness-110"
+              }`}
+            style={{ background: isSubmitting ? colors.neutral.gray : colors.accent.orange }}
             whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
             whileTap={{ scale: 0.95 }}
             initial={{ opacity: 0, y: 20 }}
@@ -395,52 +378,26 @@ function Booking() {
         <AnimatePresence>
           {showConfirmation && (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              className="mt-8 bg-gradient-to-r from-teal-50 to-blue-50 rounded-3xl p-8 text-center border border-teal-300 shadow-xl"
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.9 }}
+              className="mt-12 bg-white rounded-2xl p-12 text-center border border-slate-200 shadow-2xl"
             >
-              <motion.div
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-                className="flex justify-center mb-4"
+              <h2
+                className="text-3xl font-bold uppercase tracking-tight mb-4"
+                style={{ color: colors.primary.navy }}
               >
-                <div className="p-4 rounded-full" style={{ background: colors.gradients.primary }}>
-                  <CheckCircle className="w-8 h-8 text-white" />
-                </div>
-              </motion.div>
-              <h2 className="text-3xl font-bold text-teal-700 mb-3 tracking-tight">Booking Confirmed! 🎉</h2>
-              <p className="text-gray-700 text-lg mb-6">
-                Thank you, <span className="font-bold">{formData.name || "Traveler"}</span>! Your adventure to{" "}
-                <span className="font-bold">{places.find((p) => p.id === formData.destination)?.placeName || "your destination"}</span> is booked.
+                Booking Success
+              </h2>
+              <p className="text-slate-600 mb-10">
+                Your reservation has been received. Our team will contact you shortly via <span className="font-bold text-slate-900">{formData.email}</span>.
               </p>
-              <p className="text-gray-600 mb-8">
-                We'll send a confirmation email to <span className="font-semibold">{formData.email || "your email"}</span>
-              </p>
-              <div className="space-y-3 text-left bg-white rounded-xl p-4 mb-6 border border-teal-200">
-                <div className="flex items-center text-gray-700">
-                  <CheckCircle className="w-5 h-5 text-teal-600 mr-3" />
-                  <span>Booking Date: {formData.travelDate || "TBD"}</span>
-                </div>
-                <div className="flex items-center text-gray-700">
-                  <CheckCircle className="w-5 h-5 text-teal-600 mr-3" />
-                  <span>Travelers: {formData.travelers}</span>
-                </div>
-                <div className="flex items-center text-gray-700">
-                  <CheckCircle className="w-5 h-5 text-teal-600 mr-3" />
-                  <span>Reference: #{new Date().getTime()}</span>
-                </div>
-              </div>
-              <motion.button
+              <button
                 onClick={() => setShowConfirmation(false)}
-                className="bg-teal-600 text-white py-3 px-8 rounded-full font-semibold text-lg hover:bg-teal-700 transition duration-300 shadow-lg hover:shadow-xl inline-block"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+                className="bg-slate-900 text-white py-4 px-12 rounded-xl font-bold uppercase tracking-widest text-sm hover:bg-black transition-all"
               >
-                Done
-              </motion.button>
+                Return Home
+              </button>
             </motion.div>
           )}
         </AnimatePresence>

@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import colors from '../../theme/colors';
 
-const Button = ({ 
-  children, 
-  variant = 'primary', 
-  size = 'md', 
-  icon, 
+const Button = ({
+  children,
+  variant = 'primary',
+  size = 'md',
+  icon,
   iconRight,
   className = '',
-  ...props 
+  ...props
 }) => {
   const variants = {
     primary: {
@@ -24,13 +24,13 @@ const Button = ({
       },
     },
     secondary: {
-      background: colors.primary.teal,
+      background: colors.primary.navy,
       className: 'text-white font-semibold hover:shadow-lg',
       style: {
         boxShadow: colors.shadows.sm,
       },
       hover: {
-        background: colors.primary.tealDark,
+        background: colors.primary.navyDark,
         boxShadow: colors.shadows.md,
       },
     },
@@ -38,11 +38,11 @@ const Button = ({
       background: 'transparent',
       className: `font-semibold hover:bg-opacity-10`,
       style: {
-        border: `2px solid ${colors.primary.teal}`,
-        color: colors.primary.teal,
+        border: `2px solid ${colors.primary.navy}`,
+        color: colors.primary.navy,
       },
       hover: {
-        background: colors.primary.tealMuted,
+        background: colors.primary.navyMuted,
       },
     },
     ghost: {
@@ -65,17 +65,18 @@ const Button = ({
   return (
     <button
       className={`
-        rounded-lg font-medium
+        rounded-xl font-bold uppercase tracking-widest
         transition-all duration-300 ease-out
         flex items-center justify-center gap-2
         ${sizes[size]}
         ${selectedVariant.className}
         ${className}
       `}
-      style={{ 
+      style={{
         background: selectedVariant.background,
-        fontFamily: 'Inter, Roboto, sans-serif',
-        ...selectedVariant.style 
+        fontFamily: 'Outfit, sans-serif',
+        fontSize: size === 'sm' ? '10px' : '12px',
+        ...selectedVariant.style
       }}
       onMouseEnter={(e) => {
         if (selectedVariant.hover) {

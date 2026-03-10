@@ -1,15 +1,17 @@
-"use client"
+"use client";
 
-import { useState, useEffect, useRef } from "react"
-import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion"
-import { ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline"
-import { useSwipeable } from "react-swipeable"
-import React from "react"
-import { Button } from "../ui"
-import colors from "../../theme/colors"
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence, useMotionValue, useTransform } from "framer-motion";
+import { ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { Navigation, Compass, Star, MapPin, ArrowRight } from "lucide-react";
+import { useSwipeable } from "react-swipeable";
+import { Button } from "../ui";
+import colors from "../../theme/colors";
+import usePlaceStore from "../Store/PlaceStore";
 
 // Updated destinations array with HD images
-const destinations = [
+// Backup default destinations if database is empty
+const defaultDestinations = [
   {
     id: 1,
     name: "Bali",
@@ -39,110 +41,8 @@ const destinations = [
   },
 ]
 
-// Enhanced animated background component
-const AnimatedBackground = () => {
-  const canvasRef = useRef(null)
-
-  useEffect(() => {
-    const canvas = canvasRef.current
-    const ctx = canvas.getContext("2d")
-    let particles = []
-    let animationFrameId
-    const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches
-
-    if (prefersReducedMotion) return
-
-    const setCanvasDimensions = () => {
-      canvas.width = window.innerWidth
-      canvas.height = window.innerHeight
-    }
-
-    setCanvasDimensions()
-    window.addEventListener("resize", setCanvasDimensions)
-
-    const createParticles = () => {
-      particles = []
-      const particleCount = Math.min(80, Math.floor(window.innerWidth / 20))
-
-      for (let i = 0; i < particleCount; i++) {
-        const size = Math.random() * 3 + 1
-        const colors = [
-          `rgba(0, 168, 150, ${Math.random() * 0.4 + 0.1})`, // teal
-          `rgba(255, 107, 53, ${Math.random() * 0.4 + 0.1})`, // orange
-          `rgba(86, 207, 225, ${Math.random() * 0.4 + 0.1})`, // sky blue
-          `rgba(255, 210, 63, ${Math.random() * 0.4 + 0.1})`, // yellow
-        ]
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          radius: size,
-          originalRadius: size,
-          color: colors[Math.floor(Math.random() * colors.length)],
-          speedX: Math.random() * 0.5 - 0.25,
-          speedY: Math.random() * 0.5 - 0.25,
-          opacity: Math.random() * 0.5 + 0.1,
-          pulsate: Math.random() > 0.5,
-          pulsateSpeed: Math.random() * 0.02 + 0.01,
-          pulsateDirection: 1,
-        })
-      }
-    }
-
-    createParticles()
-
-    const animate = () => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-      particles.forEach((particle) => {
-        if (particle.pulsate) {
-          particle.radius += particle.pulsateDirection * particle.pulsateSpeed
-          if (particle.radius > particle.originalRadius * 1.5 || particle.radius < particle.originalRadius * 0.5) {
-            particle.pulsateDirection *= -1
-          }
-        }
-
-        ctx.beginPath()
-        ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2)
-        ctx.fillStyle = particle.color
-        ctx.fill()
-
-        particle.x += particle.speedX
-        particle.y += particle.speedY
-
-        if (particle.x < 0 || particle.x > canvas.width) particle.speedX *= -1
-        if (particle.y < 0 || particle.y > canvas.height) particle.speedY *= -1
-      })
-
-      particles.forEach((particle, i) => {
-        for (let j = i + 1; j < particles.length; j++) {
-          const dx = particle.x - particles[j].x
-          const dy = particle.y - particles[j].y
-          const distance = Math.sqrt(dx * dx + dy * dy)
-
-          if (distance < 100) {
-            ctx.beginPath()
-            ctx.strokeStyle = `rgba(0, 168, 150, ${0.2 * (1 - distance / 100)})` // teal
-            ctx.lineWidth = 0.5
-            ctx.moveTo(particle.x, particle.y)
-            ctx.lineTo(particles[j].x, particles[j].y)
-            ctx.stroke()
-          }
-        }
-      })
-
-      animationFrameId = requestAnimationFrame(animate)
-    }
-
-    animate()
-
-    return () => {
-      window.removeEventListener("resize", setCanvasDimensions)
-      cancelAnimationFrame(animationFrameId)
-    }
-  }, [])
-
-  return <canvas ref={canvasRef} className="absolute inset-0 z-0 pointer-events-none opacity-50" aria-hidden="true" />
-}
+// Cleaned up Hero background for professional clarity
+const AnimatedBackground = () => <div className="absolute inset-0 bg-slate-900/10 pointer-events-none" />;
 
 // Progress bar component for carousel
 const ProgressBar = ({ isPaused, activeDestination }) => {
@@ -164,20 +64,37 @@ const ProgressBar = ({ isPaused, activeDestination }) => {
   }, [isPaused, activeDestination])
 
   return (
-    <div className="w-full h-1.5 bg-gray-600 rounded-full mt-2 overflow-hidden">
+    <div className="w-full h-1 bg-white/20 rounded-full mt-4 overflow-hidden">
       <motion.div
         className="h-full rounded-full"
-        style={{ width: `${progress}%`, background: 'linear-gradient(90deg, #00A896, #56CFE1)' }}
+        style={{ width: `${progress}%`, background: colors.gradients.primary }}
         transition={{ ease: "linear" }}
       />
     </div>
   )
 }
 
-export default function Place() {
+export default function HeroSection() {
+  const { places, fetchPlaces, isLoading } = usePlaceStore();
   const [activeDestination, setActiveDestination] = useState(0)
   const [isPaused, setIsPaused] = useState(false)
   const [isHovering, setIsHovering] = useState(false)
+
+  // Map Supabase places to the format the hero slider expects
+  const destinations = places.length > 0
+    ? places.map(p => ({
+      id: p.id,
+      name: p.location || "Adventure",
+      title: p.title.toUpperCase(),
+      description: p.description,
+      image: (p.images && p.images[0]) || "https://via.placeholder.com/1200x800",
+      featured: true
+    }))
+    : defaultDestinations;
+
+  useEffect(() => {
+    fetchPlaces();
+  }, []);
   const autoSlideIntervalRef = useRef(null)
   const mouseX = useMotionValue(0)
   const mouseY = useMotionValue(0)
@@ -250,120 +167,44 @@ export default function Place() {
   }
 
   return (
-    <div 
-      className="relative w-full min-h-screen text-white font-sans overflow-hidden"
-      style={{ background: colors.neutral.charcoal }}
+    <div
+      className="relative w-full min-h-screen text-white font-sans overflow-hidden bg-[#020617]"
     >
+      {/* Background Route Trails */}
+      <div className="absolute inset-0 opacity-[0.05] pointer-events-none z-0">
+        <svg className="w-full h-full" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 0 200 Q 500 50 1000 200" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="10 10" className="text-sky-400" />
+          <path d="M 200 0 Q 400 500 200 1000" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="10 10" className="text-sky-400" opacity="0.5" />
+        </svg>
+      </div>
+
+      <div className="absolute top-1/4 left-10 opacity-[0.03] animate-float">
+        <Compass className="w-32 h-32" />
+      </div>
+      <div className="absolute bottom-1/4 right-10 opacity-[0.03] animate-float" style={{ animationDelay: '2s' }}>
+        <Navigation className="w-24 h-24 rotate-45" />
+      </div>
       <style>{`
         .perspective {
           perspective: 1200px;
         }
         .glass {
-          background: rgba(255, 255, 255, 0.1);
-          backdrop-filter: blur(10px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          background: rgba(255, 255, 255, 0.03);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(255, 255, 255, 0.08);
         }
         .glow {
-          box-shadow: 0 4px 20px rgba(0, 168, 150, 0.5);
+          box-shadow: 0 0 40px rgba(37, 99, 235, 0.3);
         }
-        .hover-glow:hover {
-          box-shadow: 0 8px 32px rgba(0, 168, 150, 0.6);
+        .text-glow {
+          text-shadow: 0 0 30px rgba(56, 189, 248, 0.5);
         }
-        @keyframes floating {
-          0% { transform: translateY(0px); }
-          50% { transform: translateY(-8px); }
-          100% { transform: translateY(0px); }
-        }
-        .floating {
-          animation: floating 3s ease-in-out infinite;
-        }
-        @keyframes textGradient {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
-        }
-        .animated-gradient-text {
-          background: linear-gradient(to right, #00A896, #56CFE1, #FFD23F, #FF6B35);
-          background-size: 200% auto;
-          -webkit-background-clip: text;
-          background-clip: text;
-          -webkit-text-fill-color: transparent;
-          animation: textGradient 5s ease infinite;
-        }
-        @media (prefers-reduced-motion: reduce) {
-          .animated-gradient-text {
-            animation: none;
-            background: #00A896;
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-          }
-          .floating {
-            animation: none;
-          }
-        }
-        .ribbon {
-          position: absolute;
-          top: 10px;
-          left: -5px;
-          padding: 3px 8px;
-          background-color: #FF6B35;
-          color: white;
-          font-size: 0.75rem;
-          font-weight: 600;
-          z-index: 10;
-        }
-        .ribbon:before {
-          content: '';
-          position: absolute;
-          left: 0;
-          bottom: -5px;
-          border-top: 5px solid #F26430;
-          border-left: 5px solid transparent;
-        }
-        .price-badge {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          padding: 4px 8px;
-          background: linear-gradient(45deg, #00A896, #56CFE1);
-          color: white;
-          font-size: 0.75rem;
-          font-weight: 600;
-          border-radius: 4px;
-          z-index: 10;
-          transform-origin: center;
-        }
-        .card-hover:hover .price-badge {
-          animation: bounce 0.5s ease;
-        }
-        @keyframes bounce {
+        @keyframes subtle-float {
           0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-5px); }
+          50% { transform: translateY(-10px); }
         }
-        .bg-pulse {
-          animation: pulse 4s ease-in-out infinite;
-        }
-        @keyframes pulse {
-          0%, 100% { opacity: 0.3; }
-          50% { opacity: 0.5; }
-        }
-        .card-shadow {
-          box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.2);
-          transition: all 0.3s ease;
-        }
-        .card-shadow:hover {
-          box-shadow: 0 20px 40px -5px rgba(0, 168, 150, 0.4);
-        }
-        .text-shadow {
-          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-        }
-        .nav-button {
-          transition: all 0.3s ease;
-        }
-        .nav-button:hover {
-          transform: scale(1.1);
-          background: rgba(255, 255, 255, 0.2);
+        .animate-float {
+          animation: subtle-float 6s ease-in-out infinite;
         }
       `}</style>
 
@@ -383,51 +224,72 @@ export default function Place() {
             alt={destinations[activeDestination].name}
             className="w-full h-full object-cover"
             loading="lazy"
-            animate={{ scale: [1, 1.03, 1] }}
-            transition={{ duration: 20, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
-            srcSet={`${destinations[activeDestination].image}&w=1200 1200w, ${destinations[activeDestination].image}&w=800 800w, ${destinations[activeDestination].image}&w=400 400w`}
-            sizes="(max-width: 640px) 400px, (max-width: 1024px) 800px, 1200px"
+            animate={{ scale: [1, 1.1, 1] }}
+            transition={{ duration: 30, repeat: Number.POSITIVE_INFINITY, ease: "linear" }}
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-gray-900/60 via-gray-800/40 to-transparent"></div>
-          <div className="absolute inset-0 bg-gradient-to-b from-gray-900/50 via-gray-800/30 to-gray-900/20 mix-blend-overlay"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-[#020617] via-[#020617]/70 to-transparent"></div>
+          <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent"></div>
         </motion.div>
       </AnimatePresence>
 
-      <main className="relative z-10 min-h-screen flex flex-col justify-center px-4 sm:px-6 lg:px-8">
+      <main className="relative z-10 min-h-[90vh] flex flex-col justify-center px-4 sm:px-6 lg:px-12 pt-16">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeDestination}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
-            className="max-w-6xl mx-auto text-center lg:text-left"
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: 30 }}
+            transition={{ duration: 0.8, ease: "circOut" }}
+            className="max-w-4xl lg:text-left text-center"
           >
-            <motion.h1
-              className={`text-3xl sm:text-4xl lg:text-6xl font-extrabold leading-tight text-white text-shadow ${prefersReducedMotion ? "" : "animated-gradient-text"}`}
-              style={{ fontFamily: 'Pacifico, cursive' }}
+            <motion.div
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full glass mb-6 overflow-hidden relative"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ delay: 0.4 }}
             >
-              {destinations[activeDestination].title}
+              <div className="absolute inset-0 bg-sky-400 opacity-10 animate-pulse"></div>
+              <span className="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
+              <span className="text-[10px] font-black uppercase tracking-[0.2em] text-sky-400">Featured Destination</span>
+            </motion.div>
+
+            <motion.h1
+              className="text-5xl sm:text-7xl lg:text-8xl font-black leading-[0.9] text-white tracking-tighter mb-8"
+              style={{ fontFamily: 'Outfit, sans-serif' }}
+            >
+              {destinations[activeDestination].title.split(',')[0]}
+              <span className="block text-sky-400 text-glow">{destinations[activeDestination].title.split(',')[1]}</span>
             </motion.h1>
+
             <motion.p
-              className="mt-3 text-sm sm:text-base text-gray-300 leading-relaxed max-w-md mx-auto lg:mx-0 transition-colors duration-300 ease-in-out hover:text-white"
-              style={{ fontFamily: 'Poppins, Montserrat, sans-serif' }}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
+              className="mt-6 text-base sm:text-lg text-slate-300 leading-relaxed max-w-xl mx-auto lg:mx-0 opacity-90 font-medium"
+              style={{ fontFamily: 'Outfit, sans-serif' }}
             >
               {destinations[activeDestination].description}
             </motion.p>
-            <motion.div
-              className="mt-6 flex flex-col sm:flex-row items-center lg:items-start gap-3 sm:gap-4"
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
-            >
 
+            <motion.div
+              className="mt-12 flex flex-wrap gap-4 justify-center lg:justify-start"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.6 }}
+            >
+              <Button
+                variant="primary"
+                size="lg"
+                className="rounded-full shadow-2xl hover:scale-105 transition-all text-sm uppercase tracking-widest font-black"
+                style={{ background: colors.primary.navy }}
+              >
+                Plan My Trip
+              </Button>
+              <div className="flex -space-x-3 items-center ml-4">
+                {[1, 2, 3, 4].map(i => (
+                  <img key={i} src={`https://i.pravatar.cc/100?u=${i}`} className="w-10 h-10 rounded-full border-2 border-slate-900" alt="Explorer" />
+                ))}
+                <div className="pl-6 text-xs font-bold text-slate-400 uppercase tracking-widest">
+                  Joined by 1.2k+ Explorers
+                </div>
+              </div>
             </motion.div>
           </motion.div>
         </AnimatePresence>
@@ -485,10 +347,9 @@ export default function Place() {
               {destinations.map((_, index) => (
                 <motion.button
                   key={index}
-                  className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full transition-all duration-300 ${
-                    index === activeDestination ? "scale-125 glow" : "bg-gray-600"
-                  }`}
-                  style={index === activeDestination ? {background: 'linear-gradient(135deg, #00A896, #56CFE1)'} : {}}
+                  className={`w-2 h-2 sm:w-2 sm:h-2 rounded-full transition-all duration-500 ${index === activeDestination ? "w-8 shadow-lg" : "bg-white/30"
+                    }`}
+                  style={index === activeDestination ? { background: colors.gradients.primary } : {}}
                   onClick={() => setActiveDestination(index)}
                   whileHover={{ scale: 1.4 }}
                   whileTap={{ scale: 1.1 }}
@@ -534,9 +395,8 @@ const DestinationCard = ({
 
   return (
     <motion.div
-      className={`absolute w-[200px] sm:w-[240px] lg:w-[280px] h-[300px] sm:h-[340px] lg:h-[360px] rounded-2xl overflow-hidden card-shadow cursor-pointer ${
-        index === activeDestination ? "hover-glow" : ""
-      }`}
+      className={`absolute w-[220px] sm:w-[260px] lg:w-[300px] h-[340px] sm:h-[380px] lg:h-[400px] rounded-[2rem] overflow-hidden cursor-pointer shadow-2xl transition-all duration-700 ${index === activeDestination ? "ring-2 ring-sky-400 glow" : ""
+        }`}
       animate={{
         ...getSlideStyles(index),
         scale: index === activeDestination ? (isHovering ? 1.02 : 1) : getSlideStyles(index).scale,

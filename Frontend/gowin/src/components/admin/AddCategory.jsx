@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Sidebar from './Sidebar';
 import useCategoryStore from '../Store/CategoryStore';
@@ -13,7 +13,11 @@ const AddCategory = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState('');
 
-  const { categories, addCategory, updateCategory, deleteCategory } = useCategoryStore();
+  const { categories, addCategory, updateCategory, deleteCategory, fetchCategories, isLoading } = useCategoryStore();
+
+  useEffect(() => {
+    fetchCategories();
+  }, [fetchCategories]);
 
   const generateId = () => crypto.randomUUID();
 
@@ -34,7 +38,7 @@ const AddCategory = () => {
     }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!category.trim() || !description.trim()) {
       setError('Category name and description are required');
@@ -42,21 +46,25 @@ const AddCategory = () => {
     }
 
     const categoryData = {
-      id: editId || generateId(),
       category,
       description,
       image: imagePreview,
     };
 
+    let result;
     if (editId) {
-      updateCategory(editId, categoryData);
-      alert('Category updated successfully!');
+      result = await updateCategory(editId, categoryData);
+      if (result.success) alert('Category updated successfully!');
     } else {
-      addCategory(categoryData);
-      alert('Category added successfully!');
+      result = await addCategory(categoryData);
+      if (result.success) alert('Category added successfully!');
     }
 
-    resetForm();
+    if (result && result.success) {
+      resetForm();
+    } else if (result) {
+      setError('Failed to save category. Please try again.');
+    }
   };
 
   const resetForm = () => {
@@ -70,9 +78,9 @@ const AddCategory = () => {
   };
 
   const handleEdit = (cat) => {
-    setCategory(cat.category);
+    setCategory(cat.name);
     setDescription(cat.description);
-    setImagePreview(cat.image);
+    setImagePreview(cat.image_url);
     setEditId(cat.id);
     setIsModalOpen(true);
   };
@@ -87,13 +95,17 @@ const AddCategory = () => {
   return (
     <div className="flex min-h-screen bg-gray-50">
       <Sidebar />
-      <div className="flex-1 ml-64 p-8">
-        <div className="max-w-3xl mx-auto">
-          <div className="flex justify-between items-center mb-8">
-            <h2 className="text-3xl font-bold text-gray-800">Category Management</h2>
+      <div className="flex-1 ml-64 p-12" style={{ background: colors.neutral.offWhite, fontFamily: 'Outfit, sans-serif' }}>
+        <div className="max-w-5xl mx-auto">
+          <div className="flex justify-between items-center mb-12">
+            <div>
+              <h2 className="text-3xl font-bold uppercase tracking-tight" style={{ color: colors.primary.navy }}>Categories</h2>
+              <p className="text-slate-500 text-sm mt-1">Manage tour destinations and groupings</p>
+            </div>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 transition flex items-center space-x-2"
+              className="px-6 py-3 rounded-xl font-bold uppercase tracking-widest text-xs text-white transition-all shadow-md hover:brightness-110 active:scale-95"
+              style={{ background: colors.primary.navy }}
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
@@ -120,31 +132,31 @@ const AddCategory = () => {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.3 }}
-                  className="flex items-center justify-between p-6 bg-white rounded-xl shadow-sm hover:shadow-md transition"
+                  className="flex items-center justify-between p-6 bg-white rounded-2xl border border-slate-200 shadow-sm"
                 >
                   <div className="flex items-center space-x-4">
-                    {cat.image && (
+                    {cat.image_url && (
                       <img
-                        src={cat.image}
-                        alt={cat.category}
+                        src={cat.image_url}
+                        alt={cat.name}
                         className="w-16 h-16 object-cover rounded-lg"
                       />
                     )}
                     <div>
-                      <h4 className="text-lg font-semibold text-gray-800">{cat.category}</h4>
+                      <h4 className="text-lg font-semibold text-gray-800">{cat.name}</h4>
                       <p className="text-gray-600">{cat.description}</p>
                     </div>
                   </div>
                   <div className="flex space-x-2">
                     <button
                       onClick={() => handleEdit(cat)}
-                      className="text-indigo-600 hover:text-indigo-800 font-medium"
+                      className="text-xs uppercase tracking-widest font-bold px-3 py-1 text-sky-500 hover:text-sky-700"
                     >
                       Edit
                     </button>
                     <button
                       onClick={() => handleDelete(cat.id)}
-                      className="text-red-600 hover:text-red-800 font-medium"
+                      className="text-xs uppercase tracking-widest font-bold px-3 py-1 text-red-500 hover:text-red-700"
                     >
                       Delete
                     </button>
@@ -180,8 +192,8 @@ const AddCategory = () => {
                       type="text"
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
-                      className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition"
-                      placeholder="Enter category name"
+                      className="w-full p-4 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-1 focus:ring-sky-500 transition"
+                      placeholder="e.g. Adventure, Wellness..."
                       required
                     />
                   </div>
@@ -223,17 +235,18 @@ const AddCategory = () => {
                       )}
                     </div>
                   </div>
-                  <div className="flex space-x-4">
+                  <div className="flex space-x-4 pt-4">
                     <button
                       type="submit"
-                      className="flex-1 bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition"
+                      className="flex-1 py-4 rounded-xl font-bold uppercase tracking-widest text-xs text-white transition-all"
+                      style={{ background: colors.accent.orange }}
                     >
-                      {editId ? 'Update Category' : 'Add Category'}
+                      {editId ? 'Save Changes' : 'Create Category'}
                     </button>
                     <button
                       type="button"
                       onClick={resetForm}
-                      className="flex-1 bg-gray-300 text-gray-800 py-3 rounded-lg font-semibold hover:bg-gray-400 transition"
+                      className="flex-1 py-4 rounded-xl font-bold uppercase tracking-widest text-xs transition-all bg-slate-100 text-slate-400 hover:bg-slate-200"
                     >
                       Cancel
                     </button>

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import usePlaceStore from '../Store/PlaceStore';
+import useCategoryStore from '../Store/CategoryStore';
 import { Toaster, toast } from 'react-hot-toast';
 import { motion } from 'framer-motion';
 import colors from '../../theme/colors';
-import { v4 as uuidv4 } from 'uuid';
 
 
 class ErrorBoundary extends React.Component {
@@ -30,20 +30,24 @@ class ErrorBoundary extends React.Component {
 const AddPlace = () => {
   const [placeName, setPlaceName] = useState('');
   const [description, setDescription] = useState('');
-  const [country, setCountry] = useState('');
-  const [continent, setContinent] = useState('');
+  const [price, setPrice] = useState('');
+  const [duration, setDuration] = useState('');
+  const [location, setLocation] = useState('');
+  const [categoryId, setCategoryId] = useState('');
   const [image, setImage] = useState(null);
   const [imagePreview, setImagePreview] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const places = usePlaceStore((state) => state.places);
-  const addPlace = usePlaceStore((state) => state.addPlace);
-  const updatePlace = usePlaceStore((state) => state.updatePlace);
-  const deletePlace = usePlaceStore((state) => state.deletePlace);
+  const { places, addPlace, updatePlace, deletePlace, fetchPlaces, isLoading } = usePlaceStore();
+  const { categories, fetchCategories } = useCategoryStore();
+
+  useEffect(() => {
+    fetchPlaces();
+    fetchCategories();
+  }, [fetchPlaces, fetchCategories]);
 
   const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
 
@@ -69,10 +73,11 @@ const AddPlace = () => {
 
   const validateForm = () => {
     const newErrors = {};
-    if (!placeName.trim()) newErrors.placeName = 'Place name is required';
+    if (!placeName.trim()) newErrors.placeName = 'Title is required';
     if (!description.trim()) newErrors.description = 'Description is required';
-    if (!country.trim()) newErrors.country = 'Country is required';
-    if (!continent.trim()) newErrors.continent = 'Continent is required';
+    if (!price) newErrors.price = 'Price is required';
+    if (!location.trim()) newErrors.location = 'Location is required';
+    if (!categoryId) newErrors.categoryId = 'Category is required';
     if (!image && !editingId) newErrors.image = 'Image is required';
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -80,72 +85,46 @@ const AddPlace = () => {
 
   const handleSubmit = async () => {
     if (!validateForm()) {
-      toast.error('Please fill all required fields!', {
-        className: 'toast-error',
-      });
+      toast.error('Please fill all required fields!');
       return;
     }
 
-    setIsLoading(true);
     const placeData = {
-      placeName: placeName.trim(),
+      title: placeName.trim(),
       description: description.trim(),
-      country: country.trim(),
-      continent: continent.trim(),
+      price: parseFloat(price),
+      duration: duration.trim(),
+      location: location.trim(),
+      category_id: categoryId,
+      images: [imagePreview],
     };
 
     try {
-      if (image) {
-        const reader = new FileReader();
-        reader.readAsDataURL(image);
-        reader.onload = () => {
-          placeData.image = reader.result;
-          if (editingId) {
-            updatePlace(editingId, { id: editingId, ...placeData });
-            toast.success('Place updated successfully!', {
-              className: 'toast-success',
-            });
-          } else {
-addPlace({ id: uuidv4(), ...placeData });
-            toast.success('Place added successfully!', {
-              className: 'toast-success',
-            });
-          }
-          resetForm();
-        };
-        reader.onerror = () => {
-          toast.error('Error reading image file!', {
-            className: 'toast-error',
-          });
-        };
-      } else if (editingId) {
-        const existingPlace = places.find((p) => p.id === editingId);
-        if (!existingPlace) {
-          toast.error('Place not found!', {
-            className: 'toast-error',
-          });
-          return;
-        }
-        updatePlace(editingId, {
-          id: editingId,
-          ...placeData,
-          image: existingPlace.image,
-        });
-        toast.success('Place updated successfully!', {
-          className: 'toast-success',
-        });
+      let result;
+      if (editingId) {
+        result = await updatePlace(editingId, placeData);
+        if (result.success) toast.success('Place updated successfully!');
+      } else {
+        result = await addPlace(placeData);
+        if (result.success) toast.success('Place added successfully!');
+      }
+
+      if (result && result.success) {
         resetForm();
       }
-    } finally {
-      setIsLoading(false);
+    } catch (err) {
+      console.error(err);
+      toast.error('An error occurred.');
     }
   };
 
   const resetForm = () => {
     setPlaceName('');
     setDescription('');
-    setCountry('');
-    setContinent('');
+    setPrice('');
+    setDuration('');
+    setLocation('');
+    setCategoryId('');
     setImage(null);
     setImagePreview(null);
     setEditingId(null);
@@ -153,18 +132,13 @@ addPlace({ id: uuidv4(), ...placeData });
   };
 
   const startEditing = (place) => {
-    if (!place || !place.id) {
-      toast.error('Invalid place data!', {
-        className: 'toast-error',
-      });
-      return;
-    }
-    setPlaceName(place.placeName || '');
+    setPlaceName(place.title || '');
     setDescription(place.description || '');
-    setCountry(place.country || '');
-    setContinent(place.continent || '');
-    setImage(null);
-    setImagePreview(place.image || null);
+    setPrice(place.price || '');
+    setDuration(place.duration || '');
+    setLocation(place.location || '');
+    setCategoryId(place.category_id || '');
+    setImagePreview(place.images ? place.images[0] : null);
     setEditingId(place.id);
     setErrors({});
   };
@@ -180,75 +154,45 @@ addPlace({ id: uuidv4(), ...placeData });
 
   const filteredPlaces = places.filter((place) => {
     if (!place || typeof place !== 'object') return false;
-    const placeName = place.placeName || '';
-    const country = place.country || '';
-    const continent = place.continent || '';
+    const title = place.title || '';
+    const location = place.location || '';
     const query = searchQuery.toLowerCase();
     return (
-      placeName.toLowerCase().includes(query) ||
-      country.toLowerCase().includes(query) ||
-      continent.toLowerCase().includes(query)
+      title.toLowerCase().includes(query) ||
+      location.toLowerCase().includes(query)
     );
   });
 
   return (
     <ErrorBoundary>
-      <div className="flex min-h-screen" style={{ background: colors.neutral.offWhite }}>
-        <div className="flex-1 p-8 max-w-7xl mx-auto">
-          <style>{`
-            input:focus, textarea:focus, select:focus {
-              outline: none;
-              border-color: ${colors.primary.teal};
-              box-shadow: 0 0 0 3px ${colors.primary.teal}20;
-            }
-          `}</style>
-          <Toaster position="top-right" reverseOrder={false} />
-          
+      <div className="flex min-h-screen" style={{ background: colors.neutral.offWhite, fontFamily: 'Outfit, sans-serif' }}>
+        <Sidebar />
+        <div className="flex-1 ml-64 p-12">
+          <Toaster position="top-right" />
+
           {/* Page Header */}
-          <div className="mb-8">
-            <motion.h1
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-4xl font-bold mb-2 flex items-center gap-3"
-              style={{ 
-                fontFamily: 'Playfair Display, Georgia, serif',
-                color: colors.neutral.charcoal
-              }}
-            >
-              <div className="w-12 h-12 rounded-xl flex items-center justify-center"
-                style={{ background: `linear-gradient(135deg, ${colors.primary.teal} 0%, ${colors.accent.orange} 100%)` }}
-              >
-                <i className="fas fa-map-marked-alt text-white"></i>
-              </div>
-              Manage Destinations
-            </motion.h1>
-            <p style={{ color: colors.neutral.gray, fontFamily: 'Inter, Roboto, sans-serif' }}>
-              Add, edit, and manage travel destinations for your platform
-            </p>
+          <div className="mb-12">
+            <h1 className="text-3xl font-bold uppercase tracking-tight" style={{ color: colors.primary.navy }}>
+              Destinations
+            </h1>
+            <p className="text-slate-500 text-sm mt-1">Manage global travel spots and pricing</p>
           </div>
 
-          <motion.h2
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl font-bold mb-8 text-center"
-          >
-            {editingId ? 'Edit Place' : 'Add Place'}
-          </motion.h2>
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className={`bg-white rounded-2xl shadow-lg p-8 mb-10 max-w-lg mx-auto ${isDarkMode ? 'bg-gray-800' : ''}`}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="bg-white rounded-2xl border border-slate-200 p-10 mb-16 shadow-sm"
           >
+            <h3 className="text-xl font-bold mb-8 uppercase tracking-wider" style={{ color: colors.primary.navy }}>
+              {editingId ? 'Modify Destination' : 'New Destination'}
+            </h3>
             <div className="space-y-6">
               <div className="relative">
                 <label className="block text-sm font-medium">Place Name</label>
                 <input
                   type="text"
-                  className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${
-                    errors.placeName ? 'border-red-500' : 'border-gray-300'
-                  } ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
+                  className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${errors.placeName ? 'border-red-500' : 'border-gray-300'
+                    } ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
                   value={placeName}
                   onChange={(e) => setPlaceName(e.target.value)}
                   placeholder="Enter place name"
@@ -267,9 +211,8 @@ addPlace({ id: uuidv4(), ...placeData });
               <div className="relative">
                 <label className="block text-sm font-medium">Description</label>
                 <textarea
-                  className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${
-                    errors.description ? 'border-red-500' : 'border-gray-300'
-                  } ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
+                  className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${errors.description ? 'border-red-500' : 'border-gray-300'
+                    } ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
                   placeholder="Enter description"
@@ -287,55 +230,57 @@ addPlace({ id: uuidv4(), ...placeData });
                 )}
               </div>
               <div className="relative">
-                <label className="block text-sm font-medium">Country</label>
+                <label className="block text-sm font-medium">Category</label>
+                <select
+                  className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 transition-all duration-200 ${errors.categoryId ? 'border-red-500' : 'border-gray-300'
+                    } ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
+                  value={categoryId}
+                  onChange={(e) => setCategoryId(e.target.value)}
+                >
+                  <option value="">Select Category</option>
+                  {categories.map((cat) => (
+                    <option key={cat.id} value={cat.id}>{cat.name}</option>
+                  ))}
+                </select>
+                {errors.categoryId && <p className="text-red-500 text-sm mt-1">{errors.categoryId}</p>}
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="relative">
+                  <label className="block text-sm font-medium">Price ($)</label>
+                  <input
+                    type="number"
+                    className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 transition-all duration-200 ${errors.price ? 'border-red-500' : 'border-gray-300'
+                      } ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    placeholder="e.g. 150"
+                  />
+                  {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
+                </div>
+                <div className="relative">
+                  <label className="block text-sm font-medium">Duration</label>
+                  <input
+                    type="text"
+                    className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 transition-all duration-200 ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
+                    value={duration}
+                    onChange={(e) => setDuration(e.target.value)}
+                    placeholder="e.g. 3 Days / 2 Nights"
+                  />
+                </div>
+              </div>
+
+              <div className="relative">
+                <label className="block text-sm font-medium">Location</label>
                 <input
                   type="text"
-                  className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${
-                    errors.country ? 'border-red-500' : 'border-gray-300'
-                  } ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
-                  value={country}
-                  onChange={(e) => setCountry(e.target.value)}
-                  placeholder="Enter country"
-                  aria-invalid={errors.country ? 'true' : 'false'}
-                  aria-describedby={errors.country ? 'country-error' : undefined}
+                  className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 transition-all duration-200 ${errors.location ? 'border-red-500' : 'border-gray-300'
+                    } ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder="e.g. Pokhara, Nepal"
                 />
-                {errors.country && (
-                  <p id="country-error" className="text-red-500 text-sm mt-1 flex items-center">
-                    <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.414-1.414L11 9.586V6z" />
-                    </svg>
-                    {errors.country}
-                  </p>
-                )}
-              </div>
-              <div className="relative">
-                <label className="block text-sm font-medium">Continent</label>
-                <select
-                  className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${
-                    errors.continent ? 'border-red-500' : 'border-gray-300'
-                  } ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
-                  value={continent}
-                  onChange={(e) => setContinent(e.target.value)}
-                  aria-invalid={errors.continent ? 'true' : 'false'}
-                  aria-describedby={errors.continent ? 'continent-error' : undefined}
-                >
-                  <option value="">Select continent</option>
-                  <option value="Africa">Africa</option>
-                  <option value="Antarctica">Antarctica</option>
-                  <option value="Asia">Asia</option>
-                  <option value="Australia">Australia</option>
-                  <option value="Europe">Europe</option>
-                  <option value="North America">North America</option>
-                  <option value="South America">South America</option>
-                </select>
-                {errors.continent && (
-                  <p id="continent-error" className="text-red-500 text-sm mt-1 flex items-center">
-                    <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.414-1.414L11 9.586V6z" />
-                    </svg>
-                    {errors.continent}
-                  </p>
-                )}
+                {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
               </div>
               <div className="relative">
                 <label className="block text-sm font-medium">
@@ -344,9 +289,8 @@ addPlace({ id: uuidv4(), ...placeData });
                 <input
                   type="file"
                   accept="image/*"
-                  className={`mt-1 w-full p-3 border rounded-lg text-gray-500 transition-all duration-200 ${
-                    errors.image ? 'border-red-500' : 'border-gray-300'
-                  } ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
+                  className={`mt-1 w-full p-3 border rounded-lg text-gray-500 transition-all duration-200 ${errors.image ? 'border-red-500' : 'border-gray-300'
+                    } ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
                   onChange={handleImageChange}
                   aria-invalid={errors.image ? 'true' : 'false'}
                   aria-describedby={errors.image ? 'image-error' : undefined}
@@ -367,31 +311,20 @@ addPlace({ id: uuidv4(), ...placeData });
                   />
                 )}
               </div>
-              <div className="flex space-x-4">
+              <div className="flex space-x-4 pt-6">
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={handleSubmit}
                   disabled={isLoading}
-                  className={`w-full bg-teal-600 text-white py-3 rounded-lg font-medium hover:bg-teal-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 flex items-center justify-center ${
-                    isLoading ? 'opacity-50 cursor-not-allowed' : ''
-                  }`}
-                  aria-label={editingId ? 'Update Place' : 'Add Place'}
+                  className="flex-1 py-4 rounded-xl font-bold uppercase tracking-widest text-xs text-white"
+                  style={{ background: colors.accent.orange }}
                 >
-                  {isLoading ? (
-                    <svg className="animate-spin h-5 w-5 mr-2 text-white" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                    </svg>
-                  ) : null}
                   {isLoading ? 'Processing...' : editingId ? 'Update Place' : 'Add Place'}
                 </motion.button>
                 <motion.button
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                  whileTap={{ scale: 0.98 }}
                   onClick={resetForm}
-                  className="w-full bg-gray-300 text-gray-800 py-3 rounded-lg font-medium hover:bg-gray-400 transition duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                  aria-label="Reset Form"
+                  className="flex-1 bg-slate-100 text-slate-400 py-4 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-slate-200"
                 >
                   Reset
                 </motion.button>
@@ -406,9 +339,8 @@ addPlace({ id: uuidv4(), ...placeData });
           >
             <input
               type="text"
-              className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${
-                isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'
-              }`}
+              className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'
+                }`}
               placeholder="Search places by name, country, or continent"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -459,70 +391,44 @@ addPlace({ id: uuidv4(), ...placeData });
               <p className="mt-4 text-lg">No places found. Add a new destination above!</p>
             </motion.div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
               {filteredPlaces.map((place) => (
-                <motion.div
+                <div
                   key={place.id}
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.3 }}
-                  className={`bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300 relative group ${
-                    isDarkMode ? 'bg-gray-800' : ''
-                  }`}
+                  className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all"
                 >
                   <img
-                    src={place.image || 'https://via.placeholder.com/400x200'}
-                    alt={place.placeName || 'Place'}
-                    className="w-full h-56 object-cover"
+                    src={(place.images && place.images[0]) || 'https://via.placeholder.com/400x200'}
+                    alt={place.title || 'Place'}
+                    className="w-full h-52 object-cover"
                   />
                   <div className="p-6">
-                    <h3 className="text-xl font-semibold">{place.placeName || 'Unknown Place'}</h3>
-                    <p className="text-gray-600 mt-2 line-clamp-3">{place.description || 'No description available'}</p>
-                    <p className="text-gray-500 mt-1">
-                      <span className="font-medium">Country:</span> {place.country || 'Unknown'}
-                    </p>
-                    <p className="text-gray-500">
-                      <span className="font-medium">Continent:</span> {place.continent || 'Unknown'}
-                    </p>
-                    <div className="flex justify-between mt-4">
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => startEditing(place)}
-                        className="bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600 transition duration-200 focus:outline-none focus:ring-2 focus:ring-yellow-500 relative group/button"
-                        aria-label={`Edit ${place.placeName || 'place'}`}
-                      >
-                        Edit
-                        <div className="absolute hidden group-hover/button:block bg-teal-800 text-white text-sm px-2 py-1 rounded-md -top-8 left-1/2 transform -translate-x-1/2">
-                          Edit this place
-                        </div>
-                      </motion.button>
-                      <motion.button
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleDelete(place.id)}
-                        className="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 relative group/button"
-                        aria-label={`Delete ${place.placeName || 'place'}`}
-                      >
-                        Delete
-                        <div className="absolute hidden group-hover/button:block bg-teal-800 text-white text-sm px-2 py-1 rounded-md -top-8 left-1/2 transform -translate-x-1/2">
-                          Delete this place
-                        </div>
-                      </motion.button>
-                    </div>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="mt-4 w-full bg-teal-600 text-white py-2 rounded-lg hover:bg-teal-700 transition duration-200 focus:outline-none focus:ring-2 focus:ring-teal-500 relative group/button"
-                      aria-label={`View details for ${place.placeName || 'place'}`}
-                    >
-                      View Details
-                      <div className="absolute hidden group-hover/button:block bg-teal-800 text-white text-sm px-2 py-1 rounded-md -top-8 left-1/2 transform -translate-x-1/2">
-                        See more about this place
+                    <h3 className="text-lg font-bold uppercase tracking-tight" style={{ color: colors.primary.navy }}>
+                      {place.title}
+                    </h3>
+                    <p className="text-slate-500 text-sm mt-2 line-clamp-2">{place.description}</p>
+
+                    <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4">
+                      <span className="text-xl font-black" style={{ color: colors.accent.orange }}>
+                        ${place.price}
+                      </span>
+                      <div className="flex gap-2">
+                        <button
+                          onClick={() => startEditing(place)}
+                          className="text-[10px] uppercase tracking-widest font-bold text-sky-500 hover:text-sky-700"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() => handleDelete(place.id)}
+                          className="text-[10px] uppercase tracking-widest font-bold text-red-500 hover:text-red-700"
+                        >
+                          Delete
+                        </button>
                       </div>
-                    </motion.button>
+                    </div>
                   </div>
-                </motion.div>
+                </div>
               ))}
             </div>
           )}

@@ -50,15 +50,15 @@ function Dashboard() {
       value: stats.totalPlaces,
       icon: 'fas fa-map-marked-alt',
       gradient: 'vibrant',
-      color: colors.accent.orange,
+      color: colors.primary.navy,
       change: '+12%',
     },
     {
       title: 'Total Bookings',
       value: stats.totalBookings,
-      icon: 'fas fa-calendar-check',
+      icon: 'fas fa-calendar',
       gradient: 'primary',
-      color: colors.primary.teal,
+      color: colors.accent.skyBlue,
       change: '+23%',
     },
     {
@@ -80,22 +80,20 @@ function Dashboard() {
   ];
 
   return (
-    <div 
-      className="min-h-screen p-6"
-      style={{ 
-        background: `linear-gradient(135deg, ${colors.neutral.white} 0%, ${colors.neutral.offWhite} 100%)`,
-
-        fontFamily: 'Poppins, Montserrat, sans-serif'
+    <div
+      className="min-h-screen p-8"
+      style={{
+        background: colors.neutral.offWhite,
+        fontFamily: 'Outfit, sans-serif'
       }}
     >
       {/* Header */}
-      <div className="mb-8">
-        <h1 
-          className="text-4xl font-bold mb-2 heading-font flex items-center gap-3"
-          style={{ color: colors.primary.teal, fontFamily: 'Pacifico, cursive' }}
+      <div className="mb-10">
+        <h1
+          className="text-3xl font-bold mb-2 uppercase tracking-tight"
+          style={{ color: colors.primary.navy }}
         >
-          <i className="fas fa-chart-line" style={{ color: colors.accent.orange }}></i>
-          Dashboard
+          System Overview
         </h1>
         <p style={{ color: colors.neutral.gray }}>
           Welcome to your admin dashboard. Here's an overview of your travel platform.
@@ -111,7 +109,7 @@ function Dashboard() {
                 <p className="text-sm font-medium mb-1" style={{ color: colors.neutral.gray }}>
                   {stat.title}
                 </p>
-                <p 
+                <p
                   className="text-3xl font-bold subheading-font mb-2"
                   style={{ color: stat.color }}
                 >
@@ -127,11 +125,11 @@ function Dashboard() {
               </div>
               <IconBadge icon={stat.icon} gradient={stat.gradient} size="lg" />
             </div>
-            
-            {/* Decorative gradient bar */}
-            <div 
-              className="absolute bottom-0 left-0 right-0 h-1"
-              style={{ background: colors.gradients[stat.gradient] }}
+
+            {/* Simple accent */}
+            <div
+              className="absolute top-0 right-0 w-1 h-full"
+              style={{ background: stat.color }}
             />
           </Card>
         ))}
@@ -139,14 +137,13 @@ function Dashboard() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Bookings */}
-        <Card>
-          <div className="flex items-center gap-3 mb-6">
-            <IconBadge icon="fas fa-receipt" gradient="vibrant" />
-            <h2 
-              className="text-2xl font-bold subheading-font"
-              style={{ color: colors.primary.teal }}
+        <Card className="border-none shadow-sm">
+          <div className="flex items-center gap-3 mb-8">
+            <h2
+              className="text-xl font-bold uppercase tracking-wider"
+              style={{ color: colors.primary.navy }}
             >
-              Recent Bookings
+              Recent Activity
             </h2>
           </div>
 
@@ -155,10 +152,10 @@ function Dashboard() {
               {stats.recentBookings.map((booking, index) => {
                 const place = places.find(p => p.id === booking.placeId);
                 return (
-                  <div 
+                  <div
                     key={index}
                     className="p-4 rounded-xl border-2 hover:shadow-md transition-all"
-                    style={{ 
+                    style={{
                       borderColor: colors.neutral.lightGray,
                       background: 'linear-gradient(135deg, rgba(0, 168, 150, 0.05) 0%, rgba(86, 207, 225, 0.05) 100%)'
                     }}
@@ -181,9 +178,9 @@ function Dashboard() {
                         <p className="font-bold" style={{ color: colors.accent.orange }}>
                           ${booking.amount || '0'}
                         </p>
-                        <span 
+                        <span
                           className="text-xs px-2 py-1 rounded-full"
-                          style={{ 
+                          style={{
                             background: colors.gradients.warm,
                             color: 'white'
                           }}
@@ -205,14 +202,13 @@ function Dashboard() {
         </Card>
 
         {/* Places by Continent */}
-        <Card>
-          <div className="flex items-center gap-3 mb-6">
-            <IconBadge icon="fas fa-globe-americas" gradient="primary" />
-            <h2 
-              className="text-2xl font-bold subheading-font"
-              style={{ color: colors.primary.teal }}
+        <Card className="border-none shadow-sm">
+          <div className="flex items-center gap-3 mb-8">
+            <h2
+              className="text-xl font-bold uppercase tracking-wider"
+              style={{ color: colors.primary.navy }}
             >
-              Places by Continent
+              Regional Distribution
             </h2>
           </div>
 
@@ -221,7 +217,7 @@ function Dashboard() {
               {Object.entries(stats.placesByContinent).map(([continent, count], index) => {
                 const gradients = ['vibrant', 'primary', 'warm', 'cool'];
                 const percentage = ((count / stats.totalPlaces) * 100).toFixed(0);
-                
+
                 return (
                   <div key={index}>
                     <div className="flex items-center justify-between mb-2">
@@ -232,7 +228,7 @@ function Dashboard() {
                         </span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-sm font-bold" style={{ color: colors.primary.teal }}>
+                        <span className="text-sm font-black uppercase tracking-widest" style={{ color: colors.primary.navy }}>
                           {count} {count === 1 ? 'place' : 'places'}
                         </span>
                         <span className="text-xs" style={{ color: colors.neutral.gray }}>
@@ -241,9 +237,9 @@ function Dashboard() {
                       </div>
                     </div>
                     <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
-                      <div 
+                      <div
                         className="h-full rounded-full transition-all duration-500"
-                        style={{ 
+                        style={{
                           width: `${percentage}%`,
                           background: colors.gradients[gradients[index % gradients.length]]
                         }}
@@ -262,21 +258,20 @@ function Dashboard() {
         </Card>
 
         {/* Quick Actions */}
-        <Card className="lg:col-span-2">
-          <div className="flex items-center gap-3 mb-6">
-            <IconBadge icon="fas fa-rocket" gradient="warm" />
-            <h2 
-              className="text-2xl font-bold subheading-font"
-              style={{ color: colors.primary.teal }}
+        <Card className="lg:col-span-2 border-none shadow-sm">
+          <div className="flex items-center gap-3 mb-8">
+            <h2
+              className="text-xl font-bold uppercase tracking-wider"
+              style={{ color: colors.primary.navy }}
             >
-              Quick Actions
+              Quick Controls
             </h2>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
               { icon: 'fas fa-plus-circle', text: 'Add Place', href: '/admin/add-place', color: colors.accent.orange },
-              { icon: 'fas fa-calendar-plus', text: 'Add Booking', href: '/admin/add-booking', color: colors.primary.teal },
+              { icon: 'fas fa-calendar-plus', text: 'Add Booking', href: '/admin/add-booking', color: colors.primary.navy },
               { icon: 'fas fa-tag', text: 'Add Category', href: '/admin/add-category', color: colors.accent.yellow },
               { icon: 'fas fa-info-circle', text: 'Add Detail', href: '/admin/add-detail', color: colors.accent.skyBlue },
             ].map((action, index) => (
@@ -284,7 +279,7 @@ function Dashboard() {
                 key={index}
                 href={action.href}
                 className="p-6 rounded-xl border-2 text-center hover:shadow-lg transition-all transform hover:-translate-y-1"
-                style={{ 
+                style={{
                   borderColor: colors.neutral.lightGray,
                   background: 'white'
                 }}
@@ -297,7 +292,7 @@ function Dashboard() {
                   e.currentTarget.style.background = 'white';
                 }}
               >
-                <i 
+                <i
                   className={`${action.icon} text-4xl mb-3`}
                   style={{ color: action.color }}
                 ></i>

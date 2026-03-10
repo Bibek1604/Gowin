@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import {
@@ -15,7 +15,6 @@ import {
   Check,
 } from "lucide-react"
 import usePlaceStore from "../Store/PlaceStore" // Adjust path as needed
-import React from "react"
 import { Line } from "react-chartjs-2"
 import { Link } from "react-router-dom"
 import colors from "../../theme/colors"
@@ -51,8 +50,7 @@ function DestinationDetails() {
           rating: place.rating || 4.8,
           description:
             place.description ||
-            `Explore the charm of ${
-              place.placeName || "this destination"
+            `Explore the charm of ${place.placeName || "this destination"
             }. Wander through vibrant streets, relax on serene beaches, and immerse yourself in local culture. This journey promises unforgettable memories.`,
           highlights: place.highlights || [
             "Lasting Memories: Unforgettable experiences",
@@ -64,25 +62,25 @@ function DestinationDetails() {
             place.itinerary && place.itinerary.length > 0
               ? place.itinerary
               : [
-                  {
-                    day: 1,
-                    title: "Arrival",
-                    description:
-                      "Arrive and settle in. Enjoy a relaxing evening as you take in the beauty of your new surroundings.",
-                  },
-                  {
-                    day: 2,
-                    title: "Exploration",
-                    description:
-                      "Discover the destination's highlights, from scenic landscapes to bustling markets.",
-                  },
-                  {
-                    day: 3,
-                    title: "Cultural Immersion",
-                    description:
-                      "Connect with the local culture through unique experiences and reflect on your journey.",
-                  },
-                ],
+                {
+                  day: 1,
+                  title: "Arrival",
+                  description:
+                    "Arrive and settle in. Enjoy a relaxing evening as you take in the beauty of your new surroundings.",
+                },
+                {
+                  day: 2,
+                  title: "Exploration",
+                  description:
+                    "Discover the destination's highlights, from scenic landscapes to bustling markets.",
+                },
+                {
+                  day: 3,
+                  title: "Cultural Immersion",
+                  description:
+                    "Connect with the local culture through unique experiences and reflect on your journey.",
+                },
+              ],
           price: place.price || "$2,199",
           bestTime: place.bestTime || "Spring & Fall",
           testimonials: [
@@ -111,30 +109,30 @@ function DestinationDetails() {
   }, [placeId, places])
 
   const handleBooking = () => {
-    navigate('/booking', { 
-      state: { 
+    navigate('/booking', {
+      state: {
         preFilledDestination: destination?.id,
         destinationName: destination?.title,
         destinationLocation: destination?.location
-      } 
+      }
     })
   }
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-gradient-to-br from-teal-100 via-blue-50 to-white">
+      <div className="flex justify-center items-center h-screen bg-[#020617]">
         <div className="flex flex-col items-center gap-6">
           <motion.div
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="h-16 w-16 rounded-full border-4 border-teal-300 border-t-teal-700"
+            className="h-20 w-20 rounded-full border-2 border-white/5 border-t-sky-400 shadow-[0_0_30px_rgba(56,189,248,0.3)]"
           />
-          <motion.p 
-            className="text-teal-700 font-semibold text-xl tracking-tight"
-            animate={{ opacity: [0.5, 1, 0.5] }}
+          <motion.p
+            className="text-[10px] font-black uppercase tracking-[0.4em] text-sky-400"
+            animate={{ opacity: [0.3, 1, 0.3] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
-            Crafting Your Adventure...
+            Mapping Your Odyssey...
           </motion.p>
         </div>
       </div>
@@ -143,16 +141,20 @@ function DestinationDetails() {
 
   if (error || !destination) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-teal-50 via-blue-50 to-white px-6">
-        <motion.div 
-          className="text-center p-10 bg-white rounded-3xl shadow-2xl max-w-lg border border-teal-200"
+      <div className="flex justify-center items-center min-h-screen bg-[#020617] px-6">
+        <motion.div
+          className="text-center p-12 glass rounded-[2.5rem] shadow-2xl max-w-lg border border-white/5"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <h2 className="text-4xl font-bold text-gray-900 mb-5 tracking-tight">Something Went Wrong</h2>
-          <p className="text-gray-700 mb-8 text-lg">{error || "No destination details available."}</p>
+          <div className="w-20 h-20 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto mb-8">
+            <Sparkles className="w-10 h-10 text-rose-500" />
+          </div>
+          <h2 className="text-3xl font-black uppercase tracking-tighter mb-4 text-white">Something Went Wrong</h2>
+          <p className="text-slate-400 mb-10 font-medium leading-relaxed">{error || "No destination details found."}</p>
           <button
-            className="bg-teal-600 text-white py-3 px-10 rounded-full font-semibold text-lg hover:bg-teal-700 transition duration-300 shadow-lg hover:shadow-xl"
+            className="w-full py-5 rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-xs text-white transition-all shadow-2xl hover:bg-sky-500"
+            style={{ background: colors.primary.navy }}
             onClick={() => window.history.back()}
           >
             Back to Destinations
@@ -163,71 +165,67 @@ function DestinationDetails() {
   }
 
   return (
-    <section className="py-16 px-4 md:px-6 bg-gradient-to-br from-teal-50 via-blue-50 to-white min-h-screen">
+    <section
+      className="py-12 px-4 md:px-6 min-h-screen relative overflow-hidden"
+      style={{ background: '#020617', fontFamily: 'Outfit, sans-serif' }}
+    >
+      {/* Background Route Decor */}
+      <div className="absolute inset-0 opacity-[0.05] pointer-events-none z-0">
+        <svg className="w-full h-full" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 0 200 Q 500 50 1000 200" fill="none" stroke="white" strokeWidth="1" strokeDasharray="8 8" />
+          <path d="M 200 0 Q 400 500 200 1000" fill="none" stroke="white" strokeWidth="1" strokeDasharray="8 8" opacity="0.5" />
+        </svg>
+      </div>
+
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-sky-500/5 blur-[150px] rounded-full"></div>
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-600/5 blur-[150px] rounded-full"></div>
       <div className="max-w-7xl mx-auto">
         {/* Hero Section */}
         <motion.div
-          className="relative rounded-3xl overflow-hidden shadow-2xl mb-12"
+          className="relative rounded-[3rem] overflow-hidden shadow-2xl mb-16 border border-white/5"
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          transition={{ duration: 0.8, ease: "circOut" }}
         >
           <motion.img
             src={destination.image}
             alt={destination.title}
-            className="w-full h-96 sm:h-[32rem] object-cover"
+            className="w-full h-96 sm:h-[40rem] object-cover contrast-[1.1]"
             loading="lazy"
-            initial={{ opacity: 0, scale: 1.1 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            initial={{ scale: 1.1 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 10 }}
           />
-          <div 
-            className="absolute inset-0"
-            style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg width='100' height='100' xmlns='http://www.w3.org/2000/svg'%3E%3Crect fill='rgba(0,168,150,0.1)' width='100' height='100'/%3E%3C/svg%3E")` }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-          
-          <div className="absolute bottom-8 left-8 right-8">
-            <motion.h1 
-              className="text-4xl sm:text-5xl font-extrabold text-white mb-4 tracking-tight drop-shadow-lg"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2 }}
+          <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/40 to-transparent" />
+
+          <div className="absolute bottom-12 left-12 right-12">
+            <div className="flex items-center gap-3 mb-6">
+              <span className="px-4 py-1.5 rounded-full bg-sky-500/20 backdrop-blur-md text-[10px] font-black uppercase tracking-[0.3em] text-sky-400 border border-sky-500/30">Official Selection</span>
+            </div>
+            <motion.h1
+              className="text-5xl sm:text-8xl font-black text-white mb-8 tracking-tighter drop-shadow-2xl"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
             >
               {destination.title}
             </motion.h1>
-            <motion.div 
-              className="flex flex-wrap gap-6 text-white/95 text-base sm:text-lg"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.3 }}
+            <motion.div
+              className="flex flex-wrap gap-6 text-white text-[10px] uppercase font-black tracking-[0.2em]"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
             >
-              <div className="flex items-center bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
-                <MapPin className="w-5 h-5 mr-2 text-teal-300" />
-                <span>{destination.location}</span>
+              <div className="flex items-center px-6 py-3 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-xl">
+                <MapPin className="w-4 h-4 mr-3 text-sky-400" />
+                <span className="text-sky-300">{destination.location}</span>
               </div>
-              <div className="flex items-center bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
-                <Star className="w-5 h-5 mr-2 fill-amber-400 text-amber-400" />
-                <span>{destination.rating} (128 reviews)</span>
-              </div>
-              <div className="flex items-center bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full">
-                <Calendar className="w-5 h-5 mr-2 text-teal-300" />
-                <span>{destination.bestTime}</span>
+              <div className="flex items-center px-6 py-3 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-xl">
+                <Star className="w-4 h-4 mr-3 text-sky-400 fill-sky-400" />
+                <span className="text-sky-300">{destination.rating} Global Rating</span>
               </div>
             </motion.div>
           </div>
-          
-          <motion.button
-            onClick={() => setIsFavorite(!isFavorite)}
-            className="absolute top-6 right-6 p-3 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition duration-300 shadow-md"
-            aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-            whileHover={{ scale: 1.15 }}
-            whileTap={{ scale: 0.9 }}
-          >
-            <Heart
-              className={`w-7 h-7 ${isFavorite ? "text-red-500 fill-red-500" : "text-white fill-white/50"}`}
-            />
-          </motion.button>
         </motion.div>
 
         {/* Content Grid */}
@@ -236,73 +234,54 @@ function DestinationDetails() {
           <div className="lg:col-span-2 space-y-8">
             {/* Description Card */}
             <motion.div
-              className="bg-white rounded-3xl shadow-xl p-8 border border-teal-100/50 hover:shadow-2xl transition duration-300"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, ease: "easeOut" }}
+              className="glass rounded-[2rem] p-12 border border-white/5 relative overflow-hidden"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
             >
-              <div className="flex items-center gap-3 mb-5">
-                <div className="p-2 rounded-lg" style={{ background: colors.gradients.primary }}>
-                  <Sparkles className="w-6 h-6 text-white" />
-                </div>
-                <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Your Journey</h2>
-              </div>
-              <p className="text-gray-700 leading-relaxed text-lg text-justify">{destination.description}</p>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 blur-3xl rounded-full translate-x-12 -translate-y-12"></div>
+              <h2 className="text-2xl font-black uppercase tracking-[0.2em] text-sky-400 mb-8">Overview</h2>
+              <p className="text-slate-300 leading-[1.8] text-lg font-medium">{destination.description}</p>
             </motion.div>
 
             {/* Highlights Card */}
             <motion.div
-              className="bg-white rounded-3xl shadow-xl p-8 border border-teal-100/50 hover:shadow-2xl transition duration-300"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+              className="glass rounded-[2rem] p-12 border border-white/5 shadow-2xl"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
             >
-              <div className="flex items-center gap-3 mb-6">
-                <div className="p-2 rounded-lg" style={{ background: colors.gradients.warm }}>
-                  <Sparkles className="w-6 h-6 text-white" />
-                </div>
-                <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Why Visit?</h2>
-              </div>
-              <ul className="space-y-4">
+              <h2 className="text-2xl font-black uppercase tracking-[0.2em] text-sky-400 mb-10">Premium Experiences</h2>
+              <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {destination.highlights.map((highlight, index) => (
-                  <motion.li
+                  <li
                     key={index}
-                    className="flex items-start p-3 rounded-xl bg-gradient-to-r from-teal-50 to-blue-50 border border-teal-100"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.1 }}
-                    whileHover={{ x: 8 }}
+                    className="flex flex-col p-6 rounded-[1.5rem] bg-white/5 border border-white/5 hover:border-sky-500/30 transition-all group"
                   >
-                    <Check className="w-6 h-6 mr-3 text-teal-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-gray-700 text-lg">{highlight}</p>
-                  </motion.li>
+                    <div className="w-10 h-10 rounded-full bg-sky-500/10 flex items-center justify-center mb-4 group-hover:bg-sky-500 transition-colors">
+                      <Check className="w-5 h-5 text-sky-400 group-hover:text-white" />
+                    </div>
+                    <p className="text-slate-200 font-bold uppercase tracking-wider text-xs leading-relaxed">{highlight}</p>
+                  </li>
                 ))}
               </ul>
             </motion.div>
 
-            {/* Itinerary Card */}
             <motion.div
-              className="bg-white rounded-3xl shadow-xl p-8 border border-teal-100/50 hover:shadow-2xl transition duration-300"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+              className="glass rounded-[2rem] p-12 border border-white/5"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.4 }}
             >
               <div
-                className="flex justify-between items-center cursor-pointer"
+                className="flex justify-between items-center cursor-pointer group"
                 onClick={() => setShowItinerary(!showItinerary)}
               >
-                <div className="flex items-center gap-3">
-                  <div className="p-2 rounded-lg" style={{ background: colors.gradients.cool }}>
-                    <Plane className="w-6 h-6 text-white" />
-                  </div>
-                  <h2 className="text-3xl font-bold text-gray-900 tracking-tight">Itinerary</h2>
-                </div>
-                <motion.div animate={{ rotate: showItinerary ? 180 : 0 }} transition={{ duration: 0.4 }}>
-                  {showItinerary ? (
-                    <ChevronUp className="w-7 h-7 text-teal-600" />
-                  ) : (
-                    <ChevronDown className="w-7 h-7 text-teal-600" />
-                  )}
+                <h2 className="text-2xl font-black uppercase tracking-[0.2em] text-sky-400">Voyage Itinerary</h2>
+                <motion.div
+                  animate={{ rotate: showItinerary ? 180 : 0 }}
+                  className="w-10 h-10 rounded-full glass shrink-0 flex items-center justify-center group-hover:bg-sky-500 transition-colors"
+                >
+                  <ChevronDown className="w-6 h-6 text-white" />
                 </motion.div>
               </div>
               <AnimatePresence>
@@ -315,27 +294,22 @@ function DestinationDetails() {
                     className="mt-8 space-y-6"
                   >
                     {destination.itinerary.map((day, index) => (
-                      <motion.div
+                      <div
                         key={index}
-                        className="relative pl-12 pb-4 border-l-4"
-                        style={{ borderLeftColor: index % 2 === 0 ? colors.primary.teal : colors.accent.orange }}
-                        initial={{ opacity: 0, x: -30 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.4, delay: index * 0.1 }}
+                        className="pl-8 pb-8 border-l-2 relative last:pb-0"
+                        style={{ borderLeftColor: colors.accent.skyBlue }}
                       >
-                        <div 
-                          className="absolute -left-5 top-0 w-10 h-10 rounded-full text-white flex items-center justify-center text-base font-bold shadow-md flex items-center justify-center"
-                          style={{ background: index % 2 === 0 ? colors.primary.teal : colors.accent.orange }}
-                        >
-                          {day.day}
-                        </div>
-                        <div className="bg-gradient-to-r from-teal-50 to-blue-50 p-5 rounded-xl border border-teal-100">
-                          <h3 className="text-xl font-bold text-gray-900 mb-2 tracking-tight">
+                        <div
+                          className="absolute -left-[9px] top-4 w-4 h-4 rounded-full border-2 border-[#020617] scale-125"
+                          style={{ background: colors.primary.navy }}
+                        />
+                        <div className="glass p-8 rounded-[1.5rem] border border-white/5 hover:border-white/10 transition-colors">
+                          <h3 className="text-lg font-black text-white mb-3 uppercase tracking-widest">
                             Day {day.day}: {day.title}
                           </h3>
-                          <p className="text-gray-700 text-lg">{day.description}</p>
+                          <p className="text-slate-400 leading-relaxed font-medium">{day.description}</p>
                         </div>
-                      </motion.div>
+                      </div>
                     ))}
                   </motion.div>
                 )}
@@ -343,57 +317,49 @@ function DestinationDetails() {
             </motion.div>
           </div>
 
-          {/* Right Column - Booking Card */}
-          <div>
+          <div className="relative">
             <motion.div
-              className="bg-white rounded-3xl shadow-xl p-8 border border-teal-100/50 sticky top-8 hover:shadow-2xl transition duration-300"
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+              className="glass rounded-[2.5rem] p-2 border border-white/10 sticky top-28 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)]"
+              initial={{ opacity: 0, x: 30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.6 }}
             >
-              <div className="mb-6">
-                <p className="text-gray-600 text-sm font-medium tracking-wide mb-2">STARTING FROM</p>
-                <p className="text-4xl font-extrabold text-transparent bg-clip-text" style={{ backgroundImage: colors.gradients.warm }}>
-                  {destination.price}
-                </p>
-              </div>
+              <div className="p-10">
+                <div className="mb-10 p-8 rounded-[2rem] text-center relative overflow-hidden group" style={{ background: colors.primary.navy }}>
+                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  <p className="text-[10px] font-black tracking-[0.4em] mb-4 text-white/60 uppercase">Starting From</p>
+                  <p className="text-5xl font-black text-white tracking-tighter shadow-sm">
+                    {destination.price}
+                  </p>
+                </div>
 
-              <div className="space-y-4 mb-8">
-                <div className="flex items-center p-3 rounded-lg bg-teal-50 border border-teal-200">
-                  <MapPin className="w-5 h-5 text-teal-600 mr-3" />
-                  <div>
-                    <p className="text-xs text-gray-600 font-semibold">DESTINATION</p>
-                    <p className="text-gray-900 font-semibold">{destination.title}</p>
+                <div className="space-y-6 mb-10">
+                  <div className="flex items-center p-6 rounded-2xl bg-white/5 border border-white/5">
+                    <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center mr-4">
+                      <MapPin className="w-6 h-6 text-orange-500" />
+                    </div>
+                    <div>
+                      <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1">DESTINATION</p>
+                      <p className="text-white font-black text-sm uppercase tracking-tight">{destination.title}</p>
+                    </div>
                   </div>
                 </div>
-                <div className="flex items-center p-3 rounded-lg bg-blue-50 border border-blue-200">
-                  <Calendar className="w-5 h-5 text-blue-600 mr-3" />
-                  <div>
-                    <p className="text-xs text-gray-600 font-semibold">BEST TIME</p>
-                    <p className="text-gray-900 font-semibold">{destination.bestTime}</p>
-                  </div>
+
+                <motion.button
+                  onClick={handleBooking}
+                  className="w-full py-6 rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-xs text-white transition-all shadow-2xl"
+                  style={{ background: colors.accent.orange }}
+                  whileHover={{ scale: 1.05, y: -5 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  Embark Journey
+                </motion.button>
+
+                <div className="flex items-center justify-center gap-4 mt-8 opacity-40">
+                  <Check className="w-4 h-4 text-sky-400" />
+                  <p className="text-[10px] font-black uppercase tracking-widest text-white">Elite Experiences Guaranteed</p>
                 </div>
               </div>
-
-              <motion.button
-                onClick={handleBooking}
-                className="w-full py-4 px-6 rounded-full font-bold text-lg text-white transition duration-300 shadow-lg hover:shadow-xl relative overflow-hidden group"
-                style={{ background: colors.gradients.warm }}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span className="relative z-10 flex items-center justify-center gap-2">
-                  <Plane className="w-5 h-5" />
-                  Book Your Adventure
-                </span>
-                <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition duration-300" />
-              </motion.button>
-
-              <p className="text-center text-gray-600 text-sm mt-6 leading-relaxed">
-                ✓ Best Price Guarantee<br/>
-                ✓ 24/7 Customer Support<br/>
-                ✓ Free Cancellation
-              </p>
             </motion.div>
           </div>
         </div>

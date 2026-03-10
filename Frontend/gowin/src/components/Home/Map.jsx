@@ -1,35 +1,33 @@
-"use client"
-
-import { useEffect, useRef, useState } from "react"
+import React, { useEffect, useRef, useState } from "react"
 import L from "leaflet"
 import "leaflet/dist/leaflet.css"
-import React from "react"
+import colors from "../../theme/colors"
+import { SectionHeader } from "../ui"
 
 // Define sample locations
 const locations = [
-  {name: "Kathmandu, Nepal", lat: 27.6264, lng: 83.3789, color: "#4A8EBC", isHighlighted: true },
-  {name: "London", lat: 51.5074, lng: -0.1278, color: "#5A9ECC",isHighlighted: true },
-  {name: "Dubai", lat: 25.2048, lng: 55.2708, color: "#7ABCEC", isHighlighted: true },
-  {name:"Itly", lat: 41.9028, lng: 12.4964, color: "#5A9ECC", isHighlighted: true},
-  {name:"France", lat: 48.8566, lng: 2.3522, color: "#3B5488", isHighlighted: true},
-  {name:"Germany", lat: 52.5200, lng: 13.4050, color: "#4A8EBC", isHighlighted: true},
-  {name:"Switzerland", lat: 46.9480, lng: 7.4474, color: "#5A9ECC", isHighlighted: true},
-  {name:"Luxembourg", lat: 49.6118, lng: 6.1319, color: "#3B5488", isHighlighted: true},
-  {name:"Netherlands", lat: 52.3676, lng: 4.9041, color: "#4A8EBC", isHighlighted: true},
-  {name:"Belgium", lat: 50.8503, lng: 4.3517, color: "#5A9ECC", isHighlighted: true},
-  {name:"Spain", lat: 40.4168, lng: -3.7038, color: "#3B5488", isHighlighted: true},
-  {name: "China", lat: 35.8617, lng: 104.1954, color: "#3B5488", isHighlighted: true },
-  {name:"Austria", lat: 47.5162, lng: 14.5501, color: "#5A9ECC", isHighlighted: true},
-  {name:"Sweden", lat: 59.3293, lng: 18.0686, color: "#3B5488", isHighlighted: true},
-  {name:"Finland", lat: 60.1695, lng: 24.9354, color: "#4A8EBC", isHighlighted: true},
-  {name:"Norway", lat: 59.9139, lng: 10.7522, color: "#5A9ECC", isHighlighted: true},
-  {name:"Denmark", lat: 55.6761, lng: 12.5683, color: "#3B5488", isHighlighted: true},
-  {name:"Portugal", lat: 38.7223, lng: -9.1393, color: "#4A8EBC", isHighlighted: true},
-  {name:"Ireland", lat: 53.3498, lng: -6.2603, color: "#5A9ECC", isHighlighted: true},
-  {name:"greece", lat: 37.9838, lng: 23.7275, color: "#3B5488", isHighlighted: true},
-  {name:"thailand", lat: 13.7563, lng: 100.5018, color: "#4A8EBC", isHighlighted: true },
-  {name:"Indonesia", lat: -6.2088, lng: 106.8456, color: "#5A9ECC", isHighlighted: true},
-
+  { name: "Kathmandu, Nepal", lat: 27.6264, lng: 83.3789, color: colors.primary.navy, isHighlighted: true },
+  { name: "London", lat: 51.5074, lng: -0.1278, color: colors.accent.skyBlue, isHighlighted: true },
+  { name: "Dubai", lat: 25.2048, lng: 55.2708, color: colors.accent.skyBlue, isHighlighted: true },
+  { name: "Italy", lat: 41.9028, lng: 12.4964, color: colors.accent.skyBlue, isHighlighted: true },
+  { name: "France", lat: 48.8566, lng: 2.3522, color: colors.primary.navy, isHighlighted: true },
+  { name: "Germany", lat: 52.5200, lng: 13.4050, color: colors.accent.skyBlue, isHighlighted: true },
+  { name: "Switzerland", lat: 46.9480, lng: 7.4474, color: colors.accent.skyBlue, isHighlighted: true },
+  { name: "Luxembourg", lat: 49.6118, lng: 6.1319, color: colors.primary.navy, isHighlighted: true },
+  { name: "Netherlands", lat: 52.3676, lng: 4.9041, color: colors.accent.skyBlue, isHighlighted: true },
+  { name: "Belgium", lat: 50.8503, lng: 4.3517, color: colors.accent.skyBlue, isHighlighted: true },
+  { name: "Spain", lat: 40.4168, lng: -3.7038, color: colors.primary.navy, isHighlighted: true },
+  { name: "China", lat: 35.8617, lng: 104.1954, color: colors.primary.navy, isHighlighted: true },
+  { name: "Austria", lat: 47.5162, lng: 14.5501, color: colors.accent.skyBlue, isHighlighted: true },
+  { name: "Sweden", lat: 59.3293, lng: 18.0686, color: colors.primary.navy, isHighlighted: true },
+  { name: "Finland", lat: 60.1695, lng: 24.9354, color: colors.accent.skyBlue, isHighlighted: true },
+  { name: "Norway", lat: 59.9139, lng: 10.7522, color: colors.accent.skyBlue, isHighlighted: true },
+  { name: "Denmark", lat: 55.6761, lng: 12.5683, color: colors.primary.navy, isHighlighted: true },
+  { name: "Portugal", lat: 38.7223, lng: -9.1393, color: colors.accent.skyBlue, isHighlighted: true },
+  { name: "Ireland", lat: 53.3498, lng: -6.2603, color: colors.accent.skyBlue, isHighlighted: true },
+  { name: "Greece", lat: 37.9838, lng: 23.7275, color: colors.primary.navy, isHighlighted: true },
+  { name: "Thailand", lat: 13.7563, lng: 100.5018, color: colors.accent.skyBlue, isHighlighted: true },
+  { name: "Indonesia", lat: -6.2088, lng: 106.8456, color: colors.accent.skyBlue, isHighlighted: true },
 ]
 
 export default function WorldMap() {
@@ -160,37 +158,12 @@ export default function WorldMap() {
   }
 
   return (
-    <div className="w-full bg-[#F5FAFF] py-16 md:py-24 relative overflow-hidden">
-      {/* Decorative elements with low opacity */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {/* Circles */}
-        <div className="absolute top-20 left-10 w-64 h-64 rounded-full bg-[#4A8EBC]/5 animate-pulse-slow"></div>
-        <div className="absolute bottom-40 right-10 w-96 h-96 rounded-full bg-[#3B5488]/5 animate-pulse-slow"></div>
-
-        {/* Grid pattern */}
-        <div
-          className="absolute inset-0 opacity-5"
-          style={{
-            backgroundImage: `radial-gradient(#4A8EBC 1px, transparent 1px)`,
-            backgroundSize: "30px 30px",
-          }}
-        ></div>
-      </div>
-
+    <div className="w-full bg-white py-24 relative overflow-hidden" style={{ fontFamily: 'Outfit, sans-serif' }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-block relative">
-            <div className="absolute -top-4 -left-4 w-8 h-8 rounded-full bg-[#4A8EBC]/20 animate-pulse-slow"></div>
-            <div className="absolute -bottom-4 -right-4 w-8 h-8 rounded-full bg-[#3B5488]/20 animate-pulse-slow"></div>
-            <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-[#1A2A44] to-[#4A8EBC]">
-              Global Presence
-            </h2>
-          </div>
-          <p className="mt-4 text-lg text-[#2B4066]/80 max-w-2xl mx-auto">
-            Connecting Peopl across the world with innovative digital solutions.
-          </p>
-        </div>
+        <SectionHeader
+          title="Global Presence"
+          subtitle="Bridging borders through expert travel and visa solutions"
+        />
 
         {/* Map Container */}
         <div className="relative">
@@ -221,14 +194,15 @@ export default function WorldMap() {
             />
 
             {/* Map overlay decorations */}
-            <div className="absolute top-4 left-4 bg-[#1A2A44]/80 backdrop-blur-sm text-white px-4 py-2 rounded-lg shadow-lg border border-[#4A8EBC]/30 z-10">
-              <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full bg-[#4A8EBC] mr-2 animate-pulse"></div>
+            <div className="absolute top-6 left-6 bg-white/90 backdrop-blur-md px-5 py-3 rounded-2xl shadow-xl border border-slate-100 z-10">
+              <div className="flex items-center gap-3">
+                <div className="w-2.5 h-2.5 rounded-full animate-pulse" style={{ background: colors.accent.skyBlue }}></div>
+                <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.primary.navy }}>Live Network</span>
               </div>
             </div>
 
-            <div className="absolute bottom-4 right-4 bg-[#1A2A44]/80 backdrop-blur-sm text-white px-4 py-2 rounded-lg shadow-lg border border-[#4A8EBC]/30 z-10 text-xs">
-              Serving clients in 10+ countries
+            <div className="absolute bottom-6 right-6 bg-white/90 backdrop-blur-md px-5 py-3 rounded-2xl shadow-xl border border-slate-100 z-10">
+              <span className="text-[10px] font-black uppercase tracking-widest" style={{ color: colors.primary.navy }}>Serving 20+ Global Hubs</span>
             </div>
           </div>
 

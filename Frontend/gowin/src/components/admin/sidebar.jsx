@@ -15,31 +15,31 @@ const Sidebar = () => {
       name: 'Dashboard',
       to: '/admin',
       icon: 'fas fa-chart-line',
-      color: colors.accent.orange,
+      color: colors.primary.navy,
     },
     {
       name: 'Add Place',
       to: '/admin/add-place',
-      icon: 'fas fa-map-marked-alt',
-      color: colors.primary.teal,
+      icon: 'fas fa-plus',
+      color: colors.accent.skyBlue,
     },
     {
       name: 'Add Details',
       to: '/admin/add-detail',
-      icon: 'fas fa-info-circle',
-      color: colors.accent.skyBlue,
+      icon: 'fas fa-list',
+      color: colors.primary.navy,
     },
     {
       name: 'Add Category',
       to: '/admin/add-category',
-      icon: 'fas fa-tags',
-      color: colors.accent.yellow,
+      icon: 'fas fa-tag',
+      color: colors.accent.orange,
     },
     {
       name: 'Bookings',
       to: '/admin/add-booking',
-      icon: 'fas fa-calendar-check',
-      color: colors.accent.coral,
+      icon: 'fas fa-calendar',
+      color: colors.accent.skyBlue,
     },
   ];
 
@@ -63,11 +63,11 @@ const Sidebar = () => {
 
   return (
     <motion.div
-      className="h-screen w-64 text-white flex flex-col fixed top-0 left-0 shadow-2xl z-50"
-      style={{ 
-        background: `linear-gradient(180deg, ${colors.neutral.charcoal} 0%, ${colors.neutral.darkGray} 100%)`,
-        fontFamily: 'Inter, Roboto, sans-serif',
-        borderRight: `1px solid ${colors.neutral.gray}40`
+      className="h-screen w-64 text-white flex flex-col fixed top-0 left-0 shadow-2xl z-50 border-r"
+      style={{
+        background: `linear-gradient(to bottom, #1d4ed8, #2563eb)`,
+        fontFamily: 'Outfit, sans-serif',
+        borderColor: 'rgba(255, 255, 255, 0.1)'
       }}
       variants={sidebarVariants}
       initial="hidden"
@@ -76,33 +76,32 @@ const Sidebar = () => {
       {/* Logo */}
       <Link to="/admin" className="flex items-center gap-3 p-6 border-b group" style={{ borderColor: `${colors.neutral.gray}30` }}>
         <div className="relative">
-          <img 
-            src={gowin} 
-            alt="Gowin Travel" 
+          <img
+            src={gowin}
+            alt="Gowin Travel"
             className="w-12 h-12 rounded-full shadow-lg group-hover:scale-110 transition-transform duration-300 ring-2"
-            style={{ ringColor: colors.primary.teal }}
+            style={{ ringColor: colors.accent.skyBlue }}
           />
-          <div 
+          <div
             className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full border-2 border-white"
             style={{ background: colors.accent.orange }}
           />
         </div>
         <div>
-          <h2 
-            className="text-2xl font-bold"
-            style={{ fontFamily: 'Playfair Display, Georgia, serif', color: colors.primary.teal }}
+          <h2
+            className="text-xl font-bold uppercase tracking-tighter"
+            style={{ color: 'white' }}
           >
-            Gowin
+            Go Win<span style={{ color: colors.accent.skyBlue }}>.</span>
           </h2>
-          <p className="text-xs" style={{ color: colors.accent.orange }}>Admin Dashboard</p>
+          <p className="text-[10px] uppercase tracking-widest font-bold" style={{ color: colors.accent.skyBlue }}>Admin Panel</p>
         </div>
       </Link>
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-6 overflow-y-auto"
         style={{
-          scrollbarWidth: 'thin',
-          scrollbarColor: `${colors.primary.teal} transparent`
+          scrollbarWidth: 'none',
         }}
       >
         <ul className="space-y-2">
@@ -120,42 +119,38 @@ const Sidebar = () => {
               >
                 <Link
                   to={item.to}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-200 group relative overflow-hidden"
                   style={{
-                    background: isActive 
-                      ? `linear-gradient(135deg, ${colors.primary.teal}30 0%, ${colors.primary.teal}20 100%)` 
+                    background: isActive
+                      ? `${colors.primary.navy}80`
                       : 'transparent',
-                    borderLeft: isActive ? `3px solid ${colors.primary.teal}` : '3px solid transparent',
+                    borderLeft: isActive ? `3px solid ${colors.accent.skyBlue}` : '3px solid transparent',
                   }}
                   onMouseEnter={(e) => {
                     if (!isActive) {
                       e.currentTarget.style.background = 'rgba(255, 255, 255, 0.05)';
-                      e.currentTarget.style.borderLeftColor = colors.accent.orange;
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!isActive) {
                       e.currentTarget.style.background = 'transparent';
-                      e.currentTarget.style.borderLeftColor = 'transparent';
                     }
                   }}
                 >
-                  <div 
+                  <div
                     className="w-10 h-10 rounded-lg flex items-center justify-center transition-all"
-                    style={{ 
+                    style={{
                       background: isActive ? item.color : 'rgba(255, 255, 255, 0.1)',
                     }}
                   >
-                    <i 
+                    <i
                       className={`${item.icon} text-lg`}
                       style={{ color: isActive ? 'white' : item.color }}
                     ></i>
                   </div>
-                  <span 
-                    className="font-medium text-sm"
-                    style={{ 
-                      color: isActive ? colors.primary.teal : 'rgba(255, 255, 255, 0.9)',
-                      fontFamily: 'Inter, Roboto, sans-serif'
+                  <span
+                    className="font-medium text-xs uppercase tracking-widest"
+                    style={{
+                      color: isActive ? 'white' : 'rgba(255, 255, 255, 0.6)',
                     }}
                   >
                     {item.name}
@@ -175,44 +170,38 @@ const Sidebar = () => {
         </ul>
       </nav>
 
-      {/* User Profile Section */}
-      <div className="p-4 border-t" style={{ borderColor: `${colors.neutral.gray}30` }}>
-        <div 
-          className="p-4 rounded-xl mb-3"
-          style={{ background: `linear-gradient(135deg, ${colors.primary.teal}20 0%, ${colors.accent.orange}20 100%)` }}
+      <div className="p-4 border-t" style={{ borderColor: `${colors.neutral.gray}20` }}>
+        <div
+          className="p-4 rounded-xl mb-3 flex items-center gap-3"
+          style={{ background: 'rgba(255, 255, 255, 0.05)', border: '1px solid rgba(255, 255, 255, 0.1)' }}
         >
-          <div className="flex items-center gap-3">
-            <div 
-              className="w-12 h-12 rounded-full flex items-center justify-center ring-2 ring-white/30"
-              style={{ background: `linear-gradient(135deg, ${colors.primary.teal} 0%, ${colors.accent.orange} 100%)` }}
-            >
-              <i className="fas fa-user-shield text-white text-lg"></i>
-            </div>
-            <div className="flex-1">
-              <p className="font-semibold text-sm" style={{ color: 'white' }}>Admin User</p>
-              <p className="text-xs" style={{ color: 'rgba(255, 255, 255, 0.7)' }}>Administrator</p>
-            </div>
+          <div
+            className="w-10 h-10 rounded-full flex items-center justify-center bg-slate-800"
+          >
+            <i className="fas fa-user-shield text-sky-400 text-sm"></i>
+          </div>
+          <div className="flex-1">
+            <p className="font-bold text-xs uppercase tracking-wider" style={{ color: 'white' }}>Admin</p>
+            <p className="text-[10px] uppercase opacity-50" style={{ color: 'white' }}>Safe Mode</p>
           </div>
         </div>
-        
+
         <button
           onClick={logout}
-          className="w-full py-3 px-4 rounded-lg font-medium transition-all flex items-center justify-center gap-2 group"
+          className="w-full py-3 px-4 rounded-lg font-medium transition-all flex items-center justify-center gap-2 group text-xs uppercase tracking-widest"
           style={{
-            background: `linear-gradient(135deg, ${colors.accent.orange} 0%, ${colors.accent.orangeDark} 100%)`,
+            background: colors.primary.navy,
             color: 'white',
             boxShadow: colors.shadows.md
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = colors.shadows.lg;
+            e.currentTarget.style.background = colors.accent.orange;
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = colors.shadows.md;
+            e.currentTarget.style.background = colors.primary.navy;
           }}
         >
-          <i className="fas fa-sign-out-alt group-hover:translate-x-1 transition-transform"></i>
+          <i className="fas fa-sign-out-alt"></i>
           Logout
         </button>
       </div>

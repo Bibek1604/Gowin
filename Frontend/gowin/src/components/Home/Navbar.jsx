@@ -5,81 +5,85 @@ import { Link } from 'react-router-dom';
 import colors from '../../theme/colors';
 import { Button } from '../ui';
 
-const NavLink = ({ href, icon, children }) => (
-  <a 
-    href={href} 
-    className="flex items-center gap-2 font-medium transition-all duration-300 relative group"
-    style={{ 
-      color: colors.neutral.darkGray,
-      fontFamily: 'Inter, Roboto, sans-serif',
+const NavLink = ({ href, children }) => (
+  <a
+    href={href}
+    className="flex items-center font-semibold transition-all duration-300 relative group text-sm tracking-wider uppercase h-full"
+    style={{
+      color: colors.neutral.charcoal,
+      fontFamily: 'Outfit, sans-serif',
     }}
   >
-    <i className={`${icon} text-lg`} style={{ color: colors.primary.teal }}></i>
-    <span className="hidden lg:inline">{children}</span>
-    <span 
-      className="absolute bottom-0 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-300"
-      style={{ background: colors.primary.teal }}
+    <span>{children}</span>
+    <span
+      className="absolute -bottom-1 left-0 w-0 h-0.5 group-hover:w-full transition-all duration-300"
+      style={{ background: colors.accent.skyBlue }}
     />
   </a>
 );
 
 const Navbar = () => {
   const { isAdmin, login, logout } = useAdminStore();
+  const [email, setEmail] = useState('admin@gowin.com');
   const [password, setPassword] = useState('');
   const [showInput, setShowInput] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (password.trim()) {
-      login(password);
-      setPassword('');
-      setShowInput(false);
+      const result = await login(email, password);
+      if (result.success) {
+        setPassword('');
+        setShowInput(false);
+      } else {
+        alert('Invalid credentials');
+      }
     }
   };
 
   const navLinks = [
-    { href: '/', icon: 'fas fa-home', text: 'Home' },
-    { href: '/aboutus', icon: 'fas fa-info-circle', text: 'About Us' },
-    { href: '/contactus', icon: 'fas fa-envelope', text: 'Contact' },
-    ...(isAdmin ? [{ href: '/admin', icon: 'fas fa-user-shield', text: 'Admin Panel' }] : []),
+    { href: '/', text: 'Home' },
+    { href: '/aboutus', text: 'About Us' },
+    { href: '/contactus', text: 'Contact' },
+    ...(isAdmin ? [{ href: '/admin', text: 'Admin Panel' }] : []),
   ];
 
   return (
     <>
       {/* Professional Navbar */}
-      <nav 
+      <nav
         className="sticky top-0 z-50 bg-white backdrop-blur-lg"
-        style={{ 
+        style={{
           boxShadow: colors.shadows.sm,
           borderBottom: `1px solid ${colors.neutral.lightGray}`,
         }}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
-            
+
             {/* Logo */}
             <Link to="/" className="flex items-center gap-3 group">
-              <img 
-                src={gowin} 
-                alt="Gowin Travel" 
-                className="h-12 w-12 rounded-full transition-transform duration-300 group-hover:scale-105" 
+              <img
+                src={gowin}
+                alt="Gowin Travel"
+                className="h-12 w-12 rounded-full transition-transform duration-300 group-hover:scale-105"
                 style={{ boxShadow: colors.shadows.sm }}
               />
               <div>
-                <div 
-                  className="text-2xl font-bold heading-font"
-                  style={{ 
-                    fontFamily: 'Playfair Display, Georgia, serif',
-                    color: colors.neutral.charcoal,
+                <div
+                  className="text-2xl font-black uppercase tracking-tighter"
+                  style={{
+                    fontFamily: 'Outfit, sans-serif',
+                    color: colors.primary.navy,
                   }}
                 >
-                  Gowin<span style={{ color: colors.primary.teal }}> International</span>
+                  Go Win<span style={{ color: colors.accent.skyBlue }}> International</span>
                 </div>
-                <div 
-                  className="text-xs tracking-wide"
-                  style={{ 
-                    color: colors.neutral.gray,
-                    fontFamily: 'Inter, Roboto, sans-serif',
+                <div
+                  className="text-[10px] font-bold uppercase tracking-[0.3em] opacity-40 ml-1"
+                  style={{
+                    fontFamily: 'Outfit, sans-serif',
+                    color: colors.primary.navy,
                   }}
                 >
                   Explore Beyond Borders
@@ -87,13 +91,11 @@ const Navbar = () => {
               </div>
             </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-8 h-full">
               {navLinks.map((link, index) => (
-                <NavLink 
+                <NavLink
                   key={index}
                   href={link.href}
-                  icon={link.icon}
                 >
                   {link.text}
                 </NavLink>
@@ -103,20 +105,25 @@ const Navbar = () => {
             {/* Desktop Login/Logout */}
             <div className="hidden md:flex items-center gap-3">
               {!isAdmin && showInput && (
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter Password"
-                  className="px-4 py-2 rounded-lg border-2 focus:outline-none transition-all"
-                  style={{ 
-                    borderColor: colors.neutral.lightGray,
-                    fontFamily: 'Inter, Roboto, sans-serif',
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = colors.primary.teal}
-                  onBlur={(e) => e.target.style.borderColor = colors.neutral.lightGray}
-                  onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
-                />
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Email"
+                    className="px-3 py-2 rounded-lg border-2 focus:outline-none transition-all w-40 text-sm"
+                    style={{ borderColor: colors.neutral.lightGray }}
+                  />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    className="px-3 py-2 rounded-lg border-2 focus:outline-none transition-all w-32 text-sm"
+                    style={{ borderColor: colors.neutral.lightGray }}
+                    onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                  />
+                </div>
               )}
               <Button
                 variant="primary"
@@ -135,60 +142,65 @@ const Navbar = () => {
             </div>
 
             {/* Mobile Hamburger */}
-            <button 
-              className="md:hidden text-2xl transition-transform duration-300 hover:scale-110"
+            <button
+              className="md:hidden text-2xl transition-transform duration-300"
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               aria-label="Toggle menu"
             >
-              <i 
-                className={`fas ${isMobileMenuOpen ? 'fa-times' : 'fa-bars'}`}
-                style={{ color: colors.primary.teal }}
-              ></i>
+              <div className="flex flex-col gap-1.5 w-6">
+                <span className={`block h-[2px] w-full transition-all duration-300 ${isMobileMenuOpen ? 'rotate-45 translate-y-2' : ''}`} style={{ background: colors.primary.navy }} />
+                <span className={`block h-[2px] w-full transition-all duration-300 ${isMobileMenuOpen ? 'opacity-0' : ''}`} style={{ background: colors.primary.navy }} />
+                <span className={`block h-[2px] w-full transition-all duration-300 ${isMobileMenuOpen ? '-rotate-45 -translate-y-2' : ''}`} style={{ background: colors.primary.navy }} />
+              </div>
             </button>
           </div>
         </div>
 
         {/* Mobile Menu */}
         {isMobileMenuOpen && (
-          <div 
+          <div
             className="md:hidden bg-white p-4 space-y-4 animate-fadeIn"
-            style={{ 
+            style={{
               boxShadow: colors.shadows.md,
               borderTop: `1px solid ${colors.neutral.lightGray}`
             }}
           >
             {navLinks.map((link, index) => (
-              <a 
+              <a
                 key={index}
-                href={link.href} 
-                className="flex items-center gap-3 transition-all duration-200 font-medium py-2"
+                href={link.href}
+                className="block text-sm font-bold uppercase tracking-widest py-3 border-b border-slate-50"
                 onClick={() => setIsMobileMenuOpen(false)}
-                style={{ 
-                  color: colors.neutral.darkGray,
-                  fontFamily: 'Inter, Roboto, sans-serif',
+                style={{
+                  color: colors.primary.navy,
+                  fontFamily: 'Outfit, sans-serif',
                 }}
               >
-                <i className={`${link.icon} text-xl`} style={{ color: colors.primary.teal }}></i>
                 {link.text}
               </a>
             ))}
-            
+
             <div className="pt-4 border-t" style={{ borderColor: colors.neutral.lightGray }}>
               {!isAdmin && showInput && (
-                <input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter Password"
-                  className="w-full px-4 py-2 rounded-lg border-2 focus:outline-none mb-2 transition-all"
-                  style={{ 
-                    borderColor: colors.neutral.lightGray,
-                    fontFamily: 'Inter, Roboto, sans-serif',
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = colors.primary.teal}
-                  onBlur={(e) => e.target.style.borderColor = colors.neutral.lightGray}
-                  onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
-                />
+                <div className="space-y-2 mb-2">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Admin Email"
+                    className="w-full px-4 py-2 rounded-lg border-2 focus:outline-none transition-all"
+                    style={{ borderColor: colors.neutral.lightGray }}
+                  />
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Password"
+                    className="w-full px-4 py-2 rounded-lg border-2 focus:outline-none transition-all"
+                    style={{ borderColor: colors.neutral.lightGray }}
+                    onKeyPress={(e) => e.key === 'Enter' && handleLogin()}
+                  />
+                </div>
               )}
               <Button
                 variant="primary"

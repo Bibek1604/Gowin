@@ -1,85 +1,75 @@
-import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
-import { ChevronLeft, ChevronRight, Heart } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
-import React from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Globe,
+  MapPin,
+  Coffee,
+  Info,
+  ArrowRight,
+  Navigation,
+  Compass,
+  Star
+} from "lucide-react";
 import usePlaceStore from "../Store/PlaceStore";
 import { Button, SectionHeader } from "../ui";
 import colors from "../../theme/colors";
 
 function DestinationCard({ destination }) {
-  const [isFavorite, setIsFavorite] = useState(false);
-
   return (
-    <div className="relative h-full flex flex-col bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-      <div className="relative h-64 overflow-hidden group">
+    <div
+      className="relative h-full flex flex-col rounded-[2.5rem] border border-white/5 shadow-2x transition-all duration-500 group hover:translate-y-[-5px]"
+      style={{ fontFamily: 'Outfit, sans-serif', background: 'rgba(255, 255, 255, 0.03)', backdropFilter: 'blur(10px)' }}
+    >
+      <div className="relative h-64 overflow-hidden">
         <img
           src={destination.image || "/placeholder.svg"}
           alt={destination.placeName}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           loading="lazy"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-        
-        {/* Favorite Button */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            setIsFavorite(!isFavorite);
-          }}
-          className="absolute top-4 right-4 z-10 p-2 rounded-full backdrop-blur-sm transition-all transform hover:scale-110"
-          style={{
-            background: isFavorite ? colors.gradients.vibrant : 'rgba(255, 255, 255, 0.2)'
-          }}
-          aria-label={isFavorite ? "Remove from favorites" : "Add to favorites"}
-        >
-          <Heart className={`w-5 h-5 ${isFavorite ? "text-white fill-white" : "text-white"}`} />
-        </button>
-        
+        <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-transparent to-transparent opacity-90" />
+
         {/* Price Badge */}
-        <div className="absolute bottom-4 left-4">
-          <div 
-            className="px-4 py-2 rounded-full text-sm font-bold text-white backdrop-blur-sm shadow-lg"
-            style={{ background: colors.gradients.warm }}
+        <div className="absolute top-4 left-4">
+          <div
+            className="px-4 py-1.5 rounded-full text-[9px] font-black text-white backdrop-blur-xl shadow-2xl uppercase tracking-[0.1em]"
+            style={{ background: 'rgba(56, 189, 248, 0.3)', border: '1px solid rgba(255, 255, 255, 0.1)' }}
           >
-            <i className="fas fa-tag mr-2"></i>
             {destination.price || "$2,199"}
           </div>
         </div>
       </div>
-      
-      <div className="p-5 flex-grow flex flex-col">
-        <h3 
-          className="text-xl font-bold subheading-font mb-2"
-          style={{ color: colors.primary.teal }}
-        >
+
+      <div className="p-6 flex-grow flex flex-col">
+        <div className="flex items-center gap-2 mb-3">
+          <div className="w-6 h-[1px] bg-sky-400 opacity-50"></div>
+          <span className="text-[9px] font-black uppercase tracking-[0.3em] text-sky-400">{destination.continent}</span>
+        </div>
+
+        <h3 className="text-2xl font-black text-white tracking-tight mb-3 group-hover:text-sky-300 transition-colors leading-tight">
           {destination.placeName}
         </h3>
-        
-        <p className="flex-grow text-sm mb-4 line-clamp-2 leading-relaxed" style={{ color: colors.neutral.gray }}>
+
+        <p className="flex-grow text-xs text-slate-400 mb-6 line-clamp-2 leading-relaxed font-medium">
           {destination.description}
         </p>
-        
-        <div className="space-y-2 pt-3 border-t" style={{ borderColor: colors.accent.skyBlue }}>
-          <div className="flex items-center text-sm" style={{ color: colors.neutral.darkGray }}>
-            <i className="fas fa-globe w-4 mr-2" style={{ color: colors.accent.skyBlue }}></i>
-            <span>{destination.continent}</span>
+
+        <div className="flex items-center justify-between pt-5 border-t border-white/5">
+          <div className="flex items-center gap-2 text-[10px] font-bold text-slate-300">
+            <MapPin className="w-3 h-3 text-orange-400" />
+            <span className="uppercase tracking-widest">{destination.country}</span>
           </div>
-          
-          <div className="flex items-center text-sm" style={{ color: colors.neutral.darkGray }}>
-            <i className="fas fa-flag w-4 mr-2" style={{ color: colors.primary.teal }}></i>
-            <span>{destination.country}</span>
-          </div>
-          
-          <div className="flex items-center text-sm" style={{ color: colors.neutral.darkGray }}>
-            <i className="fas fa-calendar-alt w-4 mr-2" style={{ color: colors.accent.yellow }}></i>
-            <span>Best: {destination.bestTime || "Spring & Fall"}</span>
-          </div>
-          
-          <Link to={`/details/${destination.id}`} className="block mt-3">
-            <Button variant="primary" size="sm" className="w-full" icon="fas fa-info-circle" iconRight="fas fa-arrow-right">
-              View Details
-            </Button>
+
+          <Link to={`/details/${destination.id}`}>
+            <motion.div
+              whileHover={{ x: 3 }}
+              className="flex items-center gap-2 text-[9px] font-black uppercase tracking-[0.2em] text-sky-400 hover:text-white transition-colors"
+            >
+              Explore <ArrowRight className="w-3 h-3" />
+            </motion.div>
           </Link>
         </div>
       </div>
@@ -152,13 +142,13 @@ export default function DestinationsCarousel() {
   }, []);
 
   const nextSlide = () => {
-    setCurrentIndex((prev) => 
+    setCurrentIndex((prev) =>
       prev < destinations.length - visibleCount ? prev + 1 : 0
     );
   };
 
   const prevSlide = () => {
-    setCurrentIndex((prev) => 
+    setCurrentIndex((prev) =>
       prev > 0 ? prev - 1 : destinations.length - visibleCount
     );
   };
@@ -166,40 +156,41 @@ export default function DestinationsCarousel() {
   const totalPages = Math.ceil(destinations.length / visibleCount);
   const currentPage = Math.floor(currentIndex / visibleCount);
 
-  const headerIcons = [
-    { name: 'fas fa-plane', color: colors.accent.orange },
-    { name: 'fas fa-hotel', color: colors.primary.teal },
-    { name: 'fas fa-mountain', color: colors.accent.skyBlue },
-    { name: 'fas fa-camera', color: colors.accent.yellow },
-  ];
+  const headerIcons = [];
 
   return (
-    <section 
-      className="py-16 px-4"
-      style={{ background: `linear-gradient(135deg, ${colors.neutral.white} 0%, ${colors.neutral.offWhite} 100%)` }}
+    <section
+      className="py-24 px-4 overflow-hidden relative"
+      style={{ background: '#020617' }}
     >
-      <div className="max-w-7xl mx-auto">
+      {/* Dynamic Route Background */}
+      <div className="absolute inset-0 opacity-[0.05] pointer-events-none">
+        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 0 100 Q 250 50 500 200 T 1000 100" fill="none" stroke="white" strokeWidth="2" strokeDasharray="8 8" />
+          <path d="M 0 400 Q 300 300 600 500 T 1200 400" fill="none" stroke="white" strokeWidth="2" strokeDasharray="8 8" />
+          <path d="M 100 0 Q 300 400 0 800" fill="none" stroke="white" strokeWidth="2" strokeDasharray="8 8" opacity="0.5" />
+        </svg>
+      </div>
+
+      <div className="absolute top-0 right-0 w-96 h-96 bg-sky-500/10 blur-[120px] rounded-full"></div>
+      <div className="absolute bottom-0 left-0 w-96 h-96 bg-blue-600/10 blur-[120px] rounded-full"></div>
+
+      <div className="max-w-7xl mx-auto relative z-10">
         <SectionHeader
-          title="Explore Dream Destinations"
-          subtitle={
-            <>
-              <i className="fas fa-compass mr-2" style={{ color: colors.accent.orange }}></i>
-              Discover breathtaking locations from around the world
-              <i className="fas fa-map-marked-alt ml-2" style={{ color: colors.accent.skyBlue }}></i>
-            </>
-          }
-          icons={headerIcons}
+          title="World Explorer"
+          subtitle="Simple steps to your next great adventure"
+          className="text-sky-400 mb-20"
         />
 
         {loading ? (
           <div className="flex justify-center items-center h-96">
-            <div 
+            <div
               className="animate-spin rounded-full h-16 w-16 border-4 border-t-4"
-              style={{ borderColor: colors.neutral.lightGray, borderTopColor: colors.primary.teal }}
+              style={{ borderColor: colors.neutral.lightGray, borderTopColor: colors.primary.navy }}
             />
           </div>
         ) : error ? (
-          <div 
+          <div
             className="text-center bg-red-50 p-6 rounded-xl shadow-sm max-w-xl mx-auto"
             style={{ color: colors.accent.coral }}
           >
@@ -214,15 +205,10 @@ export default function DestinationsCarousel() {
             {/* Navigation Buttons */}
             <button
               onClick={prevSlide}
-              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-4 shadow-lg -ml-6 focus:outline-none focus:ring-2 transition-all duration-300 transform hover:scale-110"
-              style={{ 
-                color: colors.primary.teal,
-                borderColor: colors.accent.skyBlue,
-                border: '2px solid'
-              }}
+              className="absolute left-0 top-1/2 -translate-y-1/2 z-10 glass rounded-full p-5 shadow-2xl -ml-8 focus:outline-none transition-all duration-500 transform hover:scale-110 hover:bg-sky-500 group"
               aria-label="Previous destination"
             >
-              <ChevronLeft className="w-6 h-6" />
+              <ChevronLeft className="w-6 h-6 text-white" />
             </button>
 
             {/* Carousel */}
@@ -246,15 +232,10 @@ export default function DestinationsCarousel() {
 
             <button
               onClick={nextSlide}
-              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white rounded-full p-4 shadow-lg -mr-6 focus:outline-none focus:ring-2 transition-all duration-300 transform hover:scale-110"
-              style={{ 
-                color: colors.primary.teal,
-                borderColor: colors.accent.skyBlue,
-                border: '2px solid'
-              }}
+              className="absolute right-0 top-1/2 -translate-y-1/2 z-10 glass rounded-full p-5 shadow-2xl -mr-8 focus:outline-none transition-all duration-500 transform hover:scale-110 hover:bg-sky-500 group"
               aria-label="Next destination"
             >
-              <ChevronRight className="w-6 h-6" />
+              <ChevronRight className="w-6 h-6 text-white" />
             </button>
 
             {/* Pagination Dots */}
@@ -265,8 +246,8 @@ export default function DestinationsCarousel() {
                   onClick={() => setCurrentIndex(index * visibleCount)}
                   className="h-3 rounded-full transition-all duration-300 focus:outline-none hover:opacity-80"
                   style={{
-                    width: currentPage === index ? '32px' : '12px',
-                    background: currentPage === index ? colors.gradients.primary : colors.neutral.lightGray
+                    width: currentPage === index ? '40px' : '10px',
+                    background: currentPage === index ? colors.primary.navy : 'rgba(255,255,255,0.1)'
                   }}
                   aria-label={`Go to page ${index + 1}`}
                 />
