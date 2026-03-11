@@ -9,364 +9,300 @@ import {
   Star,
   Heart,
   ChevronDown,
-  ChevronUp,
   Plane,
   Sparkles,
   Check,
+  Clock,
+  ArrowLeft,
+  ShieldCheck,
+  Navigation,
+  Globe
 } from "lucide-react"
-import usePlaceStore from "../Store/PlaceStore" // Adjust path as needed
-import { Line } from "react-chartjs-2"
+import usePlaceStore from "../Store/PlaceStore"
 import { Link } from "react-router-dom"
-import colors from "../../theme/colors"
+import toast, { Toaster } from 'react-hot-toast';
+
 function DestinationDetails() {
   const { placeId } = useParams()
   const navigate = useNavigate()
-  const { places } = usePlaceStore()
+  const { places, fetchPlaces, isLoading: storeLoading } = usePlaceStore()
 
   const [destination, setDestination] = useState(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const [isFavorite, setIsFavorite] = useState(false)
-  const [showItinerary, setShowItinerary] = useState(false)
+  const [showItinerary, setShowItinerary] = useState(true)
 
   useEffect(() => {
-    // Always scroll to top when this component mounts
     window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+    if (places.length === 0) {
+      fetchPlaces();
+    }
+  }, [fetchPlaces, places.length]);
+
+  useEffect(() => {
     const loadDestination = () => {
-      try {
-        const place = places.find((p) => p.id === placeId)
+      let place = places.find((p) => String(p.id) === String(placeId))
 
-        if (!place) {
-          setError("No destination found for this ID.")
-          setLoading(false)
-          return
-        }
-
-        const mappedDestination = {
-          id: place.id,
-          title: place.placeName || place.title || "Unknown Destination",
-          image: place.image || "https://via.placeholder.com/1200x600?text=Discover+Your+Journey",
-          location: place.country || place.location || "Unknown Location",
-          rating: place.rating || 4.8,
-          description:
-            place.description ||
-            `Explore the charm of ${place.placeName || "this destination"
-            }. Wander through vibrant streets, relax on serene beaches, and immerse yourself in local culture. This journey promises unforgettable memories.`,
-          highlights: place.highlights || [
-            "Lasting Memories: Unforgettable experiences",
-            "Find Peace: Relax and reconnect",
-            "Culinary Delights: Savor local flavors",
-            "Adventure Awaits: Discover new wonders",
-          ],
-          itinerary:
-            place.itinerary && place.itinerary.length > 0
-              ? place.itinerary
-              : [
-                {
-                  day: 1,
-                  title: "Arrival",
-                  description:
-                    "Arrive and settle in. Enjoy a relaxing evening as you take in the beauty of your new surroundings.",
-                },
-                {
-                  day: 2,
-                  title: "Exploration",
-                  description:
-                    "Discover the destination's highlights, from scenic landscapes to bustling markets.",
-                },
-                {
-                  day: 3,
-                  title: "Cultural Immersion",
-                  description:
-                    "Connect with the local culture through unique experiences and reflect on your journey.",
-                },
-              ],
-          price: place.price || "$2,199",
-          bestTime: place.bestTime || "Spring & Fall",
-          testimonials: [
-            {
-              name: "Sarah M.",
-              quote: "A life-changing trip. I came back inspired.",
-              rating: 5,
-            },
-            {
-              name: "David L.",
-              quote: "Unforgettable memories. Highly recommend!",
-              rating: 5,
-            },
-          ],
-        }
-
-        setDestination(mappedDestination)
+      if (!place && !storeLoading) {
+        // Fallback or handle not found
         setLoading(false)
-      } catch (err) {
-        setError("Failed to load destination details.")
+        return
+      }
+
+      if (place) {
+        setDestination({
+          id: place.id,
+          title: place.title || "Elite Destination",
+          image: place.images?.[0] || "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=1200&q=80",
+          location: place.location || "Global Wonders",
+          rating: 4.9,
+          description: place.description || "A meticulously curated escape into the heart of the world's most breathtaking landscapes.",
+          price: place.price || "Contact for pricing",
+          duration: place.duration || "Flexible Days",
+          highlights: [
+            "Premium Accommodations",
+            "Certified Private Guides",
+            "Exclusive Cultural Access",
+            "Bespoke Logistics"
+          ],
+          itinerary: [
+            { day: 1, title: "Arrival & Reception", desc: "VIP greeting and transfer to your luxury residence." },
+            { day: 2, title: "Immersive Exploration", desc: "Private guided tour of hidden landmarks." },
+            { day: 3, title: "Leisure & Departure", desc: "Morning at leisure followed by executive transfer." }
+          ]
+        })
         setLoading(false)
       }
-    }
+    };
 
     loadDestination()
-  }, [placeId, places])
+  }, [placeId, places, storeLoading])
 
   const handleBooking = () => {
     navigate('/booking', {
       state: {
         preFilledDestination: destination?.id,
-        destinationName: destination?.title,
-        destinationLocation: destination?.location
+        destinationName: destination?.title
       }
     })
   }
 
-  if (loading) {
+  if (loading || storeLoading) {
     return (
-      <div className="flex justify-center items-center h-screen bg-[#020617]">
+      <div className="flex justify-center items-center h-screen bg-white">
         <div className="flex flex-col items-center gap-6">
-          <motion.div
-            animate={{ rotate: 360 }}
-            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
-            className="h-20 w-20 rounded-full border-2 border-white/5 border-t-sky-400 shadow-[0_0_30px_rgba(56,189,248,0.3)]"
-          />
-          <motion.p
-            className="text-[10px] font-black uppercase tracking-[0.4em] text-sky-400"
-            animate={{ opacity: [0.3, 1, 0.3] }}
-            transition={{ duration: 2, repeat: Infinity }}
-          >
-            Mapping Your Odyssey...
-          </motion.p>
+          <div className="h-16 w-16 rounded-full border-4 border-[#0F4C5C]/10 border-t-[#0F4C5C] animate-spin shadow-xl" />
+          <p className="text-[10px] font-bold uppercase tracking-[0.4em] text-[#0F4C5C] animate-pulse">Mapping Your Odyssey...</p>
         </div>
       </div>
     )
   }
 
-  if (error || !destination) {
+  if (!destination) {
     return (
-      <div className="flex justify-center items-center min-h-screen bg-[#020617] px-6">
-        <motion.div
-          className="text-center p-12 glass rounded-[2.5rem] shadow-2xl max-w-lg border border-white/5"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-        >
-          <div className="w-20 h-20 bg-rose-500/10 rounded-full flex items-center justify-center mx-auto mb-8">
-            <Sparkles className="w-10 h-10 text-rose-500" />
+      <div className="flex justify-center items-center min-h-screen bg-[#F8FAFB] px-6">
+        <div className="text-center p-16 bg-white rounded-[3rem] shadow-2xl max-w-lg border border-gray-100">
+          <div className="w-20 h-20 bg-[#FF7F50]/10 rounded-full flex items-center justify-center mx-auto mb-8 text-[#FF7F50]">
+            <Navigation className="w-10 h-10 -rotate-45" />
           </div>
-          <h2 className="text-3xl font-black uppercase tracking-tighter mb-4 text-white">Something Went Wrong</h2>
-          <p className="text-slate-400 mb-10 font-medium leading-relaxed">{error || "No destination details found."}</p>
+          <h2 className="text-4xl font-black tracking-tighter mb-4 text-[#0F4C5C]">Lost in Translation</h2>
+          <p className="text-gray-400 mb-10 font-medium leading-relaxed">This destination hasn't been mapped in our elite collection yet.</p>
           <button
-            className="w-full py-5 rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-xs text-white transition-all shadow-2xl hover:bg-sky-500"
-            style={{ background: colors.primary.navy }}
-            onClick={() => window.history.back()}
+            className="w-full bg-[#0F4C5C] py-5 rounded-2xl font-bold text-white shadow-xl shadow-[#0F4C5C]/20 hover:-translate-y-1 transition-all"
+            onClick={() => navigate('/')}
           >
-            Back to Destinations
+            Return to Exploration
           </button>
-        </motion.div>
+        </div>
       </div>
     )
   }
 
   return (
-    <section
-      className="py-12 px-4 md:px-6 min-h-screen relative overflow-hidden"
-      style={{ background: '#020617', fontFamily: 'Outfit, sans-serif' }}
-    >
-      {/* Background Route Decor */}
-      <div className="absolute inset-0 opacity-[0.05] pointer-events-none z-0">
-        <svg className="w-full h-full" viewBox="0 0 1000 1000" xmlns="http://www.w3.org/2000/svg">
-          <path d="M 0 200 Q 500 50 1000 200" fill="none" stroke="white" strokeWidth="1" strokeDasharray="8 8" />
-          <path d="M 200 0 Q 400 500 200 1000" fill="none" stroke="white" strokeWidth="1" strokeDasharray="8 8" opacity="0.5" />
-        </svg>
+    <section className="min-h-screen bg-white font-sans text-[#0F4C5C] pb-32">
+      <Toaster position="top-right" />
+      
+      {/* Dynamic Header / Navigation Control */}
+      <div className="fixed top-24 left-10 z-[60] hidden lg:block">
+         <button 
+           onClick={() => navigate(-1)}
+           className="w-14 h-14 bg-white/80 backdrop-blur-md rounded-2xl border border-gray-100 shadow-xl flex items-center justify-center text-[#0F4C5C] hover:bg-[#0F4C5C] hover:text-white transition-all group"
+         >
+            <ArrowLeft className="w-6 h-6 group-hover:-translate-x-1 transition-transform" />
+         </button>
       </div>
 
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-sky-500/5 blur-[150px] rounded-full"></div>
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-blue-600/5 blur-[150px] rounded-full"></div>
-      <div className="max-w-7xl mx-auto">
-        {/* Hero Section */}
-        <motion.div
-          className="relative rounded-[3rem] overflow-hidden shadow-2xl mb-16 border border-white/5"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, ease: "circOut" }}
-        >
-          <motion.img
-            src={destination.image}
-            alt={destination.title}
-            className="w-full h-96 sm:h-[40rem] object-cover contrast-[1.1]"
-            loading="lazy"
-            initial={{ scale: 1.1 }}
-            animate={{ scale: 1 }}
-            transition={{ duration: 10 }}
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/40 to-transparent" />
-
-          <div className="absolute bottom-12 left-12 right-12">
-            <div className="flex items-center gap-3 mb-6">
-              <span className="px-4 py-1.5 rounded-full bg-sky-500/20 backdrop-blur-md text-[10px] font-black uppercase tracking-[0.3em] text-sky-400 border border-sky-500/30">Official Selection</span>
-            </div>
-            <motion.h1
-              className="text-5xl sm:text-8xl font-black text-white mb-8 tracking-tighter drop-shadow-2xl"
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, delay: 0.2 }}
-            >
-              {destination.title}
-            </motion.h1>
-            <motion.div
-              className="flex flex-wrap gap-6 text-white text-[10px] uppercase font-black tracking-[0.2em]"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-            >
-              <div className="flex items-center px-6 py-3 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-xl">
-                <MapPin className="w-4 h-4 mr-3 text-sky-400" />
-                <span className="text-sky-300">{destination.location}</span>
-              </div>
-              <div className="flex items-center px-6 py-3 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 shadow-xl">
-                <Star className="w-4 h-4 mr-3 text-sky-400 fill-sky-400" />
-                <span className="text-sky-300">{destination.rating} Global Rating</span>
-              </div>
-            </motion.div>
-          </div>
-        </motion.div>
-
-        {/* Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Column - Main Content */}
-          <div className="lg:col-span-2 space-y-8">
-            {/* Description Card */}
-            <motion.div
-              className="glass rounded-[2rem] p-12 border border-white/5 relative overflow-hidden"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-            >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-sky-500/10 blur-3xl rounded-full translate-x-12 -translate-y-12"></div>
-              <h2 className="text-2xl font-black uppercase tracking-[0.2em] text-sky-400 mb-8">Overview</h2>
-              <p className="text-slate-300 leading-[1.8] text-lg font-medium">{destination.description}</p>
-            </motion.div>
-
-            {/* Highlights Card */}
-            <motion.div
-              className="glass rounded-[2rem] p-12 border border-white/5 shadow-2xl"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.2 }}
-            >
-              <h2 className="text-2xl font-black uppercase tracking-[0.2em] text-sky-400 mb-10">Premium Experiences</h2>
-              <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                {destination.highlights.map((highlight, index) => (
-                  <li
-                    key={index}
-                    className="flex flex-col p-6 rounded-[1.5rem] bg-white/5 border border-white/5 hover:border-sky-500/30 transition-all group"
-                  >
-                    <div className="w-10 h-10 rounded-full bg-sky-500/10 flex items-center justify-center mb-4 group-hover:bg-sky-500 transition-colors">
-                      <Check className="w-5 h-5 text-sky-400 group-hover:text-white" />
-                    </div>
-                    <p className="text-slate-200 font-bold uppercase tracking-wider text-xs leading-relaxed">{highlight}</p>
-                  </li>
-                ))}
-              </ul>
-            </motion.div>
-
-            <motion.div
-              className="glass rounded-[2rem] p-12 border border-white/5"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-            >
-              <div
-                className="flex justify-between items-center cursor-pointer group"
-                onClick={() => setShowItinerary(!showItinerary)}
-              >
-                <h2 className="text-2xl font-black uppercase tracking-[0.2em] text-sky-400">Voyage Itinerary</h2>
-                <motion.div
-                  animate={{ rotate: showItinerary ? 180 : 0 }}
-                  className="w-10 h-10 rounded-full glass shrink-0 flex items-center justify-center group-hover:bg-sky-500 transition-colors"
-                >
-                  <ChevronDown className="w-6 h-6 text-white" />
-                </motion.div>
-              </div>
-              <AnimatePresence>
-                {showItinerary && (
-                  <motion.div
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    transition={{ duration: 0.5, ease: "easeInOut" }}
-                    className="mt-8 space-y-6"
-                  >
-                    {destination.itinerary.map((day, index) => (
-                      <div
-                        key={index}
-                        className="pl-8 pb-8 border-l-2 relative last:pb-0"
-                        style={{ borderLeftColor: colors.accent.skyBlue }}
-                      >
-                        <div
-                          className="absolute -left-[9px] top-4 w-4 h-4 rounded-full border-2 border-[#020617] scale-125"
-                          style={{ background: colors.primary.navy }}
-                        />
-                        <div className="glass p-8 rounded-[1.5rem] border border-white/5 hover:border-white/10 transition-colors">
-                          <h3 className="text-lg font-black text-white mb-3 uppercase tracking-widest">
-                            Day {day.day}: {day.title}
-                          </h3>
-                          <p className="text-slate-400 leading-relaxed font-medium">{day.description}</p>
-                        </div>
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 pt-32 lg:pt-40">
+        
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+          
+          {/* Main Visual Column */}
+          <div className="lg:col-span-12">
+             <div className="relative rounded-[4rem] overflow-hidden shadow-[0_50px_100px_rgba(0,0,0,0.1)] border-[12px] border-white group">
+                <img 
+                   src={destination.image} 
+                   className="w-full h-[500px] md:h-[700px] object-cover group-hover:scale-110 transition-transform duration-[3s]" 
+                   alt={destination.title} 
+                />
+                
+                {/* Floating Meta Info Overlay */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0F4C5C]/80 via-transparent to-transparent flex flex-col justify-end p-12 md:p-20">
+                   <div className="flex flex-wrap gap-4 mb-8">
+                      <span className="px-5 py-2.5 bg-white/20 backdrop-blur-xl border border-white/30 rounded-full text-white text-[10px] font-bold uppercase tracking-[0.2em]">
+                         Official Selection 2026
+                      </span>
+                      <span className="px-5 py-2.5 bg-[#FF7F50] rounded-full text-white text-[10px] font-bold uppercase tracking-[0.2em] shadow-xl shadow-[#FF7F50]/20 flex items-center gap-2">
+                         <Globe className="w-3.5 h-3.5" /> Best Seller
+                      </span>
+                   </div>
+                   <h1 className="text-6xl md:text-9xl font-black text-white tracking-tighter leading-none mb-6 drop-shadow-2xl">
+                      {destination.title}
+                   </h1>
+                   <div className="flex items-center gap-8 text-white/80 font-bold uppercase tracking-widest text-xs">
+                      <div className="flex items-center gap-2">
+                         <MapPin className="w-4 h-4 text-[#FF7F50]" /> {destination.location}
                       </div>
-                    ))}
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
+                      <div className="flex items-center gap-2">
+                         <Clock className="w-4 h-4 text-[#2A9D8F]" /> {destination.duration}
+                      </div>
+                      <div className="flex items-center gap-2">
+                         <Star className="w-4 h-4 text-[#FF7F50] fill-[#FF7F50]" /> {destination.rating} Rating
+                      </div>
+                   </div>
+                </div>
+             </div>
           </div>
 
-          <div className="relative">
-            <motion.div
-              className="glass rounded-[2.5rem] p-2 border border-white/10 sticky top-28 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.5)]"
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6 }}
-            >
-              <div className="p-10">
-                <div className="mb-10 p-8 rounded-[2rem] text-center relative overflow-hidden group" style={{ background: colors.primary.navy }}>
-                  <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  <p className="text-[10px] font-black tracking-[0.4em] mb-4 text-white/60 uppercase">Starting From</p>
-                  <p className="text-5xl font-black text-white tracking-tighter shadow-sm">
-                    {destination.price}
-                  </p>
+          {/* Detailed Content Column */}
+          <div className="lg:col-span-8 space-y-16">
+             
+             {/* Brand Introduction */}
+             <div>
+                <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#0F4C5C]/5 text-[#0F4C5C] rounded-full text-xs font-bold uppercase tracking-[0.2em] mb-8 border border-[#0F4C5C]/10">
+                   <Sparkles className="w-4 h-4" /> The Experience
+                </div>
+                <h2 className="text-5xl font-extrabold text-[#0F4C5C] mb-8 tracking-tighter">
+                   Step into the <br /> <span className="text-[#2A9D8F]">Exceptional.</span>
+                </h2>
+                <p className="text-gray-500 text-xl leading-relaxed font-medium">
+                   {destination.description}
+                </p>
+             </div>
+
+             {/* Highlights Grid */}
+             <div className="bg-[#F8FAFB] p-12 rounded-[3.5rem] border border-gray-100">
+                <h3 className="text-2xl font-bold mb-10 tracking-tight">Premium Signature Inclusions</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                   {destination.highlights.map((h, i) => (
+                      <div key={i} className="flex gap-4 group">
+                         <div className="w-12 h-12 bg-white rounded-2xl flex items-center justify-center text-[#2A9D8F] shadow-sm transform group-hover:rotate-6 transition-transform">
+                            <Check className="w-6 h-6 stroke-[3]" />
+                         </div>
+                         <div>
+                            <h4 className="font-bold text-[#0F4C5C] text-lg mb-1">{h}</h4>
+                            <p className="text-gray-400 text-sm font-medium">Included in premium package</p>
+                         </div>
+                      </div>
+                   ))}
+                </div>
+             </div>
+
+             {/* Itinerary Accordion */}
+             <div className="border-t border-gray-100 pt-16">
+                <div className="flex justify-between items-end mb-12">
+                   <div>
+                      <h3 className="text-3xl font-extrabold text-[#0F4C5C] mb-2 tracking-tight">The Odyssey Itinerary</h3>
+                      <p className="text-gray-400 font-medium">A day-by-day sequence of high-end exploration.</p>
+                   </div>
+                   <button 
+                     onClick={() => setShowItinerary(!showItinerary)}
+                     className="p-4 bg-gray-50 rounded-2xl hover:bg-[#0F4C5C] hover:text-white transition-all"
+                   >
+                      <ChevronDown className={`w-6 h-6 transition-transform ${showItinerary ? 'rotate-180' : ''}`} />
+                   </button>
                 </div>
 
-                <div className="space-y-6 mb-10">
-                  <div className="flex items-center p-6 rounded-2xl bg-white/5 border border-white/5">
-                    <div className="w-12 h-12 rounded-xl bg-orange-500/10 flex items-center justify-center mr-4">
-                      <MapPin className="w-6 h-6 text-orange-500" />
-                    </div>
-                    <div>
-                      <p className="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-1">DESTINATION</p>
-                      <p className="text-white font-black text-sm uppercase tracking-tight">{destination.title}</p>
-                    </div>
-                  </div>
-                </div>
-
-                <motion.button
-                  onClick={handleBooking}
-                  className="w-full py-6 rounded-[1.5rem] font-black uppercase tracking-[0.2em] text-xs text-white transition-all shadow-2xl"
-                  style={{ background: colors.accent.orange }}
-                  whileHover={{ scale: 1.05, y: -5 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Embark Journey
-                </motion.button>
-
-                <div className="flex items-center justify-center gap-4 mt-8 opacity-40">
-                  <Check className="w-4 h-4 text-sky-400" />
-                  <p className="text-[10px] font-black uppercase tracking-widest text-white">Elite Experiences Guaranteed</p>
-                </div>
-              </div>
-            </motion.div>
+                <AnimatePresence>
+                   {showItinerary && (
+                      <motion.div 
+                         initial={{ height: 0, opacity: 0 }}
+                         animate={{ height: 'auto', opacity: 1 }}
+                         exit={{ height: 0, opacity: 0 }}
+                         className="space-y-8 overflow-hidden"
+                      >
+                         {destination.itinerary.map((day, i) => (
+                            <div key={i} className="bg-white p-8 rounded-[2.5rem] border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-500 flex gap-8">
+                               <div className="w-16 h-16 bg-[#0F4C5C] text-white rounded-2xl flex flex-col items-center justify-center shrink-0 shadow-lg">
+                                  <span className="text-[10px] font-bold uppercase opacity-60">Day</span>
+                                  <span className="text-2xl font-black leading-none">{day.day}</span>
+                               </div>
+                               <div>
+                                  <h4 className="text-xl font-bold text-[#0F4C5C] mb-2">{day.title}</h4>
+                                  <p className="text-gray-400 font-medium leading-relaxed">{day.desc}</p>
+                               </div>
+                            </div>
+                         ))}
+                      </motion.div>
+                   )}
+                </AnimatePresence>
+             </div>
           </div>
+
+          {/* Booking Sidebar Column */}
+          <div className="lg:col-span-4 lg:pl-10">
+             <div className="sticky top-40 bg-[#0F4C5C] p-10 rounded-[3.5rem] shadow-[0_30px_80px_rgba(15,76,92,0.4)] text-white relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-full -mr-16 -mt-16 blur-2xl" />
+                
+                <div className="relative z-10">
+                   <ShieldCheck className="w-10 h-10 text-[#2A9D8F] mb-8" />
+                   <p className="text-white/60 text-[10px] font-bold uppercase tracking-[0.3em] mb-2">Investment in Memories</p>
+                   <div className="flex items-baseline gap-2 mb-10">
+                      <span className="text-4xl font-extrabold">${destination.price}</span>
+                      <span className="text-white/40 text-sm font-medium uppercase tracking-widest">/ Per Person</span>
+                   </div>
+
+                   <div className="space-y-6 mb-12">
+                      <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10">
+                         <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
+                            <Plane className="w-5 h-5" />
+                         </div>
+                         <p className="text-sm font-bold">Flights Included</p>
+                      </div>
+                      <div className="flex items-center gap-4 p-4 bg-white/5 rounded-2xl border border-white/10">
+                         <div className="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center">
+                            <Heart className="w-5 h-5 text-[#FF7F50] fill-[#FF7F50]" />
+                         </div>
+                         <p className="text-sm font-bold">Honeymoon Special</p>
+                      </div>
+                   </div>
+
+                   <button 
+                     onClick={handleBooking}
+                     className="w-full bg-[#FF7F50] hover:bg-[#ff6a33] text-white py-6 rounded-[2rem] font-bold text-xl transition-all shadow-xl shadow-[#FF7F50]/20 active:scale-95 group/btn"
+                   >
+                      Book Departure
+                   </button>
+                   
+                   <p className="text-center mt-8 text-white/40 text-[10px] font-bold uppercase tracking-[0.2em]">
+                      Free cancellation within 48 hours
+                   </p>
+                </div>
+             </div>
+
+             {/* Secondary Card */}
+             <div className="mt-10 bg-[#F8FAFB] p-10 rounded-[3rem] border border-gray-100 border-dashed text-center">
+                <div className="w-16 h-16 bg-white rounded-full shadow-md flex items-center justify-center text-[#FF7F50] mx-auto mb-6">
+                   <Clock className="w-8 h-8" />
+                </div>
+                <h4 className="font-bold text-[#0F4C5C] mb-2">Last Call!</h4>
+                <p className="text-xs font-medium text-gray-400">Only 2 seats remaining for the Summer 2026 season.</p>
+             </div>
+          </div>
+
         </div>
+
       </div>
     </section>
   )
 }
 
 export default DestinationDetails
-

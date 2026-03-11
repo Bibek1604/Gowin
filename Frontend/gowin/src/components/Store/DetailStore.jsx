@@ -1,29 +1,73 @@
-import { create } from "zustand";
+import { create } from 'zustand';
+import { supabase } from '../../supabaseClient';
 
-const useDetailsStore = create((set, get) => ({
+const useDetailsStore = create((set) => ({
   details: [],
-  addDetails: (newDetail) => {
-    console.log("Adding detail:", newDetail);
-    set((state) => ({ details: [...state.details, newDetail] }));
+  isLoading: false,
+
+  fetchDetails: async (placeId) => {
+    set({ isLoading: true });
+    const query = supabase.from('place_details').select('*');
+    if (placeId) query.eq('place_id', placeId);
+
+    const { data, error } = await query.order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching details:', error);
+    } else {
+      set({ details: data || [] });
+    }
+    set({ isLoading: false });
   },
-  updateDetails: (id, updatedDetail) => {
-    console.log("Updating detail for id:", id);
+
+  addDetails: async (detailData) => {
+    const { data, error } = await supabase
+      .from('place_details')
+      .insert([detailData])
+      .select();
+
+    if (error) {
+      console.error('Error adding detail:', error);
+      return { success: false, error };
+    }
+
+    set((state) => ({ details: [data[0], ...state.details] }));
+    return { success: true };
+  },
+
+  updateDetails: async (id, updatedDetail) => {
+    const { data, error } = await supabase
+      .from('place_details')
+      .update(updatedDetail)
+      .eq('id', id)
+      .select();
+
+    if (error) {
+      console.error('Error updating detail:', error);
+      return { success: false, error };
+    }
+
     set((state) => ({
-      details: state.details.map((d) =>
-        d.id === id ? { ...d, ...updatedDetail } : d
-      ),
+      details: state.details.map((d) => (d.id === id ? data[0] : d)),
     }));
+    return { success: true };
   },
-  deleteDetails: (id) => {
-    console.log("Deleting detail for id:", id);
+
+  deleteDetails: async (id) => {
+    const { error } = await supabase
+      .from('place_details')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting detail:', error);
+      return { success: false, error };
+    }
+
     set((state) => ({
       details: state.details.filter((d) => d.id !== id),
     }));
-  },
-  getDetailsByPlace: (placeId) => {
-    const { details } = get();
-    console.log("Fetching details for placeId:", placeId);
-    return details.filter((d) => d.placeId === placeId);
+    return { success: true };
   },
 }));
 

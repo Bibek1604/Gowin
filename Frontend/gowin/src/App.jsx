@@ -7,25 +7,27 @@ import Sidebar from './components/admin/Sidebar';
 import AddCategory from './components/admin/AddCategory';
 import AddDetail from './components/admin/AddDetail';
 import AddPlace from './components/admin/AddPlace';
-import Home from './components/Home/Home';
 import Dashboard from './components/admin/Dashboard';
-import Place from './components/Home/Place';
 import DestinationDetails from './components/Details/FetchDestinationDetails';
 import NotFound from './components/Layout/Notfound';
 import BookingForm from './components/Layout/Booking';
 import Booking from './components/admin/AddBooking';
-import Footer from './components/Home/Footer';
+import AddTestimonial from './components/admin/AddTestimonial';
+import Messages from './components/admin/Messages';
+import Subscribers from './components/admin/Subscribers';
+import Footer from './components/Tourism/Footer';
 import Login from './components/Layout/Login';
 import ProtectedRoute from './components/Layout/ProtectedRoute';
-import Navbar from './components/Home/Navbar';
-import Aboutus from './components/Layout/Aboutus';
-import ContactUs from './components/Layout/ContactUs';
+import Navbar from './components/Tourism/Navbar';
+import TourismHome from './components/Tourism/TourismHome';
+import About from './components/Tourism/About';
+import Contact from './components/Tourism/Contact';
 import colors from './theme/colors';
 
 // Admin layout with sidebar
 function AdminLayout({ children }) {
   return (
-    <div className="flex min-h-screen" style={{ background: colors.neutral.offWhite }}>
+    <div className="flex min-h-screen bg-gray-50/50">
       <Sidebar />
       <div className="flex-1 ml-64">
         {children}
@@ -108,16 +110,45 @@ function AppContent() {
           }
         />
 
+        <Route
+          path="/admin/testimonials"
+          element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <AddTestimonial />
+              </AdminLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/messages"
+          element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <Messages />
+              </AdminLayout>
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin/subscribers"
+          element={
+            <ProtectedRoute>
+              <AdminLayout>
+                <Subscribers />
+              </AdminLayout>
+            </ProtectedRoute>
+          }
+        />
+
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Home />} />
-        <Route path="/places" element={<Place />} />
+        <Route path="/" element={<TourismHome />} />
         <Route path="/places/:placeId" element={<DestinationDetails />} />
         <Route path="/details/:placeId" element={<DestinationDetails />} />
         <Route path="/booking" element={<BookingForm />} />
-        <Route path="/navbar" element={<Navbar />} />
-        <Route path="/aboutus" element={<Aboutus />} />
-        <Route path="/contactus" element={<ContactUs />} />
+        <Route path="/about" element={<About />} />
+        <Route path="/contact" element={<Contact />} />
 
         {/* Catch-all for 404 Not Found */}
         <Route path="*" element={<NotFound />} />

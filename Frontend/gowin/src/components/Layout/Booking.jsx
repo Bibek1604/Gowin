@@ -1,19 +1,18 @@
-"use client"
-
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
-import { Calendar, Users, MapPin, Mail, Phone, ChevronDown, CheckCircle } from "lucide-react"
-import usePlaceStore from "../Store/PlaceStore" // Adjust path as needed
-import useBookingStore from "../Store/BookingStore" // Adjust path as needed
+import { Calendar, Users, MapPin, Mail, Phone, ChevronDown, CheckCircle, ArrowLeft } from "lucide-react"
+import usePlaceStore from "../Store/PlaceStore"
+import useBookingStore from "../Store/BookingStore"
 import React from "react"
-import { Link, useLocation } from "react-router-dom"
-import { v4 as uuidv4 } from "uuid" // Add uuid for generating booking IDs
+import { Link, useLocation, useNavigate } from "react-router-dom"
+import toast, { Toaster } from "react-hot-toast"
 import colors from "../../theme/colors"
 
 function Booking() {
-  const { places } = usePlaceStore()
+  const { places, fetchPlaces } = usePlaceStore()
   const { addBooking } = useBookingStore()
   const location = useLocation()
+  const navigate = useNavigate()
 
   const [formData, setFormData] = useState({
     name: "",
@@ -27,6 +26,10 @@ function Booking() {
   const [errors, setErrors] = useState({})
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [showConfirmation, setShowConfirmation] = useState(false)
+
+  useEffect(() => {
+    fetchPlaces()
+  }, [fetchPlaces])
 
   const handleInputChange = (e) => {
     const { name, value } = e.target
@@ -47,363 +50,241 @@ function Booking() {
     return newErrors
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     const validationErrors = validateForm()
     if (Object.keys(validationErrors).length > 0) {
       setErrors(validationErrors)
-      return ('/')
+      return
     }
 
     setIsSubmitting(true)
-    // Create booking object with unique ID
-    const booking = {
-      bookingId: uuidv4(),
-      ...formData,
+
+    // Construct booking object for store
+    const bookingPayload = {
+      tour_id: formData.destination,
+      user_name: formData.name,
+      user_email: formData.email,
+      num_people: formData.travelers,
+      travel_date: formData.travelDate,
+      phone: formData.phone // Even if store doesn't explicitly map it, we send it
     }
 
-    // Add booking to store
-    addBooking(booking)
+    const res = await addBooking(bookingPayload)
 
-    // Simulate API call
-    setTimeout(() => {
-      setIsSubmitting(false)
+    setIsSubmitting(false)
+    if (res.success) {
       setShowConfirmation(true)
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        address: "",
-        destination: "",
-        travelDate: "",
-        travelers: 1,
-      })
-    }, 1500)
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    } else {
+      toast.error("Booking failed. Please check your connection.")
+    }
   }
 
   return (
-    <section
-      className="py-20 px-4 md:px-6 min-h-screen"
-      style={{ background: colors.neutral.offWhite, fontFamily: 'Outfit, sans-serif' }}
-    >
-      <div className="max-w-3xl mx-auto">
+    <section className="py-32 px-4 md:px-6 min-h-screen bg-[#F8FAFB] font-sans relative overflow-hidden">
+      <Toaster position="top-right" />
+
+      {/* Background Decor */}
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#2A9D8F]/5 rounded-full blur-[120px] -mr-32 -mt-32" />
+      <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#0F4C5C]/5 rounded-full blur-[120px] -ml-32 -mb-32" />
+
+      <div className="max-w-6xl mx-auto relative z-10">
+
+        {/* Navigation */}
+        <Link to="/" className="inline-flex items-center gap-2 text-gray-400 hover:text-[#0F4C5C] mb-12 font-bold transition-all hover:-translate-x-1">
+          <ArrowLeft className="w-4 h-4" /> Back to Explorations
+        </Link>
+
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h1
-            className="text-4xl sm:text-6xl font-bold uppercase tracking-tight mb-4"
-            style={{ color: colors.primary.navy }}
-          >
-            Start Your Journey
-          </h1>
-          <p className="text-sm uppercase tracking-widest opacity-60" style={{ color: colors.primary.navy }}>
-            {location.state?.destinationName
-              ? `Booking for ${location.state.destinationName}`
-              : "Reservation Form"}
-          </p>
-        </motion.div>
+        <div className="mb-16">
+          <h1 className="text-5xl md:text-7xl font-black text-[#0F4C5C] mb-4 tracking-tighter">Reserve Your Trip</h1>
+          <p className="text-gray-500 font-medium text-lg max-w-lg">Secure your spot for the adventure of a lifetime with Gowin's premium concierge.</p>
+        </div>
 
-        {/* Booking Form */}
-        <motion.form
-          onSubmit={handleSubmit}
-          className="bg-white rounded-2xl shadow-sm p-8 md:p-12 border border-slate-200"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
-        >
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Name */}
-            <motion.div
-              className="col-span-1 md:col-span-2"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.3 }}
-            >
-              <label className="block text-gray-900 font-semibold mb-3" htmlFor="name">
-                Full Name
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  id="name"
-                  name="name"
-                  value={formData.name}
-                  onChange={handleInputChange}
-                  className={`w-full p-4 rounded-xl border ${errors.name ? "border-red-400 bg-red-50" : "border-slate-200 bg-slate-50"} focus:outline-none focus:ring-1 focus:ring-sky-500 transition-all`}
-                  placeholder="e.g. John Doe"
-                />
-              </div>
-              {errors.name && (
-                <motion.p
-                  className="text-red-500 text-sm mt-2 flex items-center"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  {errors.name}
-                </motion.p>
-              )}
-            </motion.div>
+        {!showConfirmation ? (
+          <div className="flex flex-col lg:flex-row gap-10">
+            {/* Form Card */}
+            <div className="flex-1 bg-white p-10 md:p-16 rounded-[4rem] shadow-[0_20px_50px_rgba(0,0,0,0.03)] border border-gray-100">
+              <form onSubmit={handleSubmit} className="space-y-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-bold text-[#0F4C5C] uppercase tracking-[0.2em] pl-1">Full Name</label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleInputChange}
+                      className={`w-full p-5 bg-gray-50 border ${errors.name ? 'border-red-300 ring-4 ring-red-50' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F]/10 focus:bg-white transition-all font-bold text-[#0F4C5C] placeholder:text-gray-300`}
+                      placeholder="e.g. John Doe"
+                    />
+                    {errors.name && <p className="text-red-500 text-[10px] font-bold uppercase tracking-widest pl-1">{errors.name}</p>}
+                  </div>
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-bold text-[#0F4C5C] uppercase tracking-[0.2em] pl-1">Email Address</label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleInputChange}
+                      className={`w-full p-5 bg-gray-50 border ${errors.email ? 'border-red-300 ring-4 ring-red-50' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F]/10 focus:bg-white transition-all font-bold text-[#0F4C5C] placeholder:text-gray-300`}
+                      placeholder="john@example.com"
+                    />
+                    {errors.email && <p className="text-red-500 text-[10px] font-bold uppercase tracking-widest pl-1">{errors.email}</p>}
+                  </div>
+                </div>
 
-            {/* Email */}
-            <motion.div
-              className="col-span-1"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.4 }}
-            >
-              <label className="block text-gray-900 font-semibold mb-3" htmlFor="email">
-                Email
-              </label>
-              <div className="relative">
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  className={`w-full p-4 rounded-xl border ${errors.email ? "border-red-400 bg-red-50" : "border-slate-200 bg-slate-50"} focus:outline-none focus:ring-1 focus:ring-sky-500 transition-all`}
-                  placeholder="email@example.com"
-                />
-              </div>
-              {errors.email && (
-                <motion.p
-                  className="text-red-500 text-sm mt-2"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  {errors.email}
-                </motion.p>
-              )}
-            </motion.div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-bold text-[#0F4C5C] uppercase tracking-[0.2em] pl-1">Phone Number</label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={formData.phone}
+                      onChange={handleInputChange}
+                      className={`w-full p-5 bg-gray-50 border ${errors.phone ? 'border-red-300 ring-4 ring-red-50' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F]/10 focus:bg-white transition-all font-bold text-[#0F4C5C] placeholder:text-gray-300`}
+                      placeholder="+977-..."
+                    />
+                    {errors.phone && <p className="text-red-500 text-[10px] font-bold uppercase tracking-widest pl-1">{errors.phone}</p>}
+                  </div>
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-bold text-[#0F4C5C] uppercase tracking-[0.2em] pl-1">Travelers</label>
+                    <input
+                      type="number"
+                      name="travelers"
+                      value={formData.travelers}
+                      onChange={handleInputChange}
+                      min="1"
+                      className={`w-full p-5 bg-gray-50 border ${errors.travelers ? 'border-red-300 ring-4 ring-red-50' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F]/10 focus:bg-white transition-all font-bold text-[#0F4C5C]`}
+                    />
+                    {errors.travelers && <p className="text-red-500 text-[10px] font-bold uppercase tracking-widest pl-1">{errors.travelers}</p>}
+                  </div>
+                </div>
 
-            {/* Phone */}
-            <motion.div
-              className="col-span-1"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.5 }}
-            >
-              <label className="block text-gray-900 font-semibold mb-3" htmlFor="phone">
-                Phone Number
-              </label>
-              <div className="relative">
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  className={`w-full p-4 rounded-xl border ${errors.phone ? "border-red-400 bg-red-50" : "border-slate-200 bg-slate-50"} focus:outline-none focus:ring-1 focus:ring-sky-500 transition-all`}
-                  placeholder="+977-..."
-                />
-              </div>
-              {errors.phone && (
-                <motion.p
-                  className="text-red-500 text-sm mt-2"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  {errors.phone}
-                </motion.p>
-              )}
-            </motion.div>
+                <div className="space-y-3">
+                  <label className="text-[10px] font-bold text-[#0F4C5C] uppercase tracking-[0.2em] pl-1">Target Destination</label>
+                  <div className="relative">
+                    <select
+                      name="destination"
+                      value={formData.destination}
+                      onChange={handleInputChange}
+                      className={`w-full p-5 bg-gray-50 border ${errors.destination ? 'border-red-300' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F]/10 focus:bg-white transition-all appearance-none cursor-pointer font-bold text-[#0F4C5C]`}
+                    >
+                      <option value="">Select an adventure package</option>
+                      {places.map((place) => (
+                        <option key={place.id} value={place.id}>
+                          {place.title || "Adventure Pack"}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5 pointer-events-none" />
+                  </div>
+                  {errors.destination && <p className="text-red-500 text-[10px] font-bold uppercase tracking-widest pl-1">{errors.destination}</p>}
+                </div>
 
-            {/* Address */}
-            <motion.div
-              className="col-span-1 md:col-span-2"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.6 }}
-            >
-              <label className="block text-gray-900 font-semibold mb-3" htmlFor="address">
-                Address
-              </label>
-              <div className="relative">
-                <input
-                  type="text"
-                  id="address"
-                  name="address"
-                  value={formData.address}
-                  onChange={handleInputChange}
-                  className={`w-full p-4 rounded-xl border ${errors.address ? "border-red-400 bg-red-50" : "border-slate-200 bg-slate-50"} focus:outline-none focus:ring-1 focus:ring-sky-500 transition-all`}
-                  placeholder="Your Residence Address"
-                />
-              </div>
-              {errors.address && (
-                <motion.p
-                  className="text-red-500 text-sm mt-2"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  {errors.address}
-                </motion.p>
-              )}
-            </motion.div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-bold text-[#0F4C5C] uppercase tracking-[0.2em] pl-1">Departure Date</label>
+                    <input
+                      type="date"
+                      name="travelDate"
+                      value={formData.travelDate}
+                      onChange={handleInputChange}
+                      className={`w-full p-5 bg-gray-50 border ${errors.travelDate ? 'border-red-300' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F]/10 focus:bg-white transition-all font-bold text-[#0F4C5C]`}
+                    />
+                    {errors.travelDate && <p className="text-red-500 text-[10px] font-bold uppercase tracking-widest pl-1">{errors.travelDate}</p>}
+                  </div>
+                  <div className="space-y-3">
+                    <label className="text-[10px] font-bold text-[#0F4C5C] uppercase tracking-[0.2em] pl-1">Origin Address</label>
+                    <input
+                      type="text"
+                      name="address"
+                      value={formData.address}
+                      onChange={handleInputChange}
+                      className={`w-full p-5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F]/10 focus:bg-white transition-all font-bold text-[#0F4C5C] placeholder:text-gray-300`}
+                      placeholder="Residential city, country"
+                    />
+                  </div>
+                </div>
 
-            {/* Destination */}
-            <motion.div
-              className="col-span-1"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.7 }}
-            >
-              <label className="block text-gray-900 font-semibold mb-3" htmlFor="destination">
-                Destination
-              </label>
-              <div className="relative">
-                <select
-                  id="destination"
-                  name="destination"
-                  value={formData.destination}
-                  onChange={handleInputChange}
-                  className={`w-full p-4 rounded-xl border ${errors.destination ? "border-red-400 bg-red-50" : "border-slate-200 bg-slate-50"} focus:outline-none focus:ring-1 focus:ring-sky-500 transition-all appearance-none`}
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full bg-[#2A9D8F] text-white py-6 rounded-[2.5rem] font-black text-xl uppercase tracking-[0.2em] hover:bg-[#238b7e] transition-all shadow-2xl shadow-[#2A9D8F]/30 disabled:opacity-50 disabled:cursor-not-allowed mt-4 active:scale-95 flex items-center justify-center gap-4"
                 >
-                  <option value="">Choose Destination</option>
-                  {places.map((place) => (
-                    <option key={place.id} value={place.id}>
-                      {place.placeName || place.title || "Unknown Destination"}
-                    </option>
-                  ))}
-                </select>
-                <ChevronDown className="absolute right-4 top-1/2 transform -translate-y-1/2 w-5 h-5 opacity-30 pointer-events-none" />
-              </div>
-              {errors.destination && (
-                <motion.p
-                  className="text-red-500 text-sm mt-2"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  {errors.destination}
-                </motion.p>
-              )}
-            </motion.div>
+                  {isSubmitting ? (
+                    <>
+                      <div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin" />
+                      Processing
+                    </>
+                  ) : (
+                    <>
+                      Confirm Reservation
+                      <CheckCircle className="w-6 h-6" />
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
 
-            {/* Travel Date */}
-            <motion.div
-              className="col-span-1"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.8 }}
-            >
-              <label className="block text-gray-900 font-semibold mb-3" htmlFor="travelDate">
-                Travel Date
-              </label>
-              <div className="relative">
-                <input
-                  type="date"
-                  id="travelDate"
-                  name="travelDate"
-                  value={formData.travelDate}
-                  onChange={handleInputChange}
-                  className={`w-full p-4 rounded-xl border ${errors.travelDate ? "border-red-400 bg-red-50" : "border-slate-200 bg-slate-50"} focus:outline-none focus:ring-1 focus:ring-sky-500 transition-all`}
-                />
-              </div>
-              {errors.travelDate && (
-                <motion.p
-                  className="text-red-500 text-sm mt-2"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  {errors.travelDate}
-                </motion.p>
-              )}
-            </motion.div>
+            {/* Info Panel / Right Card */}
+            <div className="lg:w-[380px] space-y-8">
+              <div className="bg-white p-10 md:p-12 rounded-[3.5rem] border border-gray-100 shadow-[0_15px_60px_rgba(0,0,0,0.02)] relative overflow-hidden group">
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#2A9D8F]/5 rounded-full -mr-16 -mt-16 blur-2xl" />
 
-            {/* Number of Travelers */}
-            <motion.div
-              className="col-span-1"
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4, delay: 0.9 }}
-            >
-              <label className="block text-gray-900 font-semibold mb-3" htmlFor="travelers">
-                Number of Travelers
-              </label>
-              <div className="relative">
-                <input
-                  type="number"
-                  id="travelers"
-                  name="travelers"
-                  value={formData.travelers}
-                  onChange={handleInputChange}
-                  min="1"
-                  className={`w-full p-4 rounded-xl border ${errors.travelers ? "border-red-400 bg-red-50" : "border-slate-200 bg-slate-50"} focus:outline-none focus:ring-1 focus:ring-sky-500 transition-all`}
-                />
+                <h4 className="text-2xl font-black text-[#0F4C5C] mb-8 relative z-10 tracking-tight">Booking Support</h4>
+
+                <ul className="space-y-8 relative z-10">
+                  <li className="flex gap-6 group/item">
+                    <div className="w-12 h-12 rounded-2xl bg-[#2A9D8F]/10 flex items-center justify-center shrink-0 transition-transform group-hover/item:scale-110 group-hover/item:rotate-6">
+                      <CheckCircle className="w-6 h-6 text-[#2A9D8F]" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-[#0F4C5C] text-lg">Flexible Travel</p>
+                      <p className="text-sm text-gray-500 font-medium mt-1 leading-relaxed">Free cancellation up to 48 hours before.</p>
+                    </div>
+                  </li>
+                  <li className="flex gap-6 group/item">
+                    <div className="w-12 h-12 rounded-2xl bg-[#0F4C5C]/10 flex items-center justify-center shrink-0 transition-transform group-hover/item:scale-110 group-hover/item:rotate-6">
+                      <Calendar className="w-6 h-6 text-[#0F4C5C]" />
+                    </div>
+                    <div>
+                      <p className="font-bold text-[#0F4C5C] text-lg">24/7 Assistance</p>
+                      <p className="text-sm text-gray-500 font-medium mt-1 leading-relaxed">Our elite team is available round the clock.</p>
+                    </div>
+                  </li>
+                </ul>
+
+
               </div>
-              {errors.travelers && (
-                <motion.p
-                  className="text-red-500 text-sm mt-2"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                >
-                  {errors.travelers}
-                </motion.p>
-              )}
-            </motion.div>
+
+
+            </div>
           </div>
-
-          {/* Submit Button */}
-          <motion.button
-            type="submit"
-            disabled={isSubmitting}
-            className={`w-full mt-12 py-5 rounded-xl font-bold uppercase tracking-widest text-white transition-all shadow-lg active:scale-95 ${isSubmitting ? "opacity-75 cursor-not-allowed" : "hover:brightness-110"
-              }`}
-            style={{ background: isSubmitting ? colors.neutral.gray : colors.accent.orange }}
-            whileHover={{ scale: isSubmitting ? 1 : 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 1 }}
+        ) : (
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="bg-white rounded-[4rem] p-16 md:p-24 text-center border border-gray-100 shadow-[0_30px_100px_rgba(0,0,0,0.05)] relative overflow-hidden"
           >
-            {isSubmitting ? (
-              <>
-                <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
-                <span>Processing...</span>
-              </>
-            ) : (
-              <>
-                <CheckCircle className="w-5 h-5" />
-                <span>Confirm Booking</span>
-              </>
-            )}
-            <div className="absolute inset-0 bg-black/20 opacity-0 group-hover:opacity-100 transition duration-300" />
-          </motion.button>
-        </motion.form>
-
-        {/* Confirmation Message */}
-        <AnimatePresence>
-          {showConfirmation && (
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              className="mt-12 bg-white rounded-2xl p-12 text-center border border-slate-200 shadow-2xl"
+            <div className="w-28 h-28 bg-[#2A9D8F]/10 rounded-[2.5rem] flex items-center justify-center mx-auto mb-10 rotate-6">
+              <CheckCircle className="w-14 h-14 text-[#2A9D8F]" />
+            </div>
+            <h2 className="text-4xl md:text-6xl font-black text-[#0F4C5C] mb-8 tracking-tighter">Reservation Received!</h2>
+            <p className="text-gray-500 text-xl max-w-xl mx-auto mb-12 leading-relaxed font-medium">
+              Pack your bags! Your trip request is in. We've dispatched a confirmation summary to <span className="text-[#2A9D8F] font-black">{formData.email}</span>.
+            </p>
+            <button
+              onClick={() => navigate('/')}
+              className="px-16 py-6 bg-[#0F4C5C] text-white rounded-[2.5rem] font-bold text-xl hover:bg-[#0c3e4b] transition-all shadow-2xl shadow-[#0F4C5C]/20 active:scale-95 flex items-center gap-3 mx-auto"
             >
-              <h2
-                className="text-3xl font-bold uppercase tracking-tight mb-4"
-                style={{ color: colors.primary.navy }}
-              >
-                Booking Success
-              </h2>
-              <p className="text-slate-600 mb-10">
-                Your reservation has been received. Our team will contact you shortly via <span className="font-bold text-slate-900">{formData.email}</span>.
-              </p>
-              <button
-                onClick={() => setShowConfirmation(false)}
-                className="bg-slate-900 text-white py-4 px-12 rounded-xl font-bold uppercase tracking-widest text-sm hover:bg-black transition-all"
-              >
-                Return Home
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              Back to Home <ArrowLeft className="w-6 h-6 rotate-180" />
+            </button>
+          </motion.div>
+        )}
       </div>
     </section>
   )
 }
 
-export default Booking
+export default Booking;

@@ -1,45 +1,25 @@
 import React, { useState, useEffect } from 'react';
-import Sidebar from './Sidebar';
+import { motion, AnimatePresence } from 'framer-motion';
+import { MapPin, Clock, DollarSign, Plus, Edit2, Trash2, Search, Upload, X, Globe, Tag, Sparkles, Filter, MoreHorizontal } from 'lucide-react';
+import toast, { Toaster } from 'react-hot-toast';
 import usePlaceStore from '../Store/PlaceStore';
 import useCategoryStore from '../Store/CategoryStore';
-import { Toaster, toast } from 'react-hot-toast';
-import { motion } from 'framer-motion';
-import colors from '../../theme/colors';
 
-
-class ErrorBoundary extends React.Component {
-  state = { hasError: false };
-
-  static getDerivedStateFromError() {
-    return { hasError: true };
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return (
-        <div className="text-center text-red-600 p-6">
-          <h2 className="text-2xl font-bold">Something went wrong.</h2>
-          <p>Please refresh the page or try again later.</p>
-        </div>
-      );
-    }
-    return this.props.children;
-  }
-}
-
-const AddPlace = () => {
-  const [placeName, setPlaceName] = useState('');
-  const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
-  const [duration, setDuration] = useState('');
-  const [location, setLocation] = useState('');
-  const [categoryId, setCategoryId] = useState('');
-  const [image, setImage] = useState(null);
+const ManageDestinations = () => {
+  const [form, setForm] = useState({
+    title: '',
+    description: '',
+    price: '',
+    duration: '',
+    location: '',
+    category_id: '',
+    images: []
+  });
   const [imagePreview, setImagePreview] = useState(null);
   const [editingId, setEditingId] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [errors, setErrors] = useState({});
-  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState('All');
 
   const { places, addPlace, updatePlace, deletePlace, fetchPlaces, isLoading } = usePlaceStore();
   const { categories, fetchCategories } = useCategoryStore();
@@ -49,393 +29,360 @@ const AddPlace = () => {
     fetchCategories();
   }, [fetchPlaces, fetchCategories]);
 
-  const toggleDarkMode = () => setIsDarkMode(!isDarkMode);
-
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    if (file && file.size > 2 * 1024 * 1024) {
-      toast.error('Image size must be less than 2MB!', {
-        className: 'toast-error',
-      });
-      return;
-    }
-    setImage(file);
     if (file) {
       const reader = new FileReader();
       reader.onloadend = () => {
         setImagePreview(reader.result);
+        setForm(prev => ({ ...prev, images: [reader.result] }));
       };
       reader.readAsDataURL(file);
-    } else {
-      setImagePreview(null);
     }
   };
 
-  const validateForm = () => {
-    const newErrors = {};
-    if (!placeName.trim()) newErrors.placeName = 'Title is required';
-    if (!description.trim()) newErrors.description = 'Description is required';
-    if (!price) newErrors.price = 'Price is required';
-    if (!location.trim()) newErrors.location = 'Location is required';
-    if (!categoryId) newErrors.categoryId = 'Category is required';
-    if (!image && !editingId) newErrors.image = 'Image is required';
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+  const openModal = (place = null) => {
+    if (place) {
+      setForm({
+        title: place.title || '',
+        description: place.description || '',
+        price: place.price || '',
+        duration: place.duration || '',
+        location: place.location || '',
+        category_id: place.category_id || '',
+        images: place.images || []
+      });
+      setImagePreview(place.images?.[0] || null);
+      setEditingId(place.id);
+    } else {
+      setForm({ title: '', description: '', price: '', duration: '', location: '', category_id: '', images: [] });
+      setImagePreview(null);
+      setEditingId(null);
+    }
+    setIsModalOpen(true);
   };
 
-  const handleSubmit = async () => {
-    if (!validateForm()) {
-      toast.error('Please fill all required fields!');
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!form.title || !form.category_id) {
+      toast.error('Name and Category are essential');
       return;
     }
 
-    const placeData = {
-      title: placeName.trim(),
-      description: description.trim(),
-      price: parseFloat(price),
-      duration: duration.trim(),
-      location: location.trim(),
-      category_id: categoryId,
-      images: [imagePreview],
-    };
+    const res = editingId 
+      ? await updatePlace(editingId, form)
+      : await addPlace(form);
 
-    try {
-      let result;
-      if (editingId) {
-        result = await updatePlace(editingId, placeData);
-        if (result.success) toast.success('Place updated successfully!');
-      } else {
-        result = await addPlace(placeData);
-        if (result.success) toast.success('Place added successfully!');
-      }
-
-      if (result && result.success) {
-        resetForm();
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error('An error occurred.');
+    if (res.success) {
+      toast.success(editingId ? 'Odyssey Updated' : 'Destination Published');
+      setIsModalOpen(false);
+      fetchPlaces();
+    } else {
+      toast.error('Transmission Error');
     }
   };
 
-  const resetForm = () => {
-    setPlaceName('');
-    setDescription('');
-    setPrice('');
-    setDuration('');
-    setLocation('');
-    setCategoryId('');
-    setImage(null);
-    setImagePreview(null);
-    setEditingId(null);
-    setErrors({});
-  };
-
-  const startEditing = (place) => {
-    setPlaceName(place.title || '');
-    setDescription(place.description || '');
-    setPrice(place.price || '');
-    setDuration(place.duration || '');
-    setLocation(place.location || '');
-    setCategoryId(place.category_id || '');
-    setImagePreview(place.images ? place.images[0] : null);
-    setEditingId(place.id);
-    setErrors({});
-  };
-
-  const handleDelete = (id) => {
-    if (window.confirm('Are you sure you want to delete this place?')) {
-      deletePlace(id);
-      toast.success('Place deleted successfully!', {
-        className: 'toast-success',
-      });
+  const handleDelete = async (id) => {
+    if (window.confirm('Strike this from the records forever?')) {
+      const res = await deletePlace(id);
+      if (res.success) toast.success('Expunged Successfully');
+      else toast.error('Annihilation Failed');
     }
   };
 
-  const filteredPlaces = places.filter((place) => {
-    if (!place || typeof place !== 'object') return false;
-    const title = place.title || '';
-    const location = place.location || '';
-    const query = searchQuery.toLowerCase();
-    return (
-      title.toLowerCase().includes(query) ||
-      location.toLowerCase().includes(query)
-    );
+  const filteredPlaces = places.filter(p => {
+    const matchesSearch = p.title?.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                          p.location?.toLowerCase().includes(searchQuery.toLowerCase());
+    const matchedCategory = activeTab === 'All' || p.categories?.name === activeTab;
+    return matchesSearch && matchedCategory;
   });
 
   return (
-    <ErrorBoundary>
-      <div className="flex min-h-screen" style={{ background: colors.neutral.offWhite, fontFamily: 'Outfit, sans-serif' }}>
-        <Sidebar />
-        <div className="flex-1 ml-64 p-12">
-          <Toaster position="top-right" />
-
-          {/* Page Header */}
-          <div className="mb-12">
-            <h1 className="text-3xl font-bold uppercase tracking-tight" style={{ color: colors.primary.navy }}>
-              Destinations
-            </h1>
-            <p className="text-slate-500 text-sm mt-1">Manage global travel spots and pricing</p>
-          </div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="bg-white rounded-2xl border border-slate-200 p-10 mb-16 shadow-sm"
-          >
-            <h3 className="text-xl font-bold mb-8 uppercase tracking-wider" style={{ color: colors.primary.navy }}>
-              {editingId ? 'Modify Destination' : 'New Destination'}
-            </h3>
-            <div className="space-y-6">
-              <div className="relative">
-                <label className="block text-sm font-medium">Place Name</label>
-                <input
-                  type="text"
-                  className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${errors.placeName ? 'border-red-500' : 'border-gray-300'
-                    } ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
-                  value={placeName}
-                  onChange={(e) => setPlaceName(e.target.value)}
-                  placeholder="Enter place name"
-                  aria-invalid={errors.placeName ? 'true' : 'false'}
-                  aria-describedby={errors.placeName ? 'placeName-error' : undefined}
-                />
-                {errors.placeName && (
-                  <p id="placeName-error" className="text-red-500 text-sm mt-1 flex items-center">
-                    <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.414-1.414L11 9.586V6z" />
-                    </svg>
-                    {errors.placeName}
-                  </p>
-                )}
-              </div>
-              <div className="relative">
-                <label className="block text-sm font-medium">Description</label>
-                <textarea
-                  className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${errors.description ? 'border-red-500' : 'border-gray-300'
-                    } ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  placeholder="Enter description"
-                  rows="4"
-                  aria-invalid={errors.description ? 'true' : 'false'}
-                  aria-describedby={errors.description ? 'description-error' : undefined}
-                />
-                {errors.description && (
-                  <p id="description-error" className="text-red-500 text-sm mt-1 flex items-center">
-                    <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.414-1.414L11 9.586V6z" />
-                    </svg>
-                    {errors.description}
-                  </p>
-                )}
-              </div>
-              <div className="relative">
-                <label className="block text-sm font-medium">Category</label>
-                <select
-                  className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 transition-all duration-200 ${errors.categoryId ? 'border-red-500' : 'border-gray-300'
-                    } ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
-                  value={categoryId}
-                  onChange={(e) => setCategoryId(e.target.value)}
-                >
-                  <option value="">Select Category</option>
-                  {categories.map((cat) => (
-                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                  ))}
-                </select>
-                {errors.categoryId && <p className="text-red-500 text-sm mt-1">{errors.categoryId}</p>}
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div className="relative">
-                  <label className="block text-sm font-medium">Price ($)</label>
-                  <input
-                    type="number"
-                    className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 transition-all duration-200 ${errors.price ? 'border-red-500' : 'border-gray-300'
-                      } ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    placeholder="e.g. 150"
-                  />
-                  {errors.price && <p className="text-red-500 text-sm mt-1">{errors.price}</p>}
-                </div>
-                <div className="relative">
-                  <label className="block text-sm font-medium">Duration</label>
-                  <input
-                    type="text"
-                    className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 transition-all duration-200 ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
-                    value={duration}
-                    onChange={(e) => setDuration(e.target.value)}
-                    placeholder="e.g. 3 Days / 2 Nights"
-                  />
-                </div>
-              </div>
-
-              <div className="relative">
-                <label className="block text-sm font-medium">Location</label>
-                <input
-                  type="text"
-                  className={`mt-1 w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 transition-all duration-200 ${errors.location ? 'border-red-500' : 'border-gray-300'
-                    } ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  placeholder="e.g. Pokhara, Nepal"
-                />
-                {errors.location && <p className="text-red-500 text-sm mt-1">{errors.location}</p>}
-              </div>
-              <div className="relative">
-                <label className="block text-sm font-medium">
-                  {editingId ? 'Upload New Image (Optional)' : 'Upload Image'}
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className={`mt-1 w-full p-3 border rounded-lg text-gray-500 transition-all duration-200 ${errors.image ? 'border-red-500' : 'border-gray-300'
-                    } ${isDarkMode ? 'bg-gray-700 text-white' : ''}`}
-                  onChange={handleImageChange}
-                  aria-invalid={errors.image ? 'true' : 'false'}
-                  aria-describedby={errors.image ? 'image-error' : undefined}
-                />
-                {errors.image && (
-                  <p id="image-error" className="text-red-500 text-sm mt-1 flex items-center">
-                    <svg className="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.414-1.414L11 9.586V6z" />
-                    </svg>
-                    {errors.image}
-                  </p>
-                )}
-                {imagePreview && (
-                  <img
-                    src={imagePreview}
-                    alt="Preview"
-                    className="mt-4 w-full h-48 object-cover rounded-lg shadow-sm"
-                  />
-                )}
-              </div>
-              <div className="flex space-x-4 pt-6">
-                <motion.button
-                  whileTap={{ scale: 0.98 }}
-                  onClick={handleSubmit}
-                  disabled={isLoading}
-                  className="flex-1 py-4 rounded-xl font-bold uppercase tracking-widest text-xs text-white"
-                  style={{ background: colors.accent.orange }}
-                >
-                  {isLoading ? 'Processing...' : editingId ? 'Update Place' : 'Add Place'}
-                </motion.button>
-                <motion.button
-                  whileTap={{ scale: 0.98 }}
-                  onClick={resetForm}
-                  className="flex-1 bg-slate-100 text-slate-400 py-4 rounded-xl font-bold uppercase tracking-widest text-xs hover:bg-slate-200"
-                >
-                  Reset
-                </motion.button>
-              </div>
-            </div>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="mb-8 max-w-lg mx-auto relative"
-          >
-            <input
-              type="text"
-              className={`w-full p-3 border rounded-lg focus:ring-2 focus:ring-teal-500 focus:border-teal-500 transition-all duration-200 ${isDarkMode ? 'bg-gray-700 text-white' : 'bg-white text-gray-900'
-                }`}
-              placeholder="Search places by name, country, or continent"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              aria-label="Search places"
-            />
-            <svg
-              className="absolute right-3 top-3 w-5 h-5 text-gray-400"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </motion.div>
-          <motion.h2
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-            className="text-3xl font-bold mb-8 text-center"
-          >
-            Places
-          </motion.h2>
-          {filteredPlaces.length === 0 ? (
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.5 }}
-              className="text-center text-gray-500"
-            >
-              <svg
-                className="mx-auto h-24 w-24 text-gray-400"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
+    <div className="p-12 min-h-screen bg-[#F8FAFB] font-sans">
+      <Toaster position="top-right" />
+      <div className="max-w-7xl mx-auto">
+        
+        {/* Superior Header */}
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mb-16 gap-8">
+           <div className="space-y-3">
+             <div className="inline-flex items-center gap-2 px-6 py-2 bg-[#0F4C5C]/5 text-[#0F4C5C] rounded-full text-[10px] font-bold uppercase tracking-[0.3em] mb-4 border border-[#0F4C5C]/10 shadow-sm">
+                <Globe className="w-4 h-4" /> Global Portfolio
+             </div>
+             <h1 className="text-6xl font-black text-[#0F4C5C] tracking-tighter leading-none">Curation <span className="text-[#2A9D8F]">Lab.</span></h1>
+             <p className="text-gray-400 font-medium text-lg leading-tight">Meticulously manage the world's most sought-after travel experiences.</p>
+           </div>
+           
+           <div className="flex gap-4 w-full md:w-auto">
+              <button
+                onClick={() => openModal()}
+                className="flex-1 md:flex-none flex items-center justify-center gap-3 px-10 py-5 rounded-[2.5rem] font-bold text-white bg-[#0F4C5C] hover:bg-[#0a3845] transition-all shadow-2xl shadow-[#0F4C5C]/20 active:scale-95"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth="2"
-                  d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l5.447-2.724A1 1 0 0021 13.382V2.618a1 1 0 00-1.447-.894L15 4m0 13l-6-3"
-                />
-              </svg>
-              <p className="mt-4 text-lg">No places found. Add a new destination above!</p>
-            </motion.div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {filteredPlaces.map((place) => (
-                <div
-                  key={place.id}
-                  className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-md transition-all"
-                >
-                  <img
-                    src={(place.images && place.images[0]) || 'https://via.placeholder.com/400x200'}
-                    alt={place.title || 'Place'}
-                    className="w-full h-52 object-cover"
-                  />
-                  <div className="p-6">
-                    <h3 className="text-lg font-bold uppercase tracking-tight" style={{ color: colors.primary.navy }}>
-                      {place.title}
-                    </h3>
-                    <p className="text-slate-500 text-sm mt-2 line-clamp-2">{place.description}</p>
+                <Plus className="w-6 h-6" /> Create Destination
+              </button>
+           </div>
+        </div>
 
-                    <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4">
-                      <span className="text-xl font-black" style={{ color: colors.accent.orange }}>
-                        ${place.price}
-                      </span>
-                      <div className="flex gap-2">
-                        <button
-                          onClick={() => startEditing(place)}
-                          className="text-[10px] uppercase tracking-widest font-bold text-sky-500 hover:text-sky-700"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(place.id)}
-                          className="text-[10px] uppercase tracking-widest font-bold text-red-500 hover:text-red-700"
-                        >
-                          Delete
-                        </button>
-                      </div>
+        {/* Curation Toolbar */}
+        <div className="bg-white rounded-[3.5rem] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col lg:flex-row gap-6 mb-12 items-center">
+           <div className="relative flex-1 group w-full">
+              <Search className="absolute left-8 top-1/2 -translate-y-1/2 text-gray-300 w-6 h-6 group-focus-within:text-[#2A9D8F] transition-colors" />
+              <input 
+                type="text" 
+                placeholder="Find a destination by title, region or heritage..." 
+                className="w-full pl-20 pr-10 py-6 bg-gray-50/50 border-transparent rounded-[2.5rem] focus:outline-none focus:bg-white focus:ring-4 focus:ring-[#2A9D8F]/5 transition-all font-medium text-[#0F4C5C] text-lg"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+           </div>
+           
+           <div className="flex gap-3 overflow-x-auto w-full lg:w-auto p-2 no-scrollbar">
+              {['All', ...categories.map(c => c.name)].map(tab => (
+                <button
+                  key={tab}
+                  onClick={() => setActiveTab(tab)}
+                  className={`px-8 py-5 rounded-[2rem] font-black text-[10px] uppercase tracking-[0.3em] transition-all whitespace-nowrap
+                    ${activeTab === tab 
+                      ? 'bg-[#FF7F50] text-white shadow-xl shadow-[#FF7F50]/20' 
+                      : 'bg-white text-gray-400 hover:text-[#0F4C5C] border border-gray-50'
+                    }`}
+                >
+                  {tab}
+                </button>
+              ))}
+           </div>
+        </div>
+
+        {/* Global Grid */}
+        {isLoading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+            {[1,2,3,4,5,6].map(i => <div key={i} className="h-[450px] bg-white rounded-[3.5rem] animate-pulse border border-gray-50 shadow-sm" />)}
+          </div>
+        ) : filteredPlaces.length === 0 ? (
+          <div className="py-40 text-center bg-white rounded-[5rem] border border-gray-100 shadow-xl max-w-4xl mx-auto">
+             <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-10">
+                <Search className="w-10 h-10 text-gray-200" />
+             </div>
+             <h3 className="text-3xl font-extrabold text-[#0F4C5C] mb-4">No Odysseys Found.</h3>
+             <p className="text-gray-400 font-medium">Try refining your curation or search parameters to reveal results.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+            <AnimatePresence>
+              {filteredPlaces.map((place) => (
+                <motion.div 
+                  key={place.id}
+                  layout
+                  initial={{ opacity: 0, y: 30 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.9 }}
+                  className="bg-white rounded-[3.5rem] border border-gray-50 shadow-[0_15px_60px_rgba(0,0,0,0.03)] overflow-hidden hover:shadow-2xl hover:-translate-y-4 transition-all duration-700 group flex flex-col relative"
+                >
+                  <div className="relative h-[250px] overflow-hidden">
+                    <img 
+                      src={place.images?.[0] || 'https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=800&q=80'} 
+                      className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-[3s]" 
+                      alt={place.title}
+                    />
+                    <div className="absolute top-6 left-6 px-5 py-2.5 bg-white/90 backdrop-blur-xl rounded-2xl font-black text-[#FF7F50] text-xs shadow-xl flex items-center gap-1.5">
+                       <DollarSign className="w-3.5 h-3.5" /> {place.price}
+                    </div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                  </div>
+                  
+                  <div className="p-10 flex-1 flex flex-col relative">
+                    <div className="mb-4">
+                       <span className="text-[10px] uppercase font-black tracking-[0.3em] text-[#2A9D8F] mb-2 block">
+                         {(place.categories?.name || 'Venture').toUpperCase()}
+                       </span>
+                       <h3 className="font-black text-[#0F4C5C] text-2xl tracking-tighter leading-tight group-hover:text-[#FF7F50] transition-colors line-clamp-2">
+                         {place.title}
+                       </h3>
+                    </div>
+                    
+                    <div className="flex items-center gap-3 text-gray-400 font-bold text-xs mb-8">
+                      <MapPin className="w-4 h-4 text-gray-300" />
+                      {place.location}
+                    </div>
+
+                    <p className="text-gray-400 font-medium text-sm leading-relaxed mb-10 line-clamp-3">
+                      {place.description}
+                    </p>
+
+                    <div className="mt-auto pt-8 border-t border-gray-50 flex items-center justify-between">
+                       <div className="flex items-center gap-2.5 text-[#0F4C5C]/40 text-[10px] font-black uppercase tracking-widest">
+                          <Clock className="w-4 h-4 text-[#FF7F50]" /> {place.duration}
+                       </div>
+                       <div className="flex gap-2">
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); openModal(place); }}
+                            className="w-12 h-12 rounded-2xl bg-[#0F4C5C]/5 text-[#0F4C5C] hover:bg-[#0F4C5C] hover:text-white transition-all shadow-sm flex items-center justify-center"
+                          >
+                            <Edit2 className="w-5 h-5" />
+                          </button>
+                          <button 
+                            onClick={(e) => { e.stopPropagation(); handleDelete(place.id); }}
+                            className="w-12 h-12 rounded-2xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm flex items-center justify-center"
+                          >
+                            <Trash2 className="w-5 h-5" />
+                          </button>
+                       </div>
                     </div>
                   </div>
-                </div>
+                  
+                  {/* Premium Tag Overlay */}
+                  {place.id % 3 === 0 && (
+                     <div className="absolute top-4 right-[-40px] bg-[#FF7F50] text-white px-12 py-2 text-[8px] font-black uppercase tracking-[0.4em] rotate-45 shadow-xl">
+                        Featured
+                     </div>
+                  )}
+                </motion.div>
               ))}
-            </div>
-          )}
-        </div>
+            </AnimatePresence>
+          </div>
+        )}
       </div>
-    </ErrorBoundary>
+
+      {/* Narrative Modal Experience */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-6 bg-[#0F4C5C]/30 backdrop-blur-xl">
+            <motion.div 
+              initial={{ scale: 0.95, opacity: 0, y: 100 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 100 }}
+              className="relative w-full max-w-4xl bg-white rounded-[4rem] shadow-[0_50px_100px_rgba(0,0,0,0.3)] overflow-hidden border border-white"
+            >
+              <div className="p-12 border-b border-gray-50 flex justify-between items-center bg-[#F8FAFB]/50">
+                <div>
+                   <h3 className="text-4xl font-black text-[#0F4C5C] tracking-tighter">
+                     {editingId ? 'Refine Odyssey' : 'Publish Discovery'}
+                   </h3>
+                   <p className="text-gray-400 font-medium mt-1">Populate the global collection with world-class details.</p>
+                </div>
+                <button onClick={() => setIsModalOpen(false)} className="w-16 h-16 rounded-[1.5rem] bg-white text-gray-400 hover:text-red-500 shadow-xl flex items-center justify-center transition-all">
+                  <X className="w-6 h-6" />
+                </button>
+              </div>
+
+              <form onSubmit={handleSubmit} className="p-12 max-h-[65vh] overflow-y-auto premium-scrollbar grid grid-cols-1 md:grid-cols-12 gap-10">
+                <div className="md:col-span-12 space-y-3">
+                   <label className="text-[10px] font-black text-[#0F4C5C] uppercase tracking-[0.4em] pl-2">Signature Title</label>
+                   <input
+                     type="text"
+                     className="w-full p-6 bg-gray-50/50 border border-gray-100 rounded-[1.5rem] focus:outline-none focus:bg-white focus:ring-4 focus:ring-[#2A9D8F]/10 transition-all font-black text-2xl text-[#0F4C5C]"
+                     placeholder="The Grand Himalayan Odyssey"
+                     value={form.title}
+                     onChange={e => setForm({...form, title: e.target.value})}
+                     required
+                   />
+                </div>
+
+                <div className="md:col-span-6 space-y-3">
+                   <label className="text-[10px] font-black text-[#0F4C5C] uppercase tracking-[0.4em] pl-2">Venture Category</label>
+                   <div className="relative">
+                      <select
+                        className="w-full p-5 bg-gray-50/50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-4 focus:ring-[#2A9D8F]/10 transition-all font-bold appearance-none cursor-pointer"
+                        value={form.category_id}
+                        onChange={e => setForm({...form, category_id: e.target.value})}
+                        required
+                      >
+                        <option value="">Map to Category...</option>
+                        {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
+                      </select>
+                      <Tag className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-300 w-5 h-5 pointer-events-none" />
+                   </div>
+                </div>
+
+                <div className="md:col-span-6 space-y-3">
+                   <label className="text-[10px] font-black text-[#0F4C5C] uppercase tracking-[0.4em] pl-2">Pricing Structure ($)</label>
+                   <div className="relative">
+                      <input
+                        type="text"
+                        className="w-full p-5 pl-12 bg-gray-50/50 border border-gray-100 rounded-2xl focus:outline-none focus:bg-white transition-all font-bold text-[#FF7F50]"
+                        placeholder="2,199"
+                        value={form.price}
+                        onChange={e => setForm({...form, price: e.target.value})}
+                      />
+                      <DollarSign className="absolute left-5 top-1/2 -translate-y-1/2 text-[#FF7F50] w-5 h-5" />
+                   </div>
+                </div>
+
+                <div className="md:col-span-12 space-y-3">
+                   <label className="text-[10px] font-black text-[#0F4C5C] uppercase tracking-[0.4em] pl-2">Narrative Summary</label>
+                   <textarea
+                     rows="5"
+                     className="w-full p-6 bg-gray-50/50 border border-gray-100 rounded-[2rem] focus:outline-none focus:bg-white transition-all font-medium text-gray-600 resize-none leading-relaxed"
+                     placeholder="Tell the story of this journey..."
+                     value={form.description}
+                     onChange={e => setForm({...form, description: e.target.value})}
+                   />
+                </div>
+
+                <div className="md:col-span-6 space-y-3">
+                   <label className="text-[10px] font-black text-[#0F4C5C] uppercase tracking-[0.4em] pl-2">Duration / Scale</label>
+                   <div className="relative">
+                      <input
+                        type="text"
+                        className="w-full p-5 pl-12 bg-gray-50/50 border border-gray-100 rounded-2xl focus:outline-none transition-all font-bold"
+                        placeholder="7 Days / 6 Nights"
+                        value={form.duration}
+                        onChange={e => setForm({...form, duration: e.target.value})}
+                      />
+                      <Clock className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-300 w-5 h-5" />
+                   </div>
+                </div>
+
+                <div className="md:col-span-6 space-y-3">
+                   <label className="text-[10px] font-black text-[#0F4C5C] uppercase tracking-[0.4em] pl-2">Geographical Focus</label>
+                   <div className="relative">
+                      <input
+                        type="text"
+                        className="w-full p-5 pl-12 bg-gray-50/50 border border-gray-100 rounded-2xl focus:outline-none transition-all font-bold"
+                        placeholder="High Altitude Nepal"
+                        value={form.location}
+                        onChange={e => setForm({...form, location: e.target.value})}
+                      />
+                      <MapPin className="absolute left-5 top-1/2 -translate-y-1/2 text-[#2A9D8F] w-5 h-5" />
+                   </div>
+                </div>
+
+                <div className="md:col-span-12 pt-6">
+                   <div className="flex flex-col md:flex-row gap-6 items-center">
+                      <div className="flex-1 w-full">
+                         <label className="flex flex-col items-center justify-center p-12 border-4 border-dashed border-[#0F4C5C]/5 hover:border-[#2A9D8F]/20 rounded-[3rem] bg-[#F8FAFB] hover:bg-white transition-all cursor-pointer group group">
+                            <Upload className="w-12 h-12 text-gray-300 group-hover:text-[#2A9D8F] mb-4 transform group-hover:-translate-y-2 transition-transform" />
+                            <span className="text-xs font-black text-gray-400 uppercase tracking-widest">Master Cover Artifact</span>
+                            <input type="file" onChange={handleImageChange} className="hidden" accept="image/*" />
+                         </label>
+                      </div>
+                      <AnimatePresence>
+                         {imagePreview && (
+                           <motion.div initial={{ scale: 0, x: 20 }} animate={{ scale: 1, x: 0 }} className="w-48 h-48 rounded-[2.5rem] overflow-hidden border-4 border-white shadow-2xl relative shrink-0">
+                              <img src={imagePreview} className="w-full h-full object-cover" alt="Preview" />
+                              <button type="button" onClick={() => setImagePreview(null)} className="absolute top-3 right-3 bg-red-500 text-white p-2 rounded-xl shadow-lg hover:scale-110 transition-transform">
+                                 <X className="w-4 h-4" />
+                              </button>
+                           </motion.div>
+                         )}
+                      </AnimatePresence>
+                   </div>
+                </div>
+
+                <div className="md:col-span-12 flex gap-6 pt-10">
+                  <button type="submit" className="flex-1 py-6 bg-[#2A9D8F] text-white rounded-[2.5rem] font-black text-xl uppercase tracking-widest hover:bg-[#218074] transition-all shadow-xl shadow-[#2A9D8F]/20 active:scale-95">
+                     {editingId ? 'Refine Odyssey' : 'Authorize Discovery'}
+                  </button>
+                  <button type="button" onClick={() => setIsModalOpen(false)} className="px-12 py-6 bg-white text-[#0F4C5C] border border-gray-100 rounded-[2.5rem] font-black text-xl uppercase tracking-widest hover:bg-gray-50 transition-all shadow-sm">
+                     Halt
+                  </button>
+                </div>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 
-export default AddPlace;
+export default ManageDestinations;
