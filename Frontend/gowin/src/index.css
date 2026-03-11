@@ -23,6 +23,10 @@
   --color-dark-gray: #333333;
   --color-charcoal: #212529;
   
+  /* Selection Colors */
+  --color-selection: #3B82F6; /* Vibrant Blue */
+  --color-selection-text: #FFFFFF;
+  
   /* Typography Scale */
   --font-heading: 'Playfair Display', Georgia, serif;
   --font-body: 'Poppins', 'Inter', 'Roboto', -apple-system, system-ui, sans-serif;
@@ -318,10 +322,15 @@ html {
   outline-offset: 2px;
 }
 
-/* Selection color */
+/* Selection color - Professional Blue Contrast */
 ::selection {
-  background-color: var(--color-teal);
-  color: white;
+  background-color: var(--color-selection);
+  color: var(--color-selection-text);
+}
+
+::-moz-selection {
+  background-color: var(--color-selection);
+  color: var(--color-selection-text);
 }
 
 /* Image optimization */

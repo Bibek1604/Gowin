@@ -29,102 +29,78 @@ const Navbar = () => {
 
   return (
     <nav 
-      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-700 px-4 md:px-8 ${
+      className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-700 ${
         isScrolled 
-          ? 'py-4' 
-          : 'py-8'
+          ? 'bg-white/90 backdrop-blur-[40px] py-5 shadow-[0_20px_80px_rgba(0,0,0,0.08)] border-b border-gray-100' 
+          : 'bg-transparent py-10'
       }`}
     >
-      <div 
-        className={`mx-auto transition-all duration-700 ease-out relative ${
-          isScrolled 
-            ? 'max-w-5xl bg-white/80 backdrop-blur-2xl px-8 py-4 rounded-[2.5rem] shadow-[0_30px_100px_rgba(15,76,92,0.15)] border border-white/40 overflow-hidden' 
-            : 'max-w-7xl px-4 py-2 bg-transparent'
-        }`}
-      >
-        {/* Top edge gradient stripe on scroll */}
-        {isScrolled && (
-          <div className="absolute top-0 left-0 right-0 h-[2px] bg-gradient-to-r from-[#2A9D8F] via-[#0F4C5C] to-[#FF7F50] opacity-60" />
-        )}
+      {/* Decorative Brand Stripe - Sophisticated accent */}
+      {isScrolled && (
+        <div className="absolute top-0 left-0 right-0 h-[3px] bg-gradient-to-r from-[#2A9D8F] via-[#FF7F50] to-[#2A9D8F] opacity-80" />
+      )}
 
-        <div className="flex justify-between items-center">
-          
-          {/* Logo Area */}
-          <Link to="/" className="flex items-center gap-4 group">
-            <div className={`transition-all duration-500 rounded-[1.3rem] overflow-hidden ${isScrolled ? 'w-10 h-10 shadow-lg' : 'w-14 h-14 shadow-[0_20px_50px_rgba(42,157,143,0.3)] scale-110'}`}>
-               <img src={gowinLogo} alt="Gowin" className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+      <div className="max-w-7xl mx-auto px-6 sm:px-12 flex items-center justify-between">
+        
+        {/* Left: Brand Identity */}
+        <Link to="/" className="flex items-center gap-6 group">
+          <div className={`relative transition-all duration-700 ${isScrolled ? 'w-12 h-12 shadow-lg' : 'w-20 h-20'}`}>
+            <div className={`absolute inset-0 bg-[#2A9D8F]/20 blur-2xl rounded-full transition-opacity duration-700 ${isScrolled ? 'opacity-0' : 'opacity-100'}`} />
+            <div className="relative w-full h-full rounded-[1.5rem] overflow-hidden shadow-2xl border-2 border-white/30 transform group-hover:rotate-6 transition-transform">
+              <img src={gowinLogo} alt="Gowin" className="w-full h-full object-cover" />
             </div>
-            <div className="flex flex-col">
-              <span className={`text-2xl font-black tracking-tighter leading-none transition-all duration-500 ${isScrolled ? 'text-[#0F4C5C]' : 'text-white drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]'}`}>
-                Gowin<span className="text-[#FF7F50]">.</span>
-              </span>
-              {!isScrolled && (
-                <span className="text-[9px] font-black uppercase tracking-[0.4em] text-[#2A9D8F] mt-1 shadow-sm px-1 bg-white/10 rounded-sm">
-                  Premium Travels
-                </span>
-              )}
-            </div>
-          </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden lg:flex items-center gap-8 xl:gap-12">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                to={link.href}
-                className={`text-[12px] font-black uppercase tracking-[0.25em] transition-all duration-300 relative group py-2 
-                  ${isScrolled 
-                    ? (isActive(link.href) ? 'text-[#0F4C5C]' : 'text-gray-400 hover:text-[#2A9D8F]') 
-                    : (isActive(link.href) ? 'text-[#FF7F50]' : 'text-white/80 hover:text-white')
-                  }`}
-              >
-                {link.text}
-                <span className={`absolute -bottom-1 left-1/2 -translate-x-1/2 h-2 w-2 rounded-full transition-all duration-500 shadow-[0_0_15px_currentColor] 
-                  ${isActive(link.href) 
-                    ? 'opacity-100 scale-100 bg-[#FF7F50] text-[#FF7F50]' 
-                    : 'opacity-0 scale-0 bg-[#2A9D8F] text-[#2A9D8F] group-hover:opacity-60 group-hover:scale-100'}`} 
-                />
-              </Link>
-            ))}
           </div>
+          <div className="flex flex-col">
+            <span className={`text-4xl font-black tracking-tighter leading-none transition-all duration-500 ${isScrolled ? 'text-[#0F4C5C]' : 'text-white drop-shadow-[0_10px_20px_rgba(0,0,0,0.4)]'}`}>
+              Gowin<span className="text-[#2A9D8F]">.</span>
+            </span>
+            <span className={`text-[11px] font-black uppercase tracking-[0.5em] transition-all duration-500 overflow-hidden ${isScrolled ? 'h-0 opacity-0' : 'h-auto opacity-80 text-[#2A9D8F] mt-2'}`}>
+              Elite Concierge
+            </span>
+          </div>
+        </Link>
 
-          {/* Action Buttons */}
-          <div className="hidden lg:flex items-center gap-4">
-            {isAdmin ? (
-               <div className="flex items-center gap-3">
-                  <Link 
-                    to="/admin/dashboard" 
-                    className={`flex items-center gap-3 px-6 py-2.5 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all
-                      ${isScrolled 
-                        ? 'bg-gradient-to-r from-[#0F4C5C] to-[#0a3845] text-white shadow-xl shadow-[#0F4C5C]/20 hover:-translate-y-0.5' 
-                        : 'bg-white/15 backdrop-blur-xl text-white border border-white/30 hover:bg-white/30'
-                      }`}
-                  >
-                    <ShieldCheck className="w-4 h-4 text-[#2A9D8F]" /> Admin
-                  </Link>
-               </div>
-            ) : (
+        {/* Center: Essential Navigation */}
+        <div className="hidden lg:flex items-center gap-14">
+          {navLinks.map((link) => (
+            <Link
+              key={link.href}
+              to={link.href}
+              className={`text-[14px] font-black uppercase tracking-[0.25em] transition-all duration-500 relative group py-2
+                ${isScrolled 
+                  ? (isActive(link.href) ? 'text-[#0F4C5C]' : 'text-gray-400 hover:text-[#2A9D8F]') 
+                  : (isActive(link.href) ? 'text-[#2A9D8F]' : 'text-white hover:text-white/80')
+                }`}
+            >
+              <span className="relative z-10 group-hover:tracking-[0.35em] transition-all duration-500">{link.text}</span>
+              <span className={`absolute -bottom-1 left-0 h-[2px] bg-[#2A9D8F] transition-all duration-500 shadow-[0_0_15px_#2A9D8F] ${isActive(link.href) ? 'w-full' : 'w-0 group-hover:w-full'}`} />
+            </Link>
+          ))}
+        </div>
+
+        {/* Right: Premium Actions */}
+        <div className="flex items-center gap-6">
+          <div className="hidden lg:flex items-center gap-3">
+            {isAdmin && (
                <Link 
-                 to="/login"
-                 className={`flex items-center gap-3 px-8 py-4 rounded-[1.8rem] font-black text-[11px] uppercase tracking-[0.2em] transition-all active:scale-95 group/btn relative overflow-hidden
+                 to="/admin/dashboard" 
+                 className={`flex items-center gap-3 px-8 py-3.5 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all duration-500
                    ${isScrolled 
-                     ? 'bg-gradient-to-br from-[#2A9D8F] via-[#2A9D8F] to-[#0F4C5C] text-white shadow-[0_15px_45px_rgba(42,157,143,0.4)] hover:shadow-[0_20px_60px_rgba(42,157,143,0.5)]' 
-                     : 'bg-white text-[#0F4C5C] shadow-2xl hover:-translate-y-1 hover:shadow-white/20'
+                     ? 'bg-[#0F4C5C] text-white shadow-xl shadow-[#0F4C5C]/20 hover:-translate-y-1' 
+                     : 'bg-white/10 backdrop-blur-xl text-white border border-white/20 hover:bg-white/20 shadow-2xl'
                    }`}
                >
-                 <div className="absolute inset-0 bg-white/20 opacity-0 group-hover/btn:opacity-100 transition-opacity" />
-                 <User className={`w-4 h-4 transition-transform group-hover/btn:scale-125 z-10 ${isScrolled ? 'text-white/80' : 'text-[#2A9D8F]'}`} /> 
-                 <span className="relative z-10">Member Access</span>
+                 <ShieldCheck className="w-4.5 h-4.5 text-[#2A9D8F]" /> Dashboard
                </Link>
             )}
           </div>
 
           {/* Mobile Menu Trigger */}
           <button 
-            className={`lg:hidden p-3 rounded-2xl transition-all shadow-lg ${isScrolled ? 'bg-[#0F4C5C]/5 text-[#0F4C5C]' : 'bg-white/10 text-white border border-white/20'}`}
+            className={`lg:hidden p-4 rounded-2xl transition-all ${isScrolled ? 'bg-gray-100 text-[#0F4C5C]' : 'bg-white/20 text-white border border-white/20'}`}
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
-            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {isMobileMenuOpen ? <X className="w-7 h-7" /> : <Menu className="w-7 h-7" />}
           </button>
         </div>
       </div>
@@ -164,7 +140,7 @@ const Navbar = () => {
             </nav>
 
             <div className="pt-10 border-t border-gray-50">
-               {isAdmin ? (
+               {isAdmin && (
                   <div className="space-y-4">
                      <Link 
                        to="/admin/dashboard" 
@@ -180,14 +156,6 @@ const Navbar = () => {
                         Sign Out
                      </button>
                   </div>
-               ) : (
-                  <Link 
-                    to="/login"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center justify-center gap-3 w-full bg-[#2A9D8F] text-white py-5 rounded-[2rem] font-bold shadow-xl shadow-[#2A9D8F]/20"
-                   >
-                    <User className="w-5 h-5" /> Travel Portal Access
-                  </Link>
                )}
                
                <div className="mt-10 flex justify-center gap-6 text-gray-300">

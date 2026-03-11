@@ -23,6 +23,7 @@ import TourismHome from './components/Tourism/TourismHome';
 import About from './components/Tourism/About';
 import Contact from './components/Tourism/Contact';
 import colors from './theme/colors';
+import ScrollToTop from './components/Layout/ScrollToTop';
 
 // Admin layout with sidebar
 function AdminLayout({ children }) {
@@ -156,6 +157,7 @@ function AppContent() {
 
       {/* Footer only on non-admin pages */}
       {!isAdminRoute && <Footer />}
+      <ScrollToTop />
     </div>
   );
 }

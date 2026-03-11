@@ -210,7 +210,7 @@ function Booking() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-[#2A9D8F] text-white py-6 rounded-[2.5rem] font-black text-xl uppercase tracking-[0.2em] hover:bg-[#238b7e] transition-all shadow-2xl shadow-[#2A9D8F]/30 disabled:opacity-50 disabled:cursor-not-allowed mt-4 active:scale-95 flex items-center justify-center gap-4"
+                  className="w-full bg-[#2A9D8F] text-white py-5 rounded-3xl font-black text-lg uppercase tracking-[0.2em] hover:bg-[#238b7e] transition-all shadow-2xl shadow-[#2A9D8F]/30 disabled:opacity-50 disabled:cursor-not-allowed mt-4 active:scale-95 flex items-center justify-center gap-4"
                 >
                   {isSubmitting ? (
                     <>
@@ -276,9 +276,9 @@ function Booking() {
             </p>
             <button
               onClick={() => navigate('/')}
-              className="px-16 py-6 bg-[#0F4C5C] text-white rounded-[2.5rem] font-bold text-xl hover:bg-[#0c3e4b] transition-all shadow-2xl shadow-[#0F4C5C]/20 active:scale-95 flex items-center gap-3 mx-auto"
+              className="px-12 py-5 bg-[#0F4C5C] text-white rounded-3xl font-bold text-lg hover:bg-[#0c3e4b] transition-all shadow-2xl shadow-[#0F4C5C]/20 active:scale-95 flex items-center gap-3 mx-auto"
             >
-              Back to Home <ArrowLeft className="w-6 h-6 rotate-180" />
+              Back to Home <ArrowLeft className="w-5 h-5 rotate-180" />
             </button>
           </motion.div>
         )}
