@@ -1,10 +1,9 @@
 {
-  "buildCommand": "cd Frontend/gowin && npm install && npm run build",
+  "version": 2,
+  "public": true,
+  "buildCommand": "cd Frontend/gowin && npm run build",
   "outputDirectory": "Frontend/gowin/dist",
   "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
+    { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
