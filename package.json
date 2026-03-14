@@ -1,4 +1,7 @@
 {
+  "name": "gowin-monorepo",
+  "version": "1.0.0",
+  "private": true,
   "scripts": {
     "build": "cd Frontend/gowin && npm install && npm run build"
   },
