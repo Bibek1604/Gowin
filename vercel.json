@@ -1,0 +1,10 @@
+{
+  "buildCommand": "cd Frontend/gowin && npm install && npm run build",
+  "outputDirectory": "Frontend/gowin/dist",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
