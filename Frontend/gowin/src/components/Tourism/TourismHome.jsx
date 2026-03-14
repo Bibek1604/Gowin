@@ -23,7 +23,6 @@ const TourismHome = () => {
         <WhyChooseUs />
         <BookingSteps />
         <Testimonials />
-        <Gallery />
         <Contact />
         <CTA />
       </main>

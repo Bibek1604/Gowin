@@ -22,8 +22,15 @@ import Navbar from './components/Tourism/Navbar';
 import TourismHome from './components/Tourism/TourismHome';
 import About from './components/Tourism/About';
 import Contact from './components/Tourism/Contact';
+import AllDestinations from './components/Tourism/AllDestinations';
+import PrivacyPolicy from './components/Tourism/PrivacyPolicy';
+import RefundPolicy from './components/Tourism/RefundPolicy';
+import TravelGuides from './components/Tourism/TravelGuides';
+import ContactSupport from './components/Tourism/ContactSupport';
+import TermsConditions from './components/Tourism/TermsConditions';
 import colors from './theme/colors';
 import ScrollToTop from './components/Layout/ScrollToTop';
+import RouteScrollReset from './components/Layout/RouteScrollReset';
 
 // Admin layout with sidebar
 function AdminLayout({ children }) {
@@ -146,10 +153,16 @@ function AppContent() {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<TourismHome />} />
         <Route path="/places/:placeId" element={<DestinationDetails />} />
+        <Route path="/details/all" element={<AllDestinations />} />
         <Route path="/details/:placeId" element={<DestinationDetails />} />
         <Route path="/booking" element={<BookingForm />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />
+        <Route path="/privacy" element={<PrivacyPolicy />} />
+        <Route path="/refund" element={<RefundPolicy />} />
+        <Route path="/guides" element={<TravelGuides />} />
+        <Route path="/support" element={<ContactSupport />} />
+        <Route path="/terms" element={<TermsConditions />} />
 
         {/* Catch-all for 404 Not Found */}
         <Route path="*" element={<NotFound />} />
@@ -158,6 +171,7 @@ function AppContent() {
       {/* Footer only on non-admin pages */}
       {!isAdminRoute && <Footer />}
       <ScrollToTop />
+      <RouteScrollReset />
     </div>
   );
 }

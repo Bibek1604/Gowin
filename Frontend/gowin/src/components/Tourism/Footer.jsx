@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Mail, Instagram, Facebook, Twitter, ChevronRight, CheckCircle } from 'lucide-react';
+import { Link } from 'react-router-dom';
 import { supabase } from '../../supabaseClient';
 import gowinLogo from '../../assets/gowin.jpg';
+import usePlaceStore from '../Store/PlaceStore';
 
 const Footer = () => {
   const [email, setEmail] = useState('');
   const [isSubscribing, setIsSubscribing] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
   const [subError, setSubError] = useState('');
+  const { places, fetchPlaces } = usePlaceStore();
+
+  useEffect(() => {
+    if (places.length === 0) {
+      fetchPlaces();
+    }
+  }, [fetchPlaces, places.length]);
+
+  const footerDestinations = places.slice(0, 5);
 
   const handleSubscribe = async (e) => {
     e.preventDefault();
@@ -39,22 +50,16 @@ const Footer = () => {
           
           <div>
              <div className="flex items-center gap-3 mb-6">
-              <div className="w-10 h-10 rounded-xl overflow-hidden shadow-sm">
-                 <img src={gowinLogo} alt="Gowin" className="w-full h-full object-cover" />
-              </div>
-              <span className="font-bold text-2xl text-[#0F4C5C]">Gowin</span>
-            </div>
-            <p className="text-gray-500 mb-6 leading-relaxed">
-              Premium travel agency dedicated to curating the most exciting and unforgettable experiences around the globe.
+               <div className="w-10 h-10 rounded-xl overflow-hidden shadow-sm">
+                  <img src={gowinLogo} alt="Gowin" className="w-full h-full object-cover" />
+               </div>
+               <span className="font-bold text-2xl text-[#0F4C5C]">Gowin</span>
+             </div>
+            <p className="text-gray-500 mb-6 leading-relaxed text-sm">
+              Elite concierge dedicated to curating the world's most breathtaking travel experiences.
             </p>
             <div className="flex gap-4">
-              <a href="#" className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-500 hover:bg-[#0F4C5C] hover:text-white transition-colors">
-                <Instagram className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-500 hover:bg-[#0F4C5C] hover:text-white transition-colors">
-                <Twitter className="w-5 h-5" />
-              </a>
-              <a href="#" className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-500 hover:bg-[#0F4C5C] hover:text-white transition-colors">
+              <a href="https://www.facebook.com/share/15cfo9obmC3/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-500 hover:bg-[#0F4C5C] hover:text-white transition-colors">
                 <Facebook className="w-5 h-5" />
               </a>
             </div>
@@ -63,26 +68,43 @@ const Footer = () => {
           <div>
             <h4 className="font-bold text-[#0F4C5C] text-xl mb-6">Destinations</h4>
             <ul className="space-y-4">
-              {['Maldives, Beach', 'Swiss Alps, Mountains', 'Kyoto, City', 'Safari, Africa', 'Santorini, Greece'].map((link, i) => (
-                <li key={i}>
-                  <a href="#" className="text-gray-500 hover:text-[#FF7F50] transition-colors flex items-center gap-2 group">
-                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#FF7F50] transition-colors" />
-                    {link}
-                  </a>
-                </li>
-              ))}
+              {footerDestinations.length > 0 ? (
+                footerDestinations.map((dest) => (
+                  <li key={dest.id}>
+                    <Link to={`/places/${dest.id}`} className="text-gray-500 hover:text-[#FF7F50] transition-colors flex items-center gap-2 group">
+                      <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#FF7F50] transition-colors" />
+                      {dest.title}
+                    </Link>
+                  </li>
+                ))
+              ) : (
+                ['Maldives', 'Swiss Alps', 'Safari', 'Santorini', 'Kyoto'].map((link, i) => (
+                  <li key={i}>
+                    <Link to="/details/all" className="text-gray-500 hover:text-[#FF7F50] transition-colors flex items-center gap-2 group">
+                      <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#FF7F50] transition-colors" />
+                      {link}
+                    </Link>
+                  </li>
+                ))
+              )}
             </ul>
           </div>
 
           <div>
             <h4 className="font-bold text-[#0F4C5C] text-xl mb-6">Quick Links</h4>
             <ul className="space-y-4">
-              {['About Us', 'Travel Guides', 'Booking Terms', 'Privacy Policy', 'Contact Support'].map((link, i) => (
+              {[
+                { name: 'About Us', link: '/about' },
+                { name: 'Travel Guides', link: '/guides' },
+                { name: 'Refund Policy', link: '/refund' },
+                { name: 'Privacy Policy', link: '/privacy' },
+                { name: 'Contact Support', link: '/support' }
+              ].map((item, i) => (
                 <li key={i}>
-                  <a href="#" className="text-gray-500 hover:text-[#0F4C5C] transition-colors flex items-center gap-2 group">
+                  <Link to={item.link} className="text-gray-500 hover:text-[#0F4C5C] transition-colors flex items-center gap-2 group">
                     <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#0F4C5C] transition-colors" />
-                    {link}
-                  </a>
+                    {item.name}
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -124,8 +146,8 @@ const Footer = () => {
         <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-gray-400 text-sm">© 2026 Gowin. All rights reserved.</p>
           <div className="flex gap-6 text-sm">
-            <a href="#" className="text-gray-400 hover:text-[#0F4C5C]">Terms & Conditions</a>
-            <a href="#" className="text-gray-400 hover:text-[#0F4C5C]">Privacy</a>
+            <Link to="/terms" className="text-gray-400 hover:text-[#0F4C5C]">Terms & Conditions</Link>
+            <Link to="/privacy" className="text-gray-400 hover:text-[#0F4C5C]">Privacy</Link>
           </div>
         </div>
       </div>

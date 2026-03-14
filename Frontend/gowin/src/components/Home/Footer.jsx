@@ -1,21 +1,19 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import gowin from '../../assets/gowin.jpg';
 import { motion } from 'framer-motion';
 import { Facebook, Instagram, Twitter, Linkedin, Mail, Phone, MapPin, Send, Heart, ArrowRight } from 'lucide-react';
 
 const Footer = () => {
   const socialLinks = [
-    { icon: Facebook, href: '#', label: 'Facebook', color: '#1877F2' },
-    { icon: Instagram, href: '#', label: 'Instagram', color: '#E4405F' },
-    { icon: Twitter, href: '#', label: 'Twitter', color: '#1DA1F2' },
-    { icon: Linkedin, href: '#', label: 'LinkedIn', color: '#0A66C2' },
+    { icon: Facebook, href: 'https://www.facebook.com/share/15cfo9obmC3/?mibextid=wwXIfr', label: 'Facebook', color: '#1877F2' },
   ];
 
   const companyLinks = [
-    { text: 'About Us', href: '/aboutus' },
+    { text: 'About Us', href: '/about' },
     { text: 'Our Services', href: '/#services' },
-    { text: 'Contact Us', href: '/contactus' },
-    { text: 'Privacy Policy', href: '#' },
+    { text: 'Contact Us', href: '/contact' },
+    { text: 'Privacy Policy', href: '/privacy' },
   ];
 
   const destinations = [
@@ -84,18 +82,7 @@ const Footer = () => {
                 </div>
                 <span className="text-sm font-medium leading-relaxed">Kathmandu, Nepal<br />Shankhamul-31</span>
               </li>
-              <li className="flex items-center gap-4">
-                <div className="p-2 bg-slate-900 rounded-lg border border-slate-800">
-                  <Phone className="w-4 h-4 text-sky-400" />
-                </div>
-                <span className="text-sm font-medium">+977 9851410966</span>
-              </li>
-              <li className="flex items-center gap-4">
-                <div className="p-2 bg-slate-900 rounded-lg border border-slate-800">
-                  <Mail className="w-4 h-4 text-sky-400" />
-                </div>
-                <span className="text-sm font-medium">info@gowin.com</span>
-              </li>
+
             </ul>
           </div>
 
@@ -104,10 +91,17 @@ const Footer = () => {
             <ul className="space-y-4">
               {companyLinks.map((link, i) => (
                 <li key={i}>
-                  <a href={link.href} className="text-sm font-semibold hover:text-sky-400 transition-colors flex items-center gap-2 group">
-                    <ArrowRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
-                    {link.text}
-                  </a>
+                  {link.href.startsWith('/#') ? (
+                    <a href={link.href} className="text-sm font-semibold hover:text-sky-400 transition-colors flex items-center gap-2 group">
+                      <ArrowRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                      {link.text}
+                    </a>
+                  ) : (
+                    <Link to={link.href} className="text-sm font-semibold hover:text-sky-400 transition-colors flex items-center gap-2 group">
+                      <ArrowRight className="w-3 h-3 opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all" />
+                      {link.text}
+                    </Link>
+                  )}
                 </li>
               ))}
             </ul>

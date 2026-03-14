@@ -37,9 +37,9 @@ const Contact = () => {
   };
 
   const contactItems = [
-    { icon: <MapPin className="w-6 h-6" />, label: "Headquarters", value: "123 Gowin Ave, New York, NY", color: "text-[#0F4C5C] bg-[#0F4C5C]/5" },
-    { icon: <Phone className="w-6 h-6" />, label: "Direct Support", value: "+1 (555) 123-4567", color: "text-[#FF7F50] bg-[#FF7F50]/5" },
-    { icon: <Mail className="w-6 h-6" />, label: "Email Inquiry", value: "concierge@gowin.com", color: "text-[#2A9D8F] bg-[#2A9D8F]/5" },
+    { icon: <MapPin className="w-6 h-6" />, label: "Headquarters", value: "Shankhamul-31, Kathmandu, Nepal", color: "text-[#0F4C5C] bg-[#0F4C5C]/5" },
+    { icon: <Phone className="w-6 h-6" />, label: "Direct Support", value: "+977 9851410966", color: "text-[#FF7F50] bg-[#FF7F50]/5" },
+    { icon: <Mail className="w-6 h-6" />, label: "Email Inquiry", value: "Info.gowintravels@gmail.com", color: "text-[#0F4C5C] bg-[#0F4C5C]/5" },
     { icon: <Clock className="w-6 h-6" />, label: "Availability", value: "24/7 Premium Support", color: "text-[#0F4C5C] bg-[#0F4C5C]/5" },
   ];
 
@@ -70,21 +70,15 @@ const Contact = () => {
                   <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shrink-0 transition-transform duration-500 group-hover:scale-110 group-hover:rotate-6 ${item.color}`}>
                     {item.icon}
                   </div>
-                  <div>
+                  <div className="overflow-hidden">
                     <p className="text-xs font-bold text-gray-400 uppercase tracking-widest leading-none mb-3">{item.label}</p>
-                    <h4 className="font-black text-[#0F4C5C] text-xl tracking-tight leading-none">{item.value}</h4>
+                    <h4 className="font-black text-[#0F4C5C] text-xl tracking-tight leading-none break-words">{item.value}</h4>
                   </div>
                 </div>
               ))}
             </div>
 
-            <div className="pt-8 flex gap-6">
-              {[Instagram, Facebook, Twitter].map((Icon, i) => (
-                <a key={i} href="#" className="w-14 h-14 bg-white border border-gray-100 rounded-2xl flex items-center justify-center text-gray-400 hover:text-[#0F4C5C] hover:shadow-xl hover:-translate-y-1 transition-all duration-500">
-                  <Icon className="w-6 h-6" />
-                </a>
-              ))}
-            </div>
+
 
 
           </div>
@@ -93,7 +87,7 @@ const Contact = () => {
           <div className="lg:w-7/12">
             <div className="bg-white p-10 md:p-16 rounded-[3.5rem] shadow-[0_20px_60px_rgba(0,0,0,0.03)] border border-gray-100 h-full">
               <div className="flex items-center gap-3 mb-10">
-                <div className="w-12 h-12 bg-[#2A9D8F]/10 rounded-2xl flex items-center justify-center text-[#2A9D8F]">
+                <div className="w-12 h-12 bg-[#0F4C5C]/5 rounded-2xl flex items-center justify-center text-[#0F4C5C]">
                   <ShieldCheck className="w-6 h-6" />
                 </div>
                 <h3 className="text-3xl font-extrabold text-[#0F4C5C] tracking-tight">Direct Inquiry</h3>
@@ -155,14 +149,14 @@ const Contact = () => {
                     value={formData.message}
                     onChange={handleChange}
                     rows="6"
-                    className="w-full bg-gray-50/50 border border-gray-100 rounded-[2rem] px-8 py-6 focus:outline-none focus:bg-white focus:ring-4 focus:ring-[#2A9D8F]/5 transition-all font-bold text-lg text-[#0F4C5C] placeholder:text-gray-300 resize-none"
+                    className="w-full bg-gray-50/50 border border-gray-100 rounded-[2rem] px-8 py-6 focus:outline-none focus:bg-white focus:ring-4 focus:ring-[#0F4C5C]/5 transition-all font-bold text-lg text-[#0F4C5C] placeholder:text-gray-300 resize-none"
                     placeholder="Tell us about your dream trip..."
                     required
                   ></textarea>
                 </div>
 
                 {submitted && (
-                  <div className="flex items-center gap-4 text-[#2A9D8F] bg-[#2A9D8F]/10 px-8 py-5 rounded-[2rem] font-bold text-sm border border-[#2A9D8F]/10 animate-pulse">
+                  <div className="flex items-center gap-4 text-[#0F4C5C] bg-[#0F4C5C]/5 px-8 py-5 rounded-[2rem] font-bold text-sm border border-[#0F4C5C]/10 animate-pulse">
                     <CheckCircle className="w-6 h-6 shrink-0" />
                     Transmission Received. Expect an expert response soon.
                   </div>

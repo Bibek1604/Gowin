@@ -32,13 +32,15 @@ const CTA = () => {
             <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
               <Link
                 to="/booking"
-                className="bg-[#2A9D8F] hover:bg-[#238b7e] text-white px-10 py-5 rounded-3xl font-bold text-lg transition-all shadow-2xl shadow-[#2A9D8F]/20 flex items-center justify-center gap-3 group/btn hover:scale-105 active:scale-95 w-full sm:w-auto"
+                className="relative bg-[#0F4C5C] text-white px-12 py-5 rounded-2xl font-black text-lg transition-all shadow-2xl shadow-[#0F4C5C]/30 flex items-center justify-center gap-4 group/btn hover:-translate-y-1 active:scale-95 w-full sm:w-auto overflow-hidden"
               >
-                Initiate My Travel <ArrowRight className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
+                <div className="absolute inset-0 bg-gradient-to-r from-[#FF7F50] to-[#FF7F50] translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500 ease-out"></div>
+                <span className="relative z-10">Initiate My Travel</span>
+                <ArrowRight className="w-5 h-5 relative z-10 group-hover/btn:translate-x-2 transition-all duration-300" />
               </Link>
               <Link
                 to="/contact"
-                className="bg-white text-[#0F4C5C] border-2 border-[#0F4C5C]/10 hover:border-[#0F4C5C]/20 px-10 py-5 rounded-3xl font-bold text-lg transition-all shadow-lg shadow-[#0F4C5C]/5 hover:scale-105 active:scale-95 w-full sm:w-auto whitespace-nowrap"
+                className="bg-transparent text-[#0F4C5C] border-2 border-[#0F4C5C] px-12 py-5 rounded-2xl font-black text-lg transition-all hover:bg-[#0F4C5C]/5 active:scale-95 w-full sm:w-auto whitespace-nowrap"
               >
                 Consult an Expert
               </Link>

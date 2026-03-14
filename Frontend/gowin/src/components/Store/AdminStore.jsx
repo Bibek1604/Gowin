@@ -1,29 +1,42 @@
 import { create } from 'zustand';
+import { supabase } from '../../supabaseClient';
 
-// Admin auth store — no localStorage persistence
-// Session is lost on page refresh (requires re-login)
+// Admin auth store — now connected to Supabase Auth
 export const useAdminStore = create((set) => ({
   isAdmin: false,
-  isLoading: false,
+  isLoading: true,
 
   login: async (email, password) => {
-    const ADMIN_EMAIL = 'admin@gowin.com';
-    const ADMIN_PASSWORD = '#Shankhamul#123#abc#gowin';
+    set({ isLoading: true });
+    
+    // Connect to Supabase Auth
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
 
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
-      set({ isAdmin: true });
-      return { success: true };
-    } else {
+    set({ isLoading: false });
+
+    if (error) {
+      console.error('Login failed:', error.message);
       set({ isAdmin: false });
-      return { success: false, error: 'Invalid admin credentials' };
+      return { success: false, error: error.message };
     }
+
+    set({ isAdmin: true });
+    return { success: true };
   },
 
-  logout: () => {
+  logout: async () => {
+    await supabase.auth.signOut();
     set({ isAdmin: false });
   },
 
-  initialize: () => {
-    set({ isLoading: false });
+  // This checks if you are already logged in when you refresh the page
+  initialize: async () => {
+    set({ isLoading: true });
+    const { data: { session } } = await supabase.auth.getSession();
+    set({ isAdmin: !!session, isLoading: false });
   },
 }));
+

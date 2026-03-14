@@ -2,35 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { Star, Quote, ShieldCheck } from 'lucide-react';
 import { supabase } from '../../supabaseClient';
 
-const FALLBACK_REVIEWS = [
-  {
-    id: 'f1',
-    user_name: "Sarah Jenkins",
-    designation: "Travel Blogger",
-    content: "Unbelievable experience! The booking was flawless, and the guides in Kyoto were incredibly knowledgeable. Highly recommended for premium travelers.",
-    rating: 5,
-    image_url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-4.0.3&w=200&q=80"
-  },
-  {
-    id: 'f2',
-    user_name: "David Chen",
-    designation: "Adventure Seeker",
-    content: "The Swiss Alps hiking tour exceeded all my expectations. High-quality service with transparent pricing and exceptional support throughout the journey.",
-    rating: 5,
-    image_url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-4.0.3&w=200&q=80"
-  },
-  {
-    id: 'f3',
-    user_name: "Emily Rodriguez",
-    designation: "Family Traveler",
-    content: "We booked a 10-day Bali family package. Everything from accommodations to transport was top-notch. Our kids loved every second of the adventure!",
-    rating: 5,
-    image_url: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&w=200&q=80"
-  }
-];
 
 const Testimonials = () => {
-  const [reviews, setReviews] = useState(FALLBACK_REVIEWS);
+  const [reviews, setReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -44,6 +18,8 @@ const Testimonials = () => {
 
       if (!error && data && data.length > 0) {
         setReviews(data);
+      } else {
+        setReviews([]);
       }
       setIsLoading(false);
     };
@@ -59,8 +35,8 @@ const Testimonials = () => {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#2A9D8F]/10 text-[#2A9D8F] rounded-full text-xs font-bold uppercase tracking-[0.2em] mb-6 shadow-sm border border-[#2A9D8F]/10">
-             <ShieldCheck className="w-4 h-4" /> Guest Experiences
+          <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#0F4C5C]/5 text-[#0F4C5C] rounded-xl text-[10px] font-black uppercase tracking-[0.2em] mb-6 shadow-sm border border-[#0F4C5C]/10">
+             <ShieldCheck className="w-4 h-4 text-[#FF7F50]" /> Guest Experiences
           </div>
           <h2 className="text-4xl md:text-5xl font-bold text-[#0F4C5C] mb-6 tracking-tight">Voices of Our Explorers</h2>
           <p className="text-gray-500 max-w-2xl mx-auto text-lg leading-relaxed">
@@ -105,7 +81,7 @@ const Testimonials = () => {
 
                 <div className="pt-6 border-t border-gray-50">
                   <h4 className="font-bold text-[#0F4C5C] text-xl mb-1">{review.user_name}</h4>
-                  <p className="text-xs text-[#2A9D8F] font-bold uppercase tracking-widest">{review.designation}</p>
+                  <p className="text-xs text-[#FF7F50] font-bold uppercase tracking-widest">{review.designation}</p>
                 </div>
               </div>
             ))}

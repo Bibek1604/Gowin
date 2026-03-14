@@ -15,7 +15,7 @@ const About = () => {
 
           <div className="lg:w-1/2 relative w-full group">
             {/* Multi-layered image stack */}
-            <div className="absolute -inset-4 bg-gradient-to-tr from-[#2A9D8F]/20 to-transparent rounded-[4rem] -rotate-3 scale-105 group-hover:rotate-0 group-hover:scale-100 transition-all duration-700"></div>
+            <div className="absolute -inset-4 bg-gradient-to-tr from-[#0F4C5C]/10 to-transparent rounded-[4rem] -rotate-3 scale-105 group-hover:rotate-0 group-hover:scale-100 transition-all duration-700"></div>
             <div className="relative z-10 rounded-[3.5rem] overflow-hidden shadow-[0_30px_60px_rgba(0,0,0,0.12)] border-[12px] border-white">
               <img
                 src="https://images.unsplash.com/photo-1518509562904-e7ef99cdcc86?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=90"
@@ -88,10 +88,10 @@ const About = () => {
                 Our Story <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
               <div className="flex items-center gap-4 px-6">
-                <div className="w-12 h-12 rounded-full border-2 border-[#2A9D8F] flex items-center justify-center text-[#2A9D8F]">
-                  <Play className="w-4 h-4 fill-[#2A9D8F]" />
+                <div className="w-12 h-12 rounded-full border-2 border-[#FF7F50] flex items-center justify-center text-[#FF7F50]">
+                  <Play className="w-4 h-4 fill-[#FF7F50]" />
                 </div>
-                <p className="text-[#0F4C5C] font-bold text-sm tracking-tight cursor-pointer hover:text-[#2A9D8F] transition-colors">Watch Introduction</p>
+                <p className="text-[#0F4C5C] font-bold text-sm tracking-tight cursor-pointer hover:text-[#FF7F50] transition-colors">Watch Introduction</p>
               </div>
             </div>
           </div>

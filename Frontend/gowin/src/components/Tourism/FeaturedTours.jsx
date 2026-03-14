@@ -23,7 +23,7 @@ const FeaturedTours = () => {
               Explore our most popular and curated travel experiences. Each tour is crafted with premium comfort and authentic exploration in mind.
             </p>
           </div>
-          <Link to="/details/all" className="flex items-center gap-2 text-[#2A9D8F] font-bold hover:text-[#0F4C5C] transition-all group pb-2 border-b-2 border-[#2A9D8F]/20 hover:border-[#0F4C5C]">
+          <Link to="/details/all" className="flex items-center gap-2 text-[#0F4C5C] font-black uppercase text-xs tracking-widest hover:text-[#FF7F50] transition-all group pb-2 border-b-2 border-[#0F4C5C]/10 hover:border-[#FF7F50]">
             Explore All Excursions <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
@@ -57,9 +57,9 @@ const FeaturedTours = () => {
                 </div>
                 <div className="p-8 sm:w-3/5 flex flex-col justify-between">
                   <div>
-                    <div className="flex items-center gap-2 text-[#2A9D8F] mb-3 font-bold uppercase text-[10px] tracking-widest">
-                      <MapPin className="w-3.5 h-3.5" />
-                      <span>{tour.location}</span>
+                    <div className="flex items-center gap-2 text-[#0F4C5C]/60 mb-3 font-bold uppercase text-[10px] tracking-widest">
+                       <MapPin className="w-3.5 h-3.5" />
+                       <span>{tour.location}</span>
                     </div>
                     <h3 className="text-2xl font-bold text-[#0F4C5C] mb-5 leading-tight group-hover:text-[#FF7F50] transition-colors">{tour.title}</h3>
                     <div className="flex flex-wrap items-center gap-4 mb-8">
@@ -68,7 +68,7 @@ const FeaturedTours = () => {
                         <span>{tour.duration || 'Flexible'}</span>
                       </div>
                       <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-50 rounded-xl border border-gray-100 text-xs text-gray-400 font-bold">
-                        <ShieldCheck className="w-3.5 h-3.5 text-[#2A9D8F]" />
+                        <ShieldCheck className="w-3.5 h-3.5 text-[#0F4C5C]" />
                         <span>Certified</span>
                       </div>
                     </div>
@@ -79,7 +79,7 @@ const FeaturedTours = () => {
                       <span className="text-3xl font-extrabold text-[#0F4C5C]">${tour.price}</span>
                       <p className="text-[10px] text-gray-400 font-bold uppercase tracking-[2px]">Per person</p>
                     </div>
-                    <Link to="/booking" state={{ preFilledDestination: tour.id, destinationName: tour.title }} className="bg-[#FF7F50] text-white px-8 py-3.5 rounded-2xl font-bold hover:bg-[#ff6a33] transition-all shadow-xl shadow-[#FF7F50]/20 active:scale-95">
+                    <Link to="/booking" state={{ preFilledDestination: tour.id, destinationName: tour.title }} className="bg-white text-[#FF7F50] border-2 border-[#FF7F50]/20 px-8 py-3.5 rounded-2xl font-bold hover:bg-[#FF7F50] hover:text-white transition-all shadow-lg active:scale-95">
                       Book Trip
                     </Link>
                   </div>
