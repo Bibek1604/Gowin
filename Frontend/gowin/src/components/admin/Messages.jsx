@@ -71,7 +71,7 @@ const Messages = () => {
           <input
             type="text"
             placeholder="Search by name, email or message..."
-            className="w-full pl-14 pr-6 py-4 bg-white border border-gray-100 rounded-[1.5rem] focus:outline-none focus:ring-2 focus:ring-[#2A9D8F] shadow-[0_4px_20px_rgb(0,0,0,0.02)] transition-all"
+            className="w-full pl-14 pr-6 py-4 bg-white border border-gray-100 rounded-[1.5rem] focus:outline-none focus:ring-2 focus:ring-[#FF7F50] shadow-[0_4px_20px_rgb(0,0,0,0.02)] transition-all"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -120,7 +120,7 @@ const Messages = () => {
                   </div>
 
                   <div className="flex md:flex-col justify-end gap-2">
-                    <a href={`mailto:${msg.email}`} className="p-3 rounded-xl bg-[#2A9D8F]/10 text-[#2A9D8F] hover:bg-[#2A9D8F] hover:text-white transition-all flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-widest px-6 md:px-3">
+                    <a href={`mailto:${msg.email}`} className="p-3 rounded-xl bg-[#FF7F50]/10 text-[#FF7F50] hover:bg-[#FF7F50] hover:text-white transition-all flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-widest px-6 md:px-3">
                        <Mail className="w-4 h-4" /> <span className="md:hidden">Reply</span>
                     </a>
                     <button 

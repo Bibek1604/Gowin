@@ -24,7 +24,7 @@ const TravelCategories = () => {
   const colors = [
     "bg-[#0F4C5C]/10 text-[#0F4C5C]",
     "bg-[#FF7F50]/10 text-[#FF7F50]",
-    "bg-[#2A9D8F]/10 text-[#2A9D8F]",
+    "bg-[#0F4C5C]/5 text-[#FF7F50]",
   ];
 
   return (
@@ -61,7 +61,7 @@ const TravelCategories = () => {
                   {icons[index % icons.length]}
                 </div>
                 <h3 className="text-xl font-bold text-[#0F4C5C] group-hover:text-[#FF7F50] transition-colors">{cat.name}</h3>
-                <p className="text-[10px] uppercase font-extrabold text-[#2A9D8F] tracking-[0.2em] mt-3">Explore Now</p>
+                <p className="text-[10px] uppercase font-extrabold text-[#FF7F50] tracking-[0.2em] mt-3">Explore Now</p>
               </div>
             ))}
           </div>

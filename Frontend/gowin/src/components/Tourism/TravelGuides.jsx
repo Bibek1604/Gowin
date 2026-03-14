@@ -41,19 +41,19 @@ const TravelGuides = () => {
       
       {/* Hero Section */}
       <section className="relative pt-48 pb-32 overflow-hidden bg-[#F0F9F8]">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-[#2A9D8F]/10 blur-[120px] rounded-full -mr-32 -mt-32" />
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-[#FF7F50]/10 blur-[120px] rounded-full -mr-32 -mt-32" />
         <div className="max-w-7xl mx-auto px-6 sm:px-12 relative z-10 flex flex-col md:flex-row items-center gap-20">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             animate={{ opacity: 1, x: 0 }}
             className="md:w-1/2"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#2A9D8F]/10 text-[#0F4C5C] rounded-full text-xs font-black uppercase tracking-[0.3em] mb-8 border border-[#2A9D8F]/20">
-               <Compass className="w-4 h-4 text-[#2A9D8F]" /> Expert Insights
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#FF7F50]/10 text-[#0F4C5C] rounded-full text-xs font-black uppercase tracking-[0.3em] mb-8 border border-[#FF7F50]/20">
+               <Compass className="w-4 h-4 text-[#FF7F50]" /> Expert Insights
             </div>
             <h1 className="text-6xl md:text-8xl font-black text-[#0F4C5C] tracking-tighter leading-none mb-8">
               Travel <br />
-              <span className="text-[#2A9D8F]">Guides.</span>
+              <span className="text-[#FF7F50]">Guides.</span>
             </h1>
             <p className="text-gray-400 text-xl font-medium leading-relaxed max-w-lg mb-10">
               Curated wisdom from our seasoned explorers. Prepare for your next odyssey with confidence and style.
@@ -98,7 +98,7 @@ const TravelGuides = () => {
                 <h2 className="text-4xl font-black text-[#0F4C5C] tracking-tight mb-4 uppercase">Popular Guides</h2>
                 <div className="w-20 h-2 bg-[#FF7F50] rounded-full" />
              </div>
-             <button className="text-[11px] font-black uppercase tracking-widest text-[#2A9D8F] hover:text-[#0F4C5C] transition-colors flex items-center gap-2">
+             <button className="text-[11px] font-black uppercase tracking-widest text-[#FF7F50] hover:text-[#0F4C5C] transition-colors flex items-center gap-2">
                 Browse All <ArrowRight className="w-4 h-4" />
              </button>
           </div>
@@ -122,7 +122,7 @@ const TravelGuides = () => {
                  </div>
                  <div className="px-4">
                     <p className="text-[10px] font-black uppercase tracking-[0.3em] text-[#FF7F50] mb-3">{guide.category}</p>
-                    <h3 className="text-2xl font-black text-[#0F4C5C] tracking-tight mb-4 group-hover:text-[#2A9D8F] transition-colors">{guide.title}</h3>
+                    <h3 className="text-2xl font-black text-[#0F4C5C] tracking-tight mb-4 group-hover:text-[#FF7F50] transition-colors">{guide.title}</h3>
                     <p className="text-gray-400 font-medium text-sm leading-relaxed mb-6">{guide.desc}</p>
                     <div className="flex items-center gap-4 text-[11px] font-black uppercase tracking-widest text-[#0F4C5C]">
                        Read More <Heart className="w-4 h-4 text-[#FF7F50]" />
@@ -136,7 +136,7 @@ const TravelGuides = () => {
 
       {/* Tips Section */}
       <section className="py-24 bg-[#0F4C5C] overflow-hidden relative">
-         <div className="absolute -right-32 top-0 w-[40rem] h-[40rem] bg-[#2A9D8F]/20 rounded-full blur-[120px]" />
+         <div className="absolute -right-32 top-0 w-[40rem] h-[40rem] bg-[#FF7F50]/20 rounded-full blur-[120px]" />
          <div className="max-w-7xl mx-auto px-6 sm:px-12 relative z-10">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-center">
                <div className="space-y-12">
@@ -147,7 +147,7 @@ const TravelGuides = () => {
                        { title: "Health & Safety", list: ["Premium insurance validation", "Local clinic networks", "Emergency protocols"] }
                      ].map((item, i) => (
                        <div key={i} className="border-l-4 border-[#FF7F50] pl-8">
-                          <h4 className="text-xl font-black text-[#2A9D8F] mb-4 tracking-tight uppercase">{item.title}</h4>
+                          <h4 className="text-xl font-black text-[#FF7F50] mb-4 tracking-tight uppercase">{item.title}</h4>
                           <div className="flex flex-wrap gap-3">
                              {item.list.map(li => (
                                <span key={li} className="px-4 py-2 bg-white/5 rounded-full text-white/60 text-xs font-bold uppercase tracking-widest">{li}</span>

@@ -102,7 +102,7 @@ const Contact = () => {
                       name="name"
                       value={formData.name}
                       onChange={handleChange}
-                      className="w-full bg-gray-50/50 border border-gray-100 rounded-[1.5rem] px-8 py-6 focus:outline-none focus:bg-white focus:ring-4 focus:ring-[#2A9D8F]/5 transition-all font-bold text-lg text-[#0F4C5C] placeholder:text-gray-300 placeholder:font-medium"
+                      className="w-full bg-gray-50/50 border border-gray-100 rounded-[1.5rem] px-8 py-6 focus:outline-none focus:bg-white focus:ring-4 focus:ring-[#0F4C5C]/5 transition-all font-bold text-lg text-[#0F4C5C] placeholder:text-gray-300 placeholder:font-medium"
                       placeholder="Your Name"
                       required
                     />
@@ -114,7 +114,7 @@ const Contact = () => {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full bg-gray-50/50 border border-gray-100 rounded-[1.5rem] px-8 py-6 focus:outline-none focus:bg-white focus:ring-4 focus:ring-[#2A9D8F]/5 transition-all font-bold text-lg text-[#0F4C5C] placeholder:text-gray-300 placeholder:font-medium"
+                      className="w-full bg-gray-50/50 border border-gray-100 rounded-[1.5rem] px-8 py-6 focus:outline-none focus:bg-white focus:ring-4 focus:ring-[#0F4C5C]/5 transition-all font-bold text-lg text-[#0F4C5C] placeholder:text-gray-300 placeholder:font-medium"
                       placeholder="Your@email.com"
                       required
                     />
@@ -128,7 +128,7 @@ const Contact = () => {
                       name="destination"
                       value={formData.destination}
                       onChange={handleChange}
-                      className="w-full bg-gray-50/50 border border-gray-100 rounded-[1.5rem] px-8 py-6 focus:outline-none focus:bg-white focus:ring-4 focus:ring-[#2A9D8F]/5 transition-all font-bold text-lg text-[#0F4C5C] appearance-none cursor-pointer"
+                      className="w-full bg-gray-50/50 border border-gray-100 rounded-[1.5rem] px-8 py-6 focus:outline-none focus:bg-white focus:ring-4 focus:ring-[#0F4C5C]/5 transition-all font-bold text-lg text-[#0F4C5C] appearance-none cursor-pointer"
                     >
                       <option value="" disabled>Where are you headed?</option>
                       <option value="europe">Europe & Mediterranean</option>

@@ -21,7 +21,7 @@ const features = [
     title: "Effortless Interface",
     desc: "Book your entire global itinerary in under three minutes through our streamlined portal.",
     icon: <Zap className="w-10 h-10" />,
-    color: "text-[#2A9D8F] bg-[#2A9D8F]/5"
+    color: "text-[#FF7F50] bg-[#FF7F50]/5"
   },
   {
     id: 4,

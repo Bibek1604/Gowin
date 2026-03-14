@@ -44,7 +44,7 @@ function Dashboard() {
   const statCards = [
     { title: 'Total Places', value: stats.totalPlaces, icon: <Map className="w-6 h-6" />, color: 'text-[#0F4C5C]', bg: 'bg-[#0F4C5C]/10', trend: '+12%' },
     { title: 'Total Bookings', value: stats.totalBookings, icon: <Calendar className="w-6 h-6" />, color: 'text-[#FF7F50]', bg: 'bg-[#FF7F50]/10', trend: '+23%' },
-    { title: 'New Messages', value: messagesCount, icon: <Mail className="w-6 h-6" />, color: 'text-[#2A9D8F]', bg: 'bg-[#2A9D8F]/10', trend: 'Live' },
+    { title: 'New Messages', value: messagesCount, icon: <Mail className="w-6 h-6" />, color: 'text-[#FF7F50]', bg: 'bg-[#FF7F50]/10', trend: 'Live' },
     { title: 'Subscribers', value: subscribersCount, icon: <Users className="w-6 h-6" />, color: 'text-[#0F4C5C]', bg: 'bg-[#0F4C5C]/10', trend: '+10%' },
   ];
 
@@ -59,8 +59,8 @@ function Dashboard() {
         </div>
         <div className="flex bg-white rounded-2xl p-1.5 border border-gray-100 shadow-sm">
            <button className="px-6 py-2 rounded-xl font-bold text-sm bg-[#0F4C5C] text-white shadow-md">Realtime</button>
-           <div className="px-6 py-2 rounded-xl font-bold text-sm text-[#2A9D8F] flex items-center gap-2">
-             <div className="w-2 h-2 rounded-full bg-[#2A9D8F] animate-pulse" />
+           <div className="px-6 py-2 rounded-xl font-bold text-sm text-[#FF7F50] flex items-center gap-2">
+             <div className="w-2 h-2 rounded-full bg-[#FF7F50] animate-pulse" />
              Live Monitoring
            </div>
         </div>
@@ -73,7 +73,7 @@ function Dashboard() {
             <div>
               <p className="text-gray-400 font-bold text-xs uppercase tracking-widest mb-2">{stat.title}</p>
               <h3 className="text-3xl font-extrabold text-[#0F4C5C] mb-2">{stat.value}</h3>
-              <div className="flex items-center gap-1 text-xs font-bold text-[#2A9D8F] bg-[#2A9D8F]/10 px-2 py-1 rounded-md w-fit">
+              <div className="flex items-center gap-1 text-xs font-bold text-[#FF7F50] bg-[#FF7F50]/10 px-2 py-1 rounded-md w-fit">
                 <TrendingUp className="w-3 h-3" />
                 <span>{stat.trend}</span>
               </div>
@@ -122,7 +122,7 @@ function Dashboard() {
                     </div>
                     <div className="text-right">
                       <p className="font-extrabold text-[#0F4C5C] text-lg">${booking.amount || '0'}</p>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#2A9D8F] bg-[#2A9D8F]/10 px-3 py-1 rounded-full mt-1 inline-block">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#FF7F50] bg-[#FF7F50]/10 px-3 py-1 rounded-full mt-1 inline-block">
                         Paid
                       </span>
                     </div>
@@ -156,7 +156,7 @@ function Dashboard() {
                    <span className="font-bold text-white group-hover:translate-x-1 transition-transform">Create Package</span>
                 </Link>
                 <Link to="/admin/messages" className="flex items-center gap-4 p-4 rounded-2xl bg-white/10 hover:bg-white/20 transition-all border border-white/10 group">
-                   <div className="w-10 h-10 rounded-xl bg-[#2A9D8F] flex items-center justify-center text-white shadow-lg shadow-[#2A9D8F]/20">
+                   <div className="w-10 h-10 rounded-xl bg-[#FF7F50] flex items-center justify-center text-white shadow-lg shadow-[#FF7F50]/20">
                       <Mail className="w-5 h-5" />
                    </div>
                    <span className="font-bold text-white group-hover:translate-x-1 transition-transform">Read Messages</span>
@@ -171,7 +171,7 @@ function Dashboard() {
           </div>
 
           <div className="bg-white rounded-[2.5rem] p-8 border border-gray-100 shadow-sm text-center">
-             <div className="w-16 h-16 bg-[#2A9D8F]/10 rounded-full flex items-center justify-center text-[#2A9D8F] mx-auto mb-4">
+             <div className="w-16 h-16 bg-[#FF7F50]/10 rounded-full flex items-center justify-center text-[#FF7F50] mx-auto mb-4">
                 <TrendingUp className="w-8 h-8" />
              </div>
              <h4 className="font-bold text-[#0F4C5C] mb-1">High Conversion</h4>

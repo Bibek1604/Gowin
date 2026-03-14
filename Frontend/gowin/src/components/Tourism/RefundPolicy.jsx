@@ -23,7 +23,7 @@ const RefundPolicy = () => {
       desc: "Visa fees paid to embassies, consulates, or visa centers are non-refundable regardless of visa approval or rejection."
     },
     {
-      icon: <Calendar className="w-8 h-8 text-[#2A9D8F]" />,
+      icon: <Calendar className="w-8 h-8 text-[#FF7F50]" />,
       title: "3. VFS or Visa Center Appointment Fees",
       desc: "Fees paid for VFS Global or other visa center appointments are generally non-refundable. Refund eligibility will strictly follow the official policies of the respective visa center."
     },
@@ -101,16 +101,16 @@ const RefundPolicy = () => {
                
                <section>
                   <h3 className="text-2xl font-black text-[#0F4C5C] mb-6 tracking-tight flex items-center gap-4">
-                     <CreditCard className="w-6 h-6 text-[#2A9D8F]" /> 5. Airline Tickets, Hotels and Travel Packages
+                     <CreditCard className="w-6 h-6 text-[#FF7F50]" /> 5. Airline Tickets, Hotels and Travel Packages
                   </h3>
                   <p className="text-gray-500 font-medium leading-relaxed">
                      Refunds for airline tickets, hotels, tour packages, or other travel services depend entirely on the terms and conditions of the respective airline, hotel, or service provider.
                   </p>
                </section>
 
-               <section className="p-12 rounded-[3.5rem] bg-[#2A9D8F]/5 border border-[#2A9D8F]/10">
+               <section className="p-12 rounded-[3.5rem] bg-[#FF7F50]/5 border border-[#FF7F50]/10">
                   <h3 className="text-2xl font-black text-[#0F4C5C] mb-6 tracking-tight flex items-center gap-4">
-                     <ShieldAlert className="w-6 h-6 text-[#2A9D8F]" /> 6. Third-Party Services
+                     <ShieldAlert className="w-6 h-6 text-[#FF7F50]" /> 6. Third-Party Services
                   </h3>
                   <p className="text-gray-500 font-medium leading-relaxed">
                      Many services are provided by third-party partners such as airlines, hotels, visa centers, insurance companies, and tour operators. Refunds for these services are subject to their individual policies.

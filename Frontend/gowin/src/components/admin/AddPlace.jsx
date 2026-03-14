@@ -108,7 +108,7 @@ const ManageDestinations = () => {
              <div className="inline-flex items-center gap-2 px-6 py-2 bg-[#0F4C5C]/5 text-[#0F4C5C] rounded-full text-[10px] font-bold uppercase tracking-[0.3em] mb-4 border border-[#0F4C5C]/10 shadow-sm">
                 <Globe className="w-4 h-4" /> Global Portfolio
              </div>
-             <h1 className="text-6xl font-black text-[#0F4C5C] tracking-tighter leading-none">Curation <span className="text-[#2A9D8F]">Lab.</span></h1>
+             <h1 className="text-6xl font-black text-[#0F4C5C] tracking-tighter leading-none">Curation <span className="text-[#FF7F50]">Lab.</span></h1>
              <p className="text-gray-400 font-medium text-lg leading-tight">Meticulously manage the world's most sought-after travel experiences.</p>
            </div>
            
@@ -125,11 +125,11 @@ const ManageDestinations = () => {
         {/* Curation Toolbar */}
         <div className="bg-white rounded-[3.5rem] p-4 shadow-[0_20px_60px_rgba(0,0,0,0.02)] border border-gray-100 flex flex-col lg:flex-row gap-6 mb-12 items-center">
            <div className="relative flex-1 group w-full">
-              <Search className="absolute left-8 top-1/2 -translate-y-1/2 text-gray-300 w-6 h-6 group-focus-within:text-[#2A9D8F] transition-colors" />
+              <Search className="absolute left-8 top-1/2 -translate-y-1/2 text-gray-300 w-6 h-6 group-focus-within:text-[#FF7F50] transition-colors" />
               <input 
                 type="text" 
                 placeholder="Find a destination by title, region or heritage..." 
-                className="w-full pl-20 pr-10 py-6 bg-gray-50/50 border-transparent rounded-[2.5rem] focus:outline-none focus:bg-white focus:ring-4 focus:ring-[#2A9D8F]/5 transition-all font-medium text-[#0F4C5C] text-lg"
+                className="w-full pl-20 pr-10 py-6 bg-gray-50/50 border-transparent rounded-[2.5rem] focus:outline-none focus:bg-white focus:ring-4 focus:ring-[#FF7F50]/5 transition-all font-medium text-[#0F4C5C] text-lg"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -191,7 +191,7 @@ const ManageDestinations = () => {
                   
                   <div className="p-10 flex-1 flex flex-col relative">
                     <div className="mb-4">
-                       <span className="text-[10px] uppercase font-black tracking-[0.3em] text-[#2A9D8F] mb-2 block">
+                       <span className="text-[10px] uppercase font-black tracking-[0.3em] text-[#FF7F50] mb-2 block">
                          {(place.categories?.name || 'Venture').toUpperCase()}
                        </span>
                        <h3 className="font-black text-[#0F4C5C] text-2xl tracking-tighter leading-tight group-hover:text-[#FF7F50] transition-colors line-clamp-2">
@@ -269,7 +269,7 @@ const ManageDestinations = () => {
                    <label className="text-[10px] font-black text-[#0F4C5C] uppercase tracking-[0.4em] pl-2">Signature Title</label>
                    <input
                      type="text"
-                     className="w-full p-6 bg-gray-50/50 border border-gray-100 rounded-[1.5rem] focus:outline-none focus:bg-white focus:ring-4 focus:ring-[#2A9D8F]/10 transition-all font-black text-2xl text-[#0F4C5C]"
+                     className="w-full p-6 bg-gray-50/50 border border-gray-100 rounded-[1.5rem] focus:outline-none focus:bg-white focus:ring-4 focus:ring-[#FF7F50]/10 transition-all font-black text-2xl text-[#0F4C5C]"
                      placeholder="The Grand Himalayan Odyssey"
                      value={form.title}
                      onChange={e => setForm({...form, title: e.target.value})}
@@ -281,7 +281,7 @@ const ManageDestinations = () => {
                    <label className="text-[10px] font-black text-[#0F4C5C] uppercase tracking-[0.4em] pl-2">Venture Category</label>
                    <div className="relative">
                       <select
-                        className="w-full p-5 bg-gray-50/50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-4 focus:ring-[#2A9D8F]/10 transition-all font-bold appearance-none cursor-pointer"
+                        className="w-full p-5 bg-gray-50/50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-4 focus:ring-[#FF7F50]/10 transition-all font-bold appearance-none cursor-pointer"
                         value={form.category_id}
                         onChange={e => setForm({...form, category_id: e.target.value})}
                         required
@@ -342,15 +342,15 @@ const ManageDestinations = () => {
                         value={form.location}
                         onChange={e => setForm({...form, location: e.target.value})}
                       />
-                      <MapPin className="absolute left-5 top-1/2 -translate-y-1/2 text-[#2A9D8F] w-5 h-5" />
+                      <MapPin className="absolute left-5 top-1/2 -translate-y-1/2 text-[#FF7F50] w-5 h-5" />
                    </div>
                 </div>
 
                 <div className="md:col-span-12 pt-6">
                    <div className="flex flex-col md:flex-row gap-6 items-center">
                       <div className="flex-1 w-full">
-                         <label className="flex flex-col items-center justify-center p-12 border-4 border-dashed border-[#0F4C5C]/5 hover:border-[#2A9D8F]/20 rounded-[3rem] bg-[#F8FAFB] hover:bg-white transition-all cursor-pointer group group">
-                            <Upload className="w-12 h-12 text-gray-300 group-hover:text-[#2A9D8F] mb-4 transform group-hover:-translate-y-2 transition-transform" />
+                         <label className="flex flex-col items-center justify-center p-12 border-4 border-dashed border-[#0F4C5C]/5 hover:border-[#FF7F50]/20 rounded-[3rem] bg-[#F8FAFB] hover:bg-white transition-all cursor-pointer group group">
+                            <Upload className="w-12 h-12 text-gray-300 group-hover:text-[#FF7F50] mb-4 transform group-hover:-translate-y-2 transition-transform" />
                             <span className="text-xs font-black text-gray-400 uppercase tracking-widest">Master Cover Artifact</span>
                             <input type="file" onChange={handleImageChange} className="hidden" accept="image/*" />
                          </label>
@@ -369,7 +369,7 @@ const ManageDestinations = () => {
                 </div>
 
                 <div className="md:col-span-12 flex gap-6 pt-10">
-                  <button type="submit" className="flex-1 py-6 bg-[#2A9D8F] text-white rounded-[2.5rem] font-black text-xl uppercase tracking-widest hover:bg-[#218074] transition-all shadow-xl shadow-[#2A9D8F]/20 active:scale-95">
+                  <button type="submit" className="flex-1 py-6 bg-[#FF7F50] text-white rounded-[2.5rem] font-black text-xl uppercase tracking-widest hover:bg-[#e56a42] transition-all shadow-xl shadow-[#FF7F50]/20 active:scale-95">
                      {editingId ? 'Refine Odyssey' : 'Authorize Discovery'}
                   </button>
                   <button type="button" onClick={() => setIsModalOpen(false)} className="px-12 py-6 bg-white text-[#0F4C5C] border border-gray-100 rounded-[2.5rem] font-black text-xl uppercase tracking-widest hover:bg-gray-50 transition-all shadow-sm">

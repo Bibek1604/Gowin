@@ -39,7 +39,7 @@ function ManageBookings() {
   }
 
   const statusConfig = {
-    'Confirmed': { color: 'text-[#2A9D8F] bg-[#2A9D8F]/10', icon: <CheckCircle className="w-3 h-3" /> },
+    'Confirmed': { color: 'text-[#FF7F50] bg-[#FF7F50]/10', icon: <CheckCircle className="w-3 h-3" /> },
     'Cancelled': { color: 'text-red-500 bg-red-50', icon: <XCircle className="w-3 h-3" /> },
     'Pending': { color: 'text-[#FF7F50] bg-[#FF7F50]/10', icon: <Clock className="w-3 h-3" /> }
   }
@@ -74,11 +74,11 @@ function ManageBookings() {
         {/* Toolbar */}
         <div className="flex flex-col md:flex-row gap-4 mb-10 items-center">
            <div className="relative flex-1 group w-full">
-              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-300 w-5 h-5 group-focus-within:text-[#2A9D8F] transition-colors" />
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-gray-300 w-5 h-5 group-focus-within:text-[#FF7F50] transition-colors" />
               <input 
                 type="text" 
                 placeholder="Search by traveller name or email..." 
-                className="w-full pl-16 pr-8 py-5 bg-white border border-gray-100 rounded-[1.5rem] focus:outline-none focus:ring-2 focus:ring-[#2A9D8F]/10 transition-all font-medium text-[#0F4C5C]"
+                className="w-full pl-16 pr-8 py-5 bg-white border border-gray-100 rounded-[1.5rem] focus:outline-none focus:ring-2 focus:ring-[#FF7F50]/10 transition-all font-medium text-[#0F4C5C]"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -187,7 +187,7 @@ function ManageBookings() {
                     <div className="pt-6 border-t border-gray-50 flex gap-2">
                        <button 
                          onClick={() => handleStatusUpdate(booking.id, 'Confirmed')}
-                         className="flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl border border-[#2A9D8F]/20 text-[#2A9D8F] hover:bg-[#2A9D8F] hover:text-white transition-all shadow-sm"
+                         className="flex-1 py-3 text-[10px] font-black uppercase tracking-widest rounded-xl border border-[#FF7F50]/20 text-[#FF7F50] hover:bg-[#FF7F50] hover:text-white transition-all shadow-sm"
                        >
                           Confirm
                        </button>
@@ -206,7 +206,7 @@ function ManageBookings() {
                         <Phone className="w-3.5 h-3.5" /> {booking.phone || "No Phone"}
                      </span>
                      <div className="flex items-center gap-1.5 text-white font-black">
-                        <DollarSign className="w-4 h-4 text-[#2A9D8F]" />
+                        <DollarSign className="w-4 h-4 text-[#FF7F50]" />
                         <span className="text-xl">Paid</span>
                      </div>
                   </div>

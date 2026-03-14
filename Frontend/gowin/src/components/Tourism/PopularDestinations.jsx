@@ -38,7 +38,7 @@ const PopularDestinations = () => {
                 transition={{ delay: 0.1 }}
                 className="text-5xl md:text-6xl font-black text-[#0F4C5C] tracking-tighter leading-[0.9] mb-6"
               >
-                Iconic <span className="text-[#2A9D8F]">Destinations.</span>
+                Iconic <span className="text-[#FF7F50]">Destinations.</span>
               </motion.h2>
               <motion.p 
                 initial={{ opacity: 0, y: 20 }}
@@ -130,7 +130,7 @@ const PopularDestinations = () => {
 
                  {/* Badge */}
                  <div className="absolute bottom-10 right-10 z-10 translate-y-20 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all">
-                    <div className="bg-[#2A9D8F] text-white p-6 rounded-full rotate-12 shadow-2xl flex items-center gap-2">
+                    <div className="bg-[#FF7F50] text-white p-6 rounded-full rotate-12 shadow-2xl flex items-center gap-2">
                        <Clock className="w-4 h-4" />
                        <span className="text-[10px] font-black uppercase tracking-widest">{dest.duration || 'Flexible'}</span>
                     </div>

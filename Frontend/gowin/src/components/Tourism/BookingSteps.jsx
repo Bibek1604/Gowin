@@ -22,7 +22,7 @@ const BookingSteps = () => {
       title: "Venture Forth",
       desc: "Receive your premium travel kit and embark on your odyssey.",
       icon: <PlaneTakeoff className="w-8 h-8" />,
-      color: "bg-[#2A9D8F]/10 text-[#2A9D8F]"
+      color: "bg-[#FF7F50]/10 text-[#FF7F50]"
     }
   ];
 
@@ -39,7 +39,7 @@ const BookingSteps = () => {
                <MapPin className="w-4 h-4" /> The Road to Discovery
             </div>
             <h2 className="text-5xl lg:text-6xl font-extrabold text-[#0F4C5C] mb-8 tracking-tighter leading-tight">
-              A Journey Mapped <br /> <span className="text-[#2A9D8F]">Just For You.</span>
+              A Journey Mapped <br /> <span className="text-[#FF7F50]">Just For You.</span>
             </h2>
             <p className="text-gray-500 text-lg mb-16 max-w-lg leading-relaxed font-medium">
               We've refined the path from daydream to destination. Your seamless transition into the extraordinary starts with three simple steps.
@@ -86,7 +86,7 @@ const BookingSteps = () => {
             {/* Real-time Interaction Card */}
             <div className="absolute top-20 -left-12 bg-white/95 backdrop-blur-xl p-8 rounded-[2.5rem] shadow-2xl z-20 hidden md:flex flex-col gap-6 animate-float border border-white">
                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 bg-[#2A9D8F]/20 rounded-2xl flex items-center justify-center text-[#2A9D8F] shadow-inner">
+                  <div className="w-12 h-12 bg-[#FF7F50]/20 rounded-2xl flex items-center justify-center text-[#FF7F50] shadow-inner">
                     <CheckCircle className="w-6 h-6" />
                   </div>
                   <div>
@@ -95,7 +95,7 @@ const BookingSteps = () => {
                   </div>
                </div>
                <div className="flex gap-2">
-                  <div className="w-2 h-2 rounded-full bg-[#2A9D8F] animate-pulse" />
+                  <div className="w-2 h-2 rounded-full bg-[#FF7F50] animate-pulse" />
                   <div className="w-2 h-2 rounded-full bg-[#FF7F50] animate-pulse delay-75" />
                   <div className="w-2 h-2 rounded-full bg-[#0F4C5C] animate-pulse delay-150" />
                </div>

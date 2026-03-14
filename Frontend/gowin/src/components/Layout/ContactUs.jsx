@@ -35,8 +35,8 @@ const ContactUs = () => {
     <div className="relative min-h-screen bg-white py-16 px-5 sm:px-8 md:py-20 lg:py-24 overflow-hidden font-outfit">
       {/* Subtle background decoration */}
       <div className="absolute inset-0 opacity-[0.025] pointer-events-none">
-        <div className="absolute -left-20 top-20 w-96 h-96 bg-sky-200/20 rounded-full blur-3xl" />
-        <div className="absolute -right-20 bottom-10 w-80 h-80 bg-blue-200/20 rounded-full blur-3xl" />
+        <div className="absolute -left-20 top-20 w-96 h-96 bg-[#0F4C5C]/10 rounded-full blur-3xl" />
+        <div className="absolute -right-20 bottom-10 w-80 h-80 bg-[#FF7F50]/10 rounded-full blur-3xl" />
       </div>
 
       <div className="relative mx-auto max-w-7xl">
@@ -67,12 +67,12 @@ const ContactUs = () => {
                   />
                 </div>
 
-                <div className="rounded-2xl bg-white/60 backdrop-blur-md border border-sky-100/70 p-5 shadow-sm">
+                <div className="rounded-2xl bg-white/60 backdrop-blur-md border border-[#0F4C5C]/10 p-5 shadow-sm">
                   <div className="flex items-center gap-3 mb-2.5">
-                    <div className="p-2.5 bg-sky-50 rounded-lg">
-                      <MapPin className="w-4 h-4 text-sky-500" />
+                    <div className="p-2.5 bg-[#0F4C5C]/5 rounded-lg">
+                      <MapPin className="w-4 h-4 text-[#0F4C5C]" />
                     </div>
-                    <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-sky-600/90">
+                    <span className="text-[10px] md:text-xs font-semibold uppercase tracking-wider text-[#FF7F50]">
                       Travel Anywhere
                     </span>
                   </div>
@@ -122,12 +122,12 @@ const ContactUs = () => {
                 {item.href ? (
                   <a
                     href={item.href}
-                    className="group flex items-center gap-4 p-5 md:p-6 bg-white border border-slate-100 rounded-2xl hover:border-sky-200 hover:shadow-md transition-all duration-300"
+                    className="group flex items-center gap-4 p-5 md:p-6 bg-white border border-slate-100 rounded-2xl hover:border-[#FF7F50]/30 hover:shadow-md transition-all duration-300"
                   >
                     <ContactCardContent item={item} />
                   </a>
                 ) : (
-                  <div className="flex items-center gap-4 p-5 md:p-6 bg-white border border-slate-100 rounded-2xl hover:border-sky-200 hover:shadow-md transition-all duration-300">
+                  <div className="flex items-center gap-4 p-5 md:p-6 bg-white border border-slate-100 rounded-2xl hover:border-[#FF7F50]/30 hover:shadow-md transition-all duration-300">
                     <ContactCardContent item={item} />
                   </div>
                 )}
@@ -140,19 +140,19 @@ const ContactUs = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: 0.4 }}
-              className="relative p-6 md:p-8 bg-gradient-to-br from-sky-50/70 to-white rounded-2xl border border-sky-100/80 shadow-sm overflow-hidden group"
+              className="relative p-6 md:p-8 bg-gradient-to-br from-[#0F4C5C]/5 to-white rounded-2xl border border-[#0F4C5C]/10 shadow-sm overflow-hidden group"
             >
-              <div className="absolute -right-10 -top-10 w-40 h-40 bg-sky-400/5 rounded-full blur-2xl" />
+              <div className="absolute -right-10 -top-10 w-40 h-40 bg-[#0F4C5C]/5 rounded-full blur-2xl" />
 
               <div className="relative flex items-start sm:items-center gap-5">
-                <div className="shrink-0 w-14 h-14 rounded-xl bg-sky-500 flex items-center justify-center shadow-md">
+                <div className="shrink-0 w-14 h-14 rounded-xl bg-[#0F4C5C] flex items-center justify-center shadow-md">
                   <Headset className="w-7 h-7 text-white" />
                 </div>
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2.5 mb-1.5">
-                    <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                    <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-sky-600">
+                    <div className="w-2 h-2 rounded-full bg-[#FF7F50] animate-pulse" />
+                    <span className="text-[10px] sm:text-xs font-semibold uppercase tracking-wider text-[#FF7F50]">
                       24/7 Live Support
                     </span>
                   </div>
@@ -166,7 +166,7 @@ const ContactUs = () => {
                   </p>
                 </div>
 
-                <ArrowRight className="hidden sm:block w-5 h-5 text-sky-400/40 group-hover:text-sky-500 group-hover:translate-x-1 transition-all" />
+                <ArrowRight className="hidden sm:block w-5 h-5 text-[#0F4C5C]/30 group-hover:text-[#FF7F50] group-hover:translate-x-1 transition-all" />
               </div>
             </motion.div>
           </div>
@@ -180,25 +180,25 @@ function ContactCardContent({ item }) {
   const Icon = item.icon;
   return (
     <>
-      <div className="shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-sky-50 flex items-center justify-center group-hover:bg-sky-500 transition-colors duration-300">
-        <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-sky-500 group-hover:text-white transition-colors" />
+      <div className="shrink-0 w-11 h-11 sm:w-12 sm:h-12 rounded-xl bg-[#0F4C5C]/5 flex items-center justify-center group-hover:bg-[#FF7F50] transition-colors duration-300">
+        <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-[#0F4C5C] group-hover:text-white transition-colors" />
       </div>
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 mb-0.5">
-          <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-sky-600/70">
+          <span className="text-[9px] sm:text-[10px] font-semibold uppercase tracking-wider text-[#FF7F50]">
             {item.sub}
           </span>
         </div>
         <h3 className="text-xs sm:text-sm font-medium text-slate-500 uppercase tracking-wide mb-0.5">
           {item.label}
         </h3>
-        <div className="text-sm sm:text-base font-semibold text-slate-700 group-hover:text-sky-600 transition-colors">
+        <div className="text-sm sm:text-base font-semibold text-slate-700 group-hover:text-[#0F4C5C] transition-colors">
           {item.value}
         </div>
       </div>
 
-      <ArrowRight className="hidden sm:block w-4 h-4 text-transparent group-hover:text-sky-400 group-hover:translate-x-1 transition-all duration-300" />
+      <ArrowRight className="hidden sm:block w-4 h-4 text-transparent group-hover:text-[#FF7F50] group-hover:translate-x-1 transition-all duration-300" />
     </>
   );
 }

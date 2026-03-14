@@ -29,10 +29,10 @@ const ContactSupport = () => {
             animate={{ opacity: 1, y: 0 }}
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#0F4C5C]/5 text-[#0F4C5C] rounded-full text-xs font-black uppercase tracking-[0.3em] mb-8 border border-[#0F4C5C]/10">
-               <Headphones className="w-4 h-4 text-[#2A9D8F]" /> 24/7 Priority Support
+               <Headphones className="w-4 h-4 text-[#FF7F50]" /> 24/7 Priority Support
             </div>
             <h1 className="text-6xl md:text-8xl font-black text-[#0F4C5C] tracking-tighter leading-none mb-6 italic">
-               Support <span className="text-[#2A9D8F]">Center.</span>
+               Support <span className="text-[#FF7F50]">Center.</span>
             </h1>
             <p className="text-gray-400 text-xl font-medium max-w-2xl mx-auto leading-relaxed">
               We're here to ensure your journey is as smooth as your destination.
@@ -46,7 +46,7 @@ const ContactSupport = () => {
         <div className="max-w-7xl mx-auto px-6 sm:px-12">
            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-24">
               {[
-                { icon: <MessageCircle className="w-8 h-8 text-[#2A9D8F]" />, label: "Live Chat", value: "Instant Response", status: "Online Now", color: "bg-[#2A9D8F]/5 border-[#2A9D8F]/10" },
+                { icon: <MessageCircle className="w-8 h-8 text-[#FF7F50]" />, label: "Live Chat", value: "Instant Response", status: "Online Now", color: "bg-[#FF7F50]/5 border-[#FF7F50]/10" },
                 { icon: <Mail className="w-8 h-8 text-[#FF7F50]" />, label: "Email Support", value: "Info.gowintravels@gmail.com", status: "2h Wait Time", color: "bg-[#FF7F50]/5 border-[#FF7F50]/10" },
                 { icon: <Phone className="w-8 h-8 text-[#0F4C5C]" />, label: "Elite Line", value: "+977 9851410966", status: "24/7 Active", color: "bg-[#0F4C5C]/5 border-[#0F4C5C]/10" }
               ].map((item, i) => (
@@ -54,8 +54,8 @@ const ContactSupport = () => {
                    <div className="mb-6">{item.icon}</div>
                    <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">{item.label}</p>
                    <h4 className="text-xl font-black text-[#0F4C5C] mb-6 tracking-tight break-words">{item.value}</h4>
-                   <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#2A9D8F]">
-                      <div className="w-2 h-2 rounded-full bg-[#2A9D8F] animate-pulse" /> {item.status}
+                   <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest text-[#FF7F50]">
+                      <div className="w-2 h-2 rounded-full bg-[#FF7F50] animate-pulse" /> {item.status}
                    </div>
                 </div>
               ))}
@@ -63,7 +63,7 @@ const ContactSupport = () => {
 
            {/* FAQ Section */}
            <div className="bg-[#0F4C5C] rounded-[4rem] p-16 md:p-24 relative overflow-hidden">
-              <div className="absolute top-0 right-0 w-[40rem] h-[40rem] bg-[#2A9D8F]/10 rounded-full blur-[120px] -mr-48 -mt-48" />
+              <div className="absolute top-0 right-0 w-[40rem] h-[40rem] bg-[#FF7F50]/10 rounded-full blur-[120px] -mr-48 -mt-48" />
               <div className="relative z-10 max-w-3xl">
                  <h2 className="text-4xl md:text-5xl font-black text-white tracking-widest leading-none mb-12 uppercase">Frequently <br /> Asked.</h2>
                  <div className="space-y-8">
@@ -75,10 +75,10 @@ const ContactSupport = () => {
                          viewport={{ once: true }}
                          className="group cursor-pointer"
                        >
-                          <h4 className="text-xl font-black text-white mb-4 tracking-tight flex items-center gap-4 group-hover:text-[#2A9D8F] transition-colors">
+                          <h4 className="text-xl font-black text-white mb-4 tracking-tight flex items-center gap-4 group-hover:text-[#FF7F50] transition-colors">
                              <HelpCircle className="w-6 h-6 text-[#FF7F50] shrink-0" /> {faq.q}
                           </h4>
-                          <p className="pl-10 text-white/50 text-sm font-medium leading-relaxed max-w-2xl border-l-2 border-white/5 transition-all group-hover:border-[#2A9D8F]">
+                          <p className="pl-10 text-white/50 text-sm font-medium leading-relaxed max-w-2xl border-l-2 border-white/5 transition-all group-hover:border-[#FF7F50]">
                              {faq.a}
                           </p>
                        </motion.div>
@@ -100,10 +100,10 @@ const ContactSupport = () => {
                <p className="text-[#0F4C5C] font-black uppercase tracking-widest text-xl mb-4">Kathmandu Office</p>
                <p className="text-gray-400 font-medium leading-relaxed mb-6">Shankhamul-31, Kathmandu, Nepal</p>
                <div className="flex items-center justify-center gap-8 border-t border-gray-200 pt-6">
-                  <div className="flex items-center gap-2 text-xs font-black text-[#2A9D8F] uppercase">
+                  <div className="flex items-center gap-2 text-xs font-black text-[#FF7F50] uppercase">
                      <Clock className="w-4 h-4" /> 9:00 AM - 6:00 PM
                   </div>
-                  <div className="flex items-center gap-2 text-xs font-black text-[#2A9D8F] uppercase">
+                  <div className="flex items-center gap-2 text-xs font-black text-[#FF7F50] uppercase">
                      <Clock className="w-4 h-4" /> Sun - Fri
                   </div>
                </div>

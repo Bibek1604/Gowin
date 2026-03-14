@@ -129,7 +129,7 @@ const AddCategory = () => {
                   <div className="flex gap-2 pt-4 border-t border-gray-50">
                     <button
                       onClick={() => openModal(cat)}
-                      className="flex-1 text-xs font-bold text-[#2A9D8F] bg-[#2A9D8F]/10 py-2.5 rounded-xl hover:bg-[#2A9D8F] hover:text-white transition-colors flex items-center justify-center gap-1.5"
+                      className="flex-1 text-xs font-bold text-[#FF7F50] bg-[#FF7F50]/10 py-2.5 rounded-xl hover:bg-[#FF7F50] hover:text-white transition-colors flex items-center justify-center gap-1.5"
                     >
                       <Edit2 className="w-3.5 h-3.5" /> Edit
                     </button>
@@ -174,7 +174,7 @@ const AddCategory = () => {
                   <label className="text-sm font-bold text-[#0F4C5C]">Category Name</label>
                   <input
                     type="text"
-                    className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F] transition-all"
+                    className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#FF7F50] transition-all"
                     placeholder="e.g. Adventure, Relaxing, City Tours"
                     value={form.name}
                     onChange={e => setForm({...form, name: e.target.value})}
@@ -186,7 +186,7 @@ const AddCategory = () => {
                   <label className="text-sm font-bold text-[#0F4C5C]">Description</label>
                   <textarea
                     rows="3"
-                    className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F] transition-all resize-none"
+                    className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#FF7F50] transition-all resize-none"
                     placeholder="What kind of tours belong here?"
                     value={form.description}
                     onChange={e => setForm({...form, description: e.target.value})}
@@ -197,7 +197,7 @@ const AddCategory = () => {
                   <label className="text-sm font-bold text-[#0F4C5C]">Cover Image</label>
                   <div className="flex gap-4">
                     <label className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-2xl p-6 hover:bg-gray-50 transition-all cursor-pointer group">
-                      <Upload className="w-6 h-6 text-gray-300 group-hover:text-[#2A9D8F] mb-1" />
+                      <Upload className="w-6 h-6 text-gray-300 group-hover:text-[#FF7F50] mb-1" />
                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Upload</span>
                       <input type="file" onChange={handleImageChange} className="hidden" accept="image/*" />
                     </label>

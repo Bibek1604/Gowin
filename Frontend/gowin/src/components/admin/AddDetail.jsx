@@ -148,7 +148,7 @@ function AddDetail() {
            <select 
              value={selectedPlaceId}
              onChange={(e) => setSelectedPlaceId(e.target.value)}
-             className="w-full p-5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F] text-[#0F4C5C] font-bold text-lg cursor-pointer"
+             className="w-full p-5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#FF7F50] text-[#0F4C5C] font-bold text-lg cursor-pointer"
            >
              <option value="">-- Choose a Place --</option>
              {places.map(p => <option key={p.id} value={p.id}>{p.title}</option>)}
@@ -204,7 +204,7 @@ function AddDetail() {
                        
                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                           <div>
-                             <h5 className="font-bold text-[#2A9D8F] text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
+                             <h5 className="font-bold text-[#FF7F50] text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
                                 <CheckCircle2 className="w-4 h-4" /> Highlights
                              </h5>
                              <ul className="space-y-2">
@@ -276,7 +276,7 @@ function AddDetail() {
                         type="text" 
                         value={form.title}
                         onChange={e => setForm({...form, title: e.target.value})}
-                        className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-[#2A9D8F] outline-none"
+                        className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-[#FF7F50] outline-none"
                         placeholder="e.g. Overview & Highlights"
                       />
                     </div>
@@ -286,7 +286,7 @@ function AddDetail() {
                         rows="4"
                         value={form.description}
                         onChange={e => setForm({...form, description: e.target.value})}
-                        className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-[#2A9D8F] outline-none resize-none"
+                        className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:ring-2 focus:ring-[#FF7F50] outline-none resize-none"
                         placeholder="Main text description for the detail page..."
                       />
                     </div>
@@ -324,13 +324,13 @@ function AddDetail() {
                              className="flex-1 p-3 bg-gray-50 border border-gray-100 rounded-xl outline-none"
                              placeholder="Add highlight..."
                            />
-                           <button type="button" onClick={addHighlight} className="p-3 bg-[#2A9D8F] text-white rounded-xl hover:bg-[#238b7e] shadow-lg shadow-[#2A9D8F]/10">
+                           <button type="button" onClick={addHighlight} className="p-3 bg-[#FF7F50] text-white rounded-xl hover:bg-[#e56a42] shadow-lg shadow-[#FF7F50]/10">
                               <Plus className="w-5 h-5" />
                            </button>
                         </div>
                         <div className="flex flex-wrap gap-2">
                            {form.highlights.map((h, i) => (
-                             <span key={i} className="bg-[#2A9D8F]/10 text-[#2A9D8F] px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 group">
+                             <span key={i} className="bg-[#FF7F50]/10 text-[#FF7F50] px-4 py-1.5 rounded-full text-xs font-bold flex items-center gap-2 group">
                                 {h}
                                 <X onClick={() => removeItem('highlights', i)} className="w-3 h-3 cursor-pointer hover:text-red-500" />
                              </span>

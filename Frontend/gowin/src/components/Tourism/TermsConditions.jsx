@@ -24,10 +24,10 @@ const TermsConditions = () => {
             animate={{ opacity: 1, y: 0 }}
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#0F4C5C]/5 text-[#0F4C5C] rounded-full text-xs font-black uppercase tracking-[0.3em] mb-8 border border-[#0F4C5C]/10">
-               <Scale className="w-4 h-4 text-[#2A9D8F]" /> Legal Agreement
+               <Scale className="w-4 h-4 text-[#FF7F50]" /> Legal Agreement
             </div>
             <h1 className="text-6xl md:text-8xl font-black text-[#0F4C5C] tracking-tighter leading-none mb-6">
-              Terms & <span className="text-[#2A9D8F]">Conditions.</span>
+              Terms & <span className="text-[#FF7F50]">Conditions.</span>
             </h1>
             <p className="text-gray-400 text-xl font-medium max-w-2xl leading-relaxed">
               Establishing clear expectations for your global adventures with Go Win International.
@@ -44,7 +44,7 @@ const TermsConditions = () => {
             
             <section className="bg-gray-50 p-12 rounded-[3.5rem] border border-gray-100">
                <h2 className="text-3xl font-black text-[#0F4C5C] mb-6 tracking-tight flex items-center gap-4">
-                  <ShieldCheck className="w-8 h-8 text-[#2A9D8F]" /> 1. Agreement to Terms
+                  <ShieldCheck className="w-8 h-8 text-[#FF7F50]" /> 1. Agreement to Terms
                </h2>
                <p className="text-gray-500 font-medium leading-relaxed">
                   By using our services or website, you agree to be bound by these Terms and Conditions. Go Win International Travel and Tourism Pvt. Ltd. provides luxury concierge and travel services subject to your compliance with all terms, conditions, and notices contained herein.
@@ -54,7 +54,7 @@ const TermsConditions = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
                <div>
                   <h3 className="text-xl font-black text-[#0F4C5C] mb-4 tracking-tight flex items-center gap-3">
-                     <CheckCircle className="w-5 h-5 text-[#2A9D8F]" /> 2. Booking Verification
+                     <CheckCircle className="w-5 h-5 text-[#FF7F50]" /> 2. Booking Verification
                   </h3>
                   <p className="text-gray-500 text-sm font-medium leading-relaxed">
                      All bookings are subject to availability and confirmation. A booking is only finalized once full payment or a specified deposit is received and confirmed by our system.
@@ -82,7 +82,7 @@ const TermsConditions = () => {
                     "Notify us immediately of any booking changes or cancellations"
                   ].map((resp, i) => (
                     <div key={i} className="flex gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
-                       <ArrowRight className="w-5 h-5 text-[#2A9D8F] shrink-0" />
+                       <ArrowRight className="w-5 h-5 text-[#FF7F50] shrink-0" />
                        <p className="text-white/70 font-bold text-sm">{resp}</p>
                     </div>
                   ))}
@@ -91,7 +91,7 @@ const TermsConditions = () => {
 
             <section>
                <h3 className="text-2xl font-black text-[#0F4C5C] mb-6 tracking-tight flex items-center gap-4">
-                  <HelpCircle className="w-6 h-6 text-[#2A9D8F]" /> 5. Intellectual Property
+                  <HelpCircle className="w-6 h-6 text-[#FF7F50]" /> 5. Intellectual Property
                </h3>
                <p className="text-gray-500 font-medium leading-relaxed">
                   All content, branding, logos, and digital assets on this platform remain the exclusive property of Go Win International Travel and Tourism Pvt. Ltd. Unauthorized reproduction or use is strictly prohibited.

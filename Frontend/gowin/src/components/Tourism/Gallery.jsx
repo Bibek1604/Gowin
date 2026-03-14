@@ -18,7 +18,7 @@ const Gallery = () => {
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
           <div className="text-left max-w-xl">
-             <div className="flex items-center gap-2 mb-4 text-[#2A9D8F]">
+             <div className="flex items-center gap-2 mb-4 text-[#FF7F50]">
                 <Camera className="w-5 h-5" />
                 <span className="font-bold uppercase tracking-[0.3em] text-xs">Visual Journeys</span>
              </div>

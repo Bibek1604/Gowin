@@ -17,7 +17,7 @@ const PrivacyPolicy = () => {
       
       {/* Hero Header */}
       <section className="relative pt-48 pb-24 overflow-hidden bg-[#F8FAFB]">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-[#2A9D8F]/5 blur-[120px] rounded-full -mr-32 -mt-32" />
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-[#FF7F50]/5 blur-[120px] rounded-full -mr-32 -mt-32" />
         <div className="max-w-7xl mx-auto px-6 sm:px-12 relative z-10">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -25,10 +25,10 @@ const PrivacyPolicy = () => {
             className="text-center md:text-left"
           >
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#0F4C5C]/5 text-[#0F4C5C] rounded-full text-xs font-black uppercase tracking-[0.3em] mb-8 border border-[#0F4C5C]/10">
-               <ShieldCheck className="w-4 h-4 text-[#2A9D8F]" /> Legal Foundation
+               <ShieldCheck className="w-4 h-4 text-[#FF7F50]" /> Legal Foundation
             </div>
             <h1 className="text-6xl md:text-8xl font-black text-[#0F4C5C] tracking-tighter leading-none mb-6">
-              Privacy <span className="text-[#2A9D8F]">Policy.</span>
+              Privacy <span className="text-[#FF7F50]">Policy.</span>
             </h1>
             <p className="text-gray-400 text-xl font-medium max-w-2xl leading-relaxed">
               Transparent protection. Your trust is the foundation of our elite hospitality.
@@ -50,7 +50,7 @@ const PrivacyPolicy = () => {
                className="bg-[#F8FAFB] p-12 rounded-[3.5rem] border border-gray-100"
             >
               <h2 className="text-3xl font-black text-[#0F4C5C] mb-6 tracking-tight flex items-center gap-4">
-                 <Info className="w-8 h-8 text-[#2A9D8F]" /> 1. Introduction
+                 <Info className="w-8 h-8 text-[#FF7F50]" /> 1. Introduction
               </h2>
               <p className="text-gray-500 font-medium leading-relaxed italic">
                 Effective Date: March 14, 2026
@@ -71,7 +71,7 @@ const PrivacyPolicy = () => {
                   <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {["Full name", "Date of birth", "Nationality", "Passport details", "Phone number", "Email address", "Address", "Payment details", "Travel preferences"].map(item => (
                        <li key={item} className="flex items-center gap-3 text-sm font-bold text-[#0F4C5C] bg-gray-50 px-5 py-3 rounded-xl border border-gray-100">
-                          <div className="w-2 h-2 rounded-full bg-[#2A9D8F]" /> {item}
+                          <div className="w-2 h-2 rounded-full bg-[#FF7F50]" /> {item}
                        </li>
                     ))}
                   </ul>
@@ -83,7 +83,7 @@ const PrivacyPolicy = () => {
                <section className="bg-[#0F4C5C] p-12 rounded-[3.5rem] text-white overflow-hidden relative group">
                   <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 blur-[100px] rounded-full -mr-32 -mt-32" />
                   <h3 className="text-2xl font-black text-white mb-6 tracking-tight flex items-center gap-4">
-                    <FileText className="w-6 h-6 text-[#2A9D8F]" /> 3. Additional Information for Visa Applications
+                    <FileText className="w-6 h-6 text-[#FF7F50]" /> 3. Additional Information for Visa Applications
                   </h3>
                   <p className="text-white/70 font-medium leading-relaxed mb-8">
                     For visa processing and travel documentation purposes, we may request additional personal or professional information depending on the requirements of the respective embassy, consulate, or visa application center. This may include but is not limited to:
@@ -96,18 +96,18 @@ const PrivacyPolicy = () => {
                       "Invitation letters or supporting documents"
                     ].map(item => (
                        <div key={item} className="text-xs font-bold uppercase tracking-widest text-white/50 flex items-center gap-3">
-                          <div className="w-1.5 h-1.5 rounded-full bg-[#2A9D8F]" /> {item}
+                          <div className="w-1.5 h-1.5 rounded-full bg-[#FF7F50]" /> {item}
                        </div>
                     ))}
                   </div>
-                  <p className="mt-8 text-sm font-black text-[#2A9D8F] uppercase tracking-widest">
+                  <p className="mt-8 text-sm font-black text-[#FF7F50] uppercase tracking-widest">
                     Clients are responsible for providing accurate and genuine documents when requested.
                   </p>
                </section>
 
                <section>
                   <h3 className="text-2xl font-black text-[#0F4C5C] mb-6 tracking-tight flex items-center gap-4">
-                    <Activity className="w-6 h-6 text-[#2A9D8F]" /> 4. How We Use Your Information
+                    <Activity className="w-6 h-6 text-[#FF7F50]" /> 4. How We Use Your Information
                   </h3>
                   <div className="space-y-4">
                     {[
@@ -116,7 +116,7 @@ const PrivacyPolicy = () => {
                       "Provide customer support", "Improve our services", "Comply with legal requirements"
                     ].map((item, i) => (
                        <div key={i} className="flex gap-4 p-5 rounded-2xl border border-gray-50 hover:bg-[#F8FAFB] transition-all">
-                          <div className="text-[#2A9D8F] font-black">{i + 1}.</div>
+                          <div className="text-[#FF7F50] font-black">{i + 1}.</div>
                           <p className="text-gray-500 font-medium">{item}</p>
                        </div>
                     ))}

@@ -47,7 +47,7 @@ const Navbar = () => {
               <span className={`text-2xl font-black tracking-tighter leading-none transition-colors duration-500 ${isScrolled ? 'text-[#0F4C5C]' : 'text-white drop-shadow-md'}`}>
                 Gowin<span className="text-[#FF7F50]">.</span>
               </span>
-              <span className={`text-[9px] font-bold uppercase tracking-[0.3em] transition-colors duration-500 ${isScrolled ? 'text-[#2A9D8F]' : 'text-white/70'}`}>
+              <span className={`text-[9px] font-bold uppercase tracking-[0.3em] transition-colors duration-500 ${isScrolled ? 'text-[#FF7F50]' : 'text-white/70'}`}>
                 Premium Travels
               </span>
             </div>

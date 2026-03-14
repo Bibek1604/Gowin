@@ -64,7 +64,7 @@ const Sidebar = () => {
           <h2 className="text-xl font-bold text-[#0F4C5C] leading-none">
             Gowin<span className="text-[#FF7F50]">.</span>
           </h2>
-          <p className="text-[10px] uppercase font-bold text-[#2A9D8F] tracking-widest mt-1">Admin Panel</p>
+          <p className="text-[10px] uppercase font-bold text-[#FF7F50] tracking-widest mt-1">Admin Panel</p>
         </div>
       </Link>
 
@@ -97,7 +97,7 @@ const Sidebar = () => {
 
       <div className="p-6 border-t border-gray-50">
         <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-2xl mb-4 border border-gray-100">
-           <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-[#2A9D8F]">
+           <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-[#FF7F50]">
              <ShieldCheck className="w-5 h-5" />
            </div>
            <div>

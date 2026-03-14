@@ -86,7 +86,7 @@ function Booking() {
       <Toaster position="top-right" />
 
       {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#2A9D8F]/5 rounded-full blur-[120px] -mr-32 -mt-32" />
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#FF7F50]/5 rounded-full blur-[120px] -mr-32 -mt-32" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#0F4C5C]/5 rounded-full blur-[120px] -ml-32 -mb-32" />
 
       <div className="max-w-6xl mx-auto relative z-10">
@@ -115,7 +115,7 @@ function Booking() {
                       name="name"
                       value={formData.name}
                       onChange={handleInputChange}
-                      className={`w-full p-5 bg-gray-50 border ${errors.name ? 'border-red-300 ring-4 ring-red-50' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F]/10 focus:bg-white transition-all font-bold text-[#0F4C5C] placeholder:text-gray-300`}
+                      className={`w-full p-5 bg-gray-50 border ${errors.name ? 'border-red-300 ring-4 ring-red-50' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#FF7F50]/10 focus:bg-white transition-all font-bold text-[#0F4C5C] placeholder:text-gray-300`}
                       placeholder="e.g. John Doe"
                     />
                     {errors.name && <p className="text-red-500 text-[10px] font-bold uppercase tracking-widest pl-1">{errors.name}</p>}
@@ -127,7 +127,7 @@ function Booking() {
                       name="email"
                       value={formData.email}
                       onChange={handleInputChange}
-                      className={`w-full p-5 bg-gray-50 border ${errors.email ? 'border-red-300 ring-4 ring-red-50' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F]/10 focus:bg-white transition-all font-bold text-[#0F4C5C] placeholder:text-gray-300`}
+                      className={`w-full p-5 bg-gray-50 border ${errors.email ? 'border-red-300 ring-4 ring-red-50' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#FF7F50]/10 focus:bg-white transition-all font-bold text-[#0F4C5C] placeholder:text-gray-300`}
                       placeholder="john@example.com"
                     />
                     {errors.email && <p className="text-red-500 text-[10px] font-bold uppercase tracking-widest pl-1">{errors.email}</p>}
@@ -142,7 +142,7 @@ function Booking() {
                       name="phone"
                       value={formData.phone}
                       onChange={handleInputChange}
-                      className={`w-full p-5 bg-gray-50 border ${errors.phone ? 'border-red-300 ring-4 ring-red-50' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F]/10 focus:bg-white transition-all font-bold text-[#0F4C5C] placeholder:text-gray-300`}
+                      className={`w-full p-5 bg-gray-50 border ${errors.phone ? 'border-red-300 ring-4 ring-red-50' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#0F4C5C]/10 focus:bg-white transition-all font-bold text-[#0F4C5C] placeholder:text-gray-300`}
                       placeholder="+977-..."
                     />
                     {errors.phone && <p className="text-red-500 text-[10px] font-bold uppercase tracking-widest pl-1">{errors.phone}</p>}
@@ -155,7 +155,7 @@ function Booking() {
                       value={formData.travelers}
                       onChange={handleInputChange}
                       min="1"
-                      className={`w-full p-5 bg-gray-50 border ${errors.travelers ? 'border-red-300 ring-4 ring-red-50' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F]/10 focus:bg-white transition-all font-bold text-[#0F4C5C]`}
+                      className={`w-full p-5 bg-gray-50 border ${errors.travelers ? 'border-red-300 ring-4 ring-red-50' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#FF7F50]/10 focus:bg-white transition-all font-bold text-[#0F4C5C]`}
                     />
                     {errors.travelers && <p className="text-red-500 text-[10px] font-bold uppercase tracking-widest pl-1">{errors.travelers}</p>}
                   </div>
@@ -168,7 +168,7 @@ function Booking() {
                       name="destination"
                       value={formData.destination}
                       onChange={handleInputChange}
-                      className={`w-full p-5 bg-gray-50 border ${errors.destination ? 'border-red-300' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F]/10 focus:bg-white transition-all appearance-none cursor-pointer font-bold text-[#0F4C5C]`}
+                      className={`w-full p-5 bg-gray-50 border ${errors.destination ? 'border-red-300' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#FF7F50]/10 focus:bg-white transition-all appearance-none cursor-pointer font-bold text-[#0F4C5C]`}
                     >
                       <option value="">Select an adventure package</option>
                       {places.map((place) => (
@@ -190,7 +190,7 @@ function Booking() {
                       name="travelDate"
                       value={formData.travelDate}
                       onChange={handleInputChange}
-                      className={`w-full p-5 bg-gray-50 border ${errors.travelDate ? 'border-red-300' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F]/10 focus:bg-white transition-all font-bold text-[#0F4C5C]`}
+                      className={`w-full p-5 bg-gray-50 border ${errors.travelDate ? 'border-red-300' : 'border-gray-100'} rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#FF7F50]/10 focus:bg-white transition-all font-bold text-[#0F4C5C]`}
                     />
                     {errors.travelDate && <p className="text-red-500 text-[10px] font-bold uppercase tracking-widest pl-1">{errors.travelDate}</p>}
                   </div>
@@ -201,7 +201,7 @@ function Booking() {
                       name="address"
                       value={formData.address}
                       onChange={handleInputChange}
-                      className={`w-full p-5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#2A9D8F]/10 focus:bg-white transition-all font-bold text-[#0F4C5C] placeholder:text-gray-300`}
+                      className={`w-full p-5 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#FF7F50]/10 focus:bg-white transition-all font-bold text-[#0F4C5C] placeholder:text-gray-300`}
                       placeholder="Residential city, country"
                     />
                   </div>
@@ -210,7 +210,7 @@ function Booking() {
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full bg-[#2A9D8F] text-white py-5 rounded-3xl font-black text-lg uppercase tracking-[0.2em] hover:bg-[#238b7e] transition-all shadow-2xl shadow-[#2A9D8F]/30 disabled:opacity-50 disabled:cursor-not-allowed mt-4 active:scale-95 flex items-center justify-center gap-4"
+                  className="w-full bg-[#0F4C5C] text-white py-5 rounded-3xl font-black text-lg uppercase tracking-[0.2em] hover:bg-[#0a3845] transition-all shadow-2xl shadow-[#0F4C5C]/30 disabled:opacity-50 disabled:cursor-not-allowed mt-4 active:scale-95 flex items-center justify-center gap-4"
                 >
                   {isSubmitting ? (
                     <>
@@ -230,14 +230,14 @@ function Booking() {
             {/* Info Panel / Right Card */}
             <div className="lg:w-[380px] space-y-8">
               <div className="bg-white p-10 md:p-12 rounded-[3.5rem] border border-gray-100 shadow-[0_15px_60px_rgba(0,0,0,0.02)] relative overflow-hidden group">
-                <div className="absolute top-0 right-0 w-32 h-32 bg-[#2A9D8F]/5 rounded-full -mr-16 -mt-16 blur-2xl" />
+                <div className="absolute top-0 right-0 w-32 h-32 bg-[#FF7F50]/5 rounded-full -mr-16 -mt-16 blur-2xl" />
 
                 <h4 className="text-2xl font-black text-[#0F4C5C] mb-8 relative z-10 tracking-tight">Booking Support</h4>
 
                 <ul className="space-y-8 relative z-10">
                   <li className="flex gap-6 group/item">
-                    <div className="w-12 h-12 rounded-2xl bg-[#2A9D8F]/10 flex items-center justify-center shrink-0 transition-transform group-hover/item:scale-110 group-hover/item:rotate-6">
-                      <CheckCircle className="w-6 h-6 text-[#2A9D8F]" />
+                    <div className="w-12 h-12 rounded-2xl bg-[#FF7F50]/10 flex items-center justify-center shrink-0 transition-transform group-hover/item:scale-110 group-hover/item:rotate-6">
+                      <CheckCircle className="w-6 h-6 text-[#FF7F50]" />
                     </div>
                     <div>
                       <p className="font-bold text-[#0F4C5C] text-lg">Flexible Travel</p>
@@ -267,12 +267,12 @@ function Booking() {
             animate={{ opacity: 1, scale: 1 }}
             className="bg-white rounded-[4rem] p-16 md:p-24 text-center border border-gray-100 shadow-[0_30px_100px_rgba(0,0,0,0.05)] relative overflow-hidden"
           >
-            <div className="w-28 h-28 bg-[#2A9D8F]/10 rounded-[2.5rem] flex items-center justify-center mx-auto mb-10 rotate-6">
-              <CheckCircle className="w-14 h-14 text-[#2A9D8F]" />
+            <div className="w-28 h-28 bg-[#FF7F50]/10 rounded-[2.5rem] flex items-center justify-center mx-auto mb-10 rotate-6">
+              <CheckCircle className="w-14 h-14 text-[#FF7F50]" />
             </div>
             <h2 className="text-4xl md:text-6xl font-black text-[#0F4C5C] mb-8 tracking-tighter">Reservation Received!</h2>
             <p className="text-gray-500 text-xl max-w-xl mx-auto mb-12 leading-relaxed font-medium">
-              Pack your bags! Your trip request is in. We've dispatched a confirmation summary to <span className="text-[#2A9D8F] font-black">{formData.email}</span>.
+              Pack your bags! Your trip request is in. We've dispatched a confirmation summary to <span className="text-[#FF7F50] font-black">{formData.email}</span>.
             </p>
             <button
               onClick={() => navigate('/')}

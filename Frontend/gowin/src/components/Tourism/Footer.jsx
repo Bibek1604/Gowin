@@ -115,7 +115,7 @@ const Footer = () => {
             <p className="text-gray-500 mb-4 text-sm">Subscribe to get special offers, free travel guides, and insights.</p>
             
             {subscribed ? (
-              <div className="flex items-center gap-2 text-[#2A9D8F] font-medium bg-[#2A9D8F]/10 px-4 py-3 rounded-xl">
+              <div className="flex items-center gap-2 text-[#FF7F50] font-medium bg-[#FF7F50]/10 px-4 py-3 rounded-xl">
                 <CheckCircle className="w-5 h-5" />
                 You're subscribed!
               </div>

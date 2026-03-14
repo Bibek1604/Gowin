@@ -217,7 +217,7 @@ const AddTestimonial = () => {
                          <p className="text-xs text-gray-400 font-medium">{testimonial.designation || 'Traveler'}</p>
                       </div>
                    </div>
-                   <div className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${testimonial.is_approved ? 'bg-[#2A9D8F]/10 text-[#2A9D8F]' : 'bg-[#FF7F50]/10 text-[#FF7F50]'}`}>
+                   <div className={`px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider ${testimonial.is_approved ? 'bg-[#FF7F50]/10 text-[#FF7F50]' : 'bg-[#FF7F50]/10 text-[#FF7F50]'}`}>
                       {testimonial.is_approved ? 'Approved' : 'Pending'}
                    </div>
                 </div>
@@ -238,7 +238,7 @@ const AddTestimonial = () => {
                     className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-xl font-bold text-[10px] uppercase tracking-widest transition-all ${
                       testimonial.is_approved 
                       ? 'bg-gray-50 text-gray-400 hover:bg-orange-50 hover:text-[#FF7F50]' 
-                      : 'bg-[#2A9D8F]/10 text-[#2A9D8F] hover:bg-[#2A9D8F] hover:text-white shadow-sm'
+                      : 'bg-[#FF7F50]/10 text-[#FF7F50] hover:bg-[#FF7F50] hover:text-white shadow-sm'
                     }`}
                    >
                      {testimonial.is_approved ? <X className="w-3.5 h-3.5" /> : <CheckCircle className="w-3.5 h-3.5" />}
@@ -289,7 +289,7 @@ const AddTestimonial = () => {
                           {imagePreview ? (
                             <img src={imagePreview} className="w-full h-full object-cover" alt="Preview" />
                           ) : (
-                            <Upload className="w-6 h-6 text-gray-300 group-hover:text-[#2A9D8F]" />
+                            <Upload className="w-6 h-6 text-gray-300 group-hover:text-[#FF7F50]" />
                           )}
                           <input type="file" onChange={handleImageChange} className="hidden" accept="image/*" />
                        </label>
@@ -330,7 +330,7 @@ const AddTestimonial = () => {
                        <input 
                         type="checkbox" checked={form.is_approved}
                         onChange={e => setForm({...form, is_approved: e.target.checked})}
-                        className="w-5 h-5 accent-[#2A9D8F]"
+                        className="w-5 h-5 accent-[#FF7F50]"
                        />
                        <span className="text-sm font-bold text-[#0F4C5C]">Visible Publicly</span>
                     </div>

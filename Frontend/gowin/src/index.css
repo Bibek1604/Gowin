@@ -7,12 +7,12 @@
 /* Professional Travel Agency Theme */
 :root {
   /* Color Variables */
-  --color-primary: #00A896;
-  --color-primary-light: #26D0CE;
-  --color-primary-dark: #008F7F;
-  --color-accent: #FF6B35;
-  --color-accent-dark: #E8551E;
-  --color-sky: #56CFE1;
+  --color-primary: #0F4C5C;
+  --color-primary-light: #186d82;
+  --color-primary-dark: #0a3845;
+  --color-accent: #FF7F50;
+  --color-accent-dark: #e56a42;
+  --color-sky: #38bdf8;
   --color-yellow: #FFD23F;
   
   /* Neutral Colors */
@@ -236,12 +236,12 @@ html {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--color-teal);
+  background: var(--color-primary);
   border-radius: 5px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-orange);
+  background: var(--color-accent);
 }
 
 /* Animations */
@@ -318,7 +318,7 @@ html {
 
 /* Focus styles for accessibility */
 *:focus-visible {
-  outline: 2px solid var(--color-teal);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 

@@ -69,7 +69,7 @@ const Subscribers = () => {
           <input
             type="text"
             placeholder="Search by email..."
-            className="w-full pl-14 pr-6 py-4 bg-white border border-gray-100 rounded-[1.5rem] focus:outline-none focus:ring-2 focus:ring-[#2A9D8F] shadow-[0_4px_20px_rgb(0,0,0,0.02)] transition-all font-medium"
+            className="w-full pl-14 pr-6 py-4 bg-white border border-gray-100 rounded-[1.5rem] focus:outline-none focus:ring-2 focus:ring-[#FF7F50] shadow-[0_4px_20px_rgb(0,0,0,0.02)] transition-all font-medium"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -90,7 +90,7 @@ const Subscribers = () => {
             {filteredSubscribers.map((subscriber) => (
               <div key={subscriber.id} className="bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] p-6 hover:shadow-lg transition-all duration-300 flex items-center justify-between group">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-[#2A9D8F]/10 flex items-center justify-center text-[#2A9D8F]">
+                  <div className="w-12 h-12 rounded-2xl bg-[#FF7F50]/10 flex items-center justify-center text-[#FF7F50]">
                      <Mail className="w-6 h-6" />
                   </div>
                   <div>
