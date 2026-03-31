@@ -1,345 +1,200 @@
 @import "tailwindcss";
 
+/* ============================================
+   GOWIN TRAVELS — UNIFIED DESIGN SYSTEM
+   Primary: #0F4C5C (Deep Teal)
+   Accent:  #FF7F50 (Coral)
+   Gold:    #FFD23F
+   Dark:    #1a1a2e
+   Font:    DM Sans (body) + Playfair Display (headings)
+   ============================================ */
+
 @theme {
-  --font-sans: "Poppins", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "DM Sans", ui-sans-serif, system-ui, sans-serif;
 }
 
-/* Professional Travel Agency Theme */
 :root {
-  /* Color Variables */
-  --color-primary: #0F4C5C;
-  --color-primary-light: #186d82;
-  --color-primary-dark: #0a3845;
-  --color-accent: #FF7F50;
-  --color-accent-dark: #e56a42;
-  --color-sky: #38bdf8;
-  --color-yellow: #FFD23F;
-  
-  /* Neutral Colors */
-  --color-white: #FFFFFF;
-  --color-off-white: #F8F9FA;
-  --color-light-gray: #E9ECEF;
-  --color-gray: #6C757D;
-  --color-dark-gray: #333333;
-  --color-charcoal: #212529;
-  
-  /* Selection Colors */
-  --color-selection: #3B82F6; /* Vibrant Blue */
-  --color-selection-text: #FFFFFF;
-  
-  /* Typography Scale */
-  --font-heading: 'Playfair Display', Georgia, serif;
-  --font-body: 'Poppins', 'Inter', 'Roboto', -apple-system, system-ui, sans-serif;
-  
-  /* Font Sizes */
-  --text-xs: 0.8rem;      /* 12.8px */
-  --text-sm: 0.925rem;    /* 14.8px */
-  --text-base: 1.05rem;   /* 16.8px */
-  --text-lg: 1.15rem;     /* 18.4px */
-  --text-xl: 1.25rem;     /* 20px */
-  --text-2xl: 1.5rem;     /* 24px */
-  --text-3xl: 1.875rem;   /* 30px */
-  --text-4xl: 2.25rem;    /* 36px */
-  --text-5xl: 3rem;       /* 48px */
-  --text-6xl: 3.75rem;    /* 60px */
-  --text-7xl: 4.5rem;     /* 72px */
+  --clr-primary:    #0F4C5C;
+  --clr-primary-dk: #0a3845;
+  --clr-accent:     #FF7F50;
+  --clr-accent-dk:  #e56a42;
+  --clr-gold:       #FFD23F;
+  --clr-dark:       #1a1a2e;
+  --clr-gray:       #6b7280;
+  --clr-light:      #F8FAFB;
+  --clr-white:      #ffffff;
+  --font-heading:   'Playfair Display', Georgia, serif;
+  --font-body:      'DM Sans', system-ui, sans-serif;
 }
 
-/* Global Font Settings */
+/* ============================================
+   BASE
+   ============================================ */
+*, *::before, *::after { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
 body {
   font-family: var(--font-body);
-  font-size: var(--text-base);
+  font-size: 1rem;
   line-height: 1.7;
-  color: var(--color-dark-gray);
-  background-color: var(--color-white);
+  color: var(--clr-dark);
+  background-color: var(--clr-white);
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Professional Typography Hierarchy */
-h1, h2, h3, .heading-font {
-  font-family: var(--font-heading);
-  font-weight: 700;
-  line-height: 1.2;
-  color: var(--color-charcoal);
+/* ============================================
+   TYPOGRAPHY
+   ============================================ */
+.heading-font {
+  font-family: var(--font-heading) !important;
+  font-weight: 900;
   letter-spacing: -0.02em;
+  line-height: 1.08;
 }
 
-h4, h5, h6, .subheading-font {
+h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-heading);
-  font-weight: 600;
-  line-height: 1.4;
-  color: var(--color-dark-gray);
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--clr-dark);
 }
 
-h1 { font-size: clamp(2.5rem, 5vw, var(--text-7xl)); }
-h2 { font-size: clamp(2rem, 4vw, var(--text-5xl)); }
-h3 { font-size: clamp(1.75rem, 3vw, var(--text-4xl)); }
-h4 { font-size: var(--text-2xl); }
-h5 { font-size: var(--text-xl); }
-h6 { font-size: var(--text-lg); }
-
-p, .body-text {
+p, span, a, li, button, input, select, label {
   font-family: var(--font-body);
-  font-size: var(--text-base);
-  line-height: 1.7;
-  color: var(--color-dark-gray);
 }
 
-.lead-text {
-  font-size: var(--text-lg);
-  line-height: 1.8;
-  color: var(--color-gray);
+/* ============================================
+   SECTION LABEL SYSTEM
+   — Usage: <SectionLabel>Label Text</SectionLabel>
+   ============================================ */
+.section-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--clr-accent);
+  font-family: var(--font-body);
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+}
+.section-label::before,
+.section-label::after {
+  content: '';
+  display: block;
+  width: 1.75rem;
+  height: 2px;
+  background-color: var(--clr-accent);
+  border-radius: 999px;
+  flex-shrink: 0;
 }
 
-.small-text {
-  font-size: var(--text-sm);
-  line-height: 1.6;
+/* ============================================
+   CARD SYSTEM
+   ============================================ */
+.card {
+  border-radius: 1.5rem;  /* = rounded-3xl */
+  background: var(--clr-white);
+  border: 1px solid #f0f0f0;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+  transition: box-shadow 0.35s ease, transform 0.35s ease;
+}
+.card:hover {
+  box-shadow: 0 20px 50px rgba(0,0,0,0.10);
+  transform: translateY(-4px);
 }
 
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
+/* ============================================
+   BUTTON SYSTEM
+   ============================================ */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--clr-accent);
+  color: #fff;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.875rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.875rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 6px 20px rgba(255, 127, 80, 0.28);
+  white-space: nowrap;
 }
-
-/* Professional Scrollbar */
-::-webkit-scrollbar {
-  width: 12px;
+.btn-primary:hover {
+  background-color: var(--clr-accent-dk);
+  box-shadow: 0 10px 28px rgba(255,127,80,0.38);
 }
+.btn-primary:active { transform: scale(0.97); }
 
-::-webkit-scrollbar-track {
-  background: var(--color-off-white);
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--clr-primary);
+  color: #fff;
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 0.875rem;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.875rem;
+  border: none;
+  cursor: pointer;
+  transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  box-shadow: 0 6px 20px rgba(15,76,92,0.22);
 }
+.btn-secondary:hover { background-color: var(--clr-primary-dk); }
+.btn-secondary:active { transform: scale(0.97); }
 
-::-webkit-scrollbar-thumb {
-  background: var(--color-primary);
-  border-radius: 6px;
-  border: 3px solid var(--color-off-white);
-}
+/* ============================================
+   SCROLLBAR
+   ============================================ */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #f1f5f9; }
+::-webkit-scrollbar-thumb { background: var(--clr-primary); border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: var(--clr-accent); }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-primary-dark);
-}
+/* ============================================
+   SELECTION
+   ============================================ */
+::selection { background: var(--clr-primary); color: #fff; }
 
-/* Professional Animations */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
+/* ============================================
+   IMAGES
+   ============================================ */
+img { max-width: 100%; height: auto; display: block; }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.6s ease-out forwards;
-}
-
-.animate-slideUp {
-  animation: slideUp 0.8s ease-out forwards;
-}
-
-.animate-scaleIn {
-  animation: scaleIn 0.5s ease-out forwards;
-}
-
-/* Professional Focus Styles (WCAG Compliant) */
+/* ============================================
+   FOCUS
+   ============================================ */
 *:focus-visible {
-  outline: 3px solid var(--color-primary);
+  outline: 2px solid var(--clr-accent);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* Selection Color */
-::selection {
-  background-color: var(--color-primary);
-  color: white;
-}
-
-::-moz-selection {
-  background-color: var(--color-primary);
-  color: white;
-}
-
-/* Image Optimization */
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
-
-/* Professional Link Styles */
-a {
-  color: var(--color-primary);
-  text-decoration: none;
-  transition: all 0.3s ease;
-}
-
-a:hover {
-  color: var(--color-primary-dark);
-}
-
-/* Utility Classes */
-.container-custom {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 1.5rem;
-}
-
-.section-spacing {
-  padding: 5rem 0;
-}
-
-@media (max-width: 768px) {
-  .section-spacing {
-    padding: 3rem 0;
-  }
-}
-
-/* Smooth scrolling */
-html {
-  scroll-behavior: smooth;
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 10px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-primary);
-  border-radius: 5px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent);
-}
-
-/* Animations */
+/* ============================================
+   ANIMATIONS
+   ============================================ */
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(32px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
 }
 
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes slideInLeft {
-  from {
-    opacity: 0;
-    transform: translateX(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes pulse {
-  0%, 100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0.8;
-  }
-}
-
-@keyframes bounce {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-5px);
-  }
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.3s ease-out forwards;
-}
-
-.animate-slideInRight {
-  animation: slideInRight 0.4s ease-out forwards;
-}
-
-.animate-slideInLeft {
-  animation: slideInLeft 0.4s ease-out forwards;
-}
-
-.animate-pulse {
-  animation: pulse 2s ease-in-out infinite;
-}
-
-.animate-bounce {
-  animation: bounce 0.5s ease-in-out;
-}
-
-/* Focus styles for accessibility */
-*:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-/* Selection color - Professional Blue Contrast */
-::selection {
-  background-color: var(--color-selection);
-  color: var(--color-selection-text);
-}
-
-::-moz-selection {
-  background-color: var(--color-selection);
-  color: var(--color-selection-text);
-}
-
-/* Image optimization */
-img {
-  max-width: 100%;
-  height: auto;
-}
-
-/* Smooth transitions for links */
-a {
-  transition: all 0.3s ease;
-}
+.animate-fadeIn  { animation: fadeIn  0.6s ease-out forwards; }
+.animate-slideUp { animation: slideUp 0.8s ease-out forwards; }
+.animate-float   { animation: float   4s ease-in-out infinite; }

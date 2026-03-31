@@ -17,7 +17,7 @@ export const colors = {
     coralDark: '#e56a42',
     coralLight: '#ff9a7a',
     skyBlue: '#38bdf8',     
-  },
+  },  
   neutral: {
     white: '#FFFFFF',
     offWhite: '#fafafa',

@@ -13,6 +13,7 @@ const ManageDestinations = () => {
     duration: '',
     location: '',
     category_id: '',
+    destination_type: 'International',
     images: []
   });
   const [imagePreview, setImagePreview] = useState(null);
@@ -50,12 +51,13 @@ const ManageDestinations = () => {
         duration: place.duration || '',
         location: place.location || '',
         category_id: place.category_id || '',
+        destination_type: place.destination_type || 'International',
         images: place.images || []
       });
       setImagePreview(place.images?.[0] || null);
       setEditingId(place.id);
     } else {
-      setForm({ title: '', description: '', price: '', duration: '', location: '', category_id: '', images: [] });
+      setForm({ title: '', description: '', price: '', duration: '', location: '', category_id: '', destination_type: 'International', images: [] });
       setImagePreview(null);
       setEditingId(null);
     }
@@ -290,6 +292,21 @@ const ManageDestinations = () => {
                         {categories.map(cat => <option key={cat.id} value={cat.id}>{cat.name}</option>)}
                       </select>
                       <Tag className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-300 w-5 h-5 pointer-events-none" />
+                   </div>
+                </div>
+
+                <div className="md:col-span-6 space-y-3">
+                   <label className="text-[10px] font-black text-[#0F4C5C] uppercase tracking-[0.4em] pl-2">Destination Scale</label>
+                   <div className="relative">
+                      <select
+                        className="w-full p-5 bg-gray-50/50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-4 focus:ring-[#FF7F50]/10 transition-all font-bold appearance-none cursor-pointer"
+                        value={form.destination_type}
+                        onChange={e => setForm({...form, destination_type: e.target.value})}
+                      >
+                        <option value="International">International</option>
+                        <option value="National">National</option>
+                      </select>
+                      <Globe className="absolute right-5 top-1/2 -translate-y-1/2 text-gray-300 w-5 h-5 pointer-events-none" />
                    </div>
                 </div>
 

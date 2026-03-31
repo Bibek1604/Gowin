@@ -21,26 +21,26 @@ const CTA = () => {
           <div className="relative z-10">
 
 
-            <h2 className="text-5xl md:text-7xl font-black text-[#0F4C5C] mb-8 tracking-tighter leading-tight max-w-4xl mx-auto">
+            <h2 className="text-4xl sm:text-5xl md:text-7xl font-black text-[#0F4C5C] mb-6 md:mb-8 tracking-tight leading-tight max-w-4xl mx-auto heading-font">
               Your Ethereal Journey <br /> Begins with One Click.
             </h2>
 
-            <p className="text-gray-500 text-xl max-w-2xl mx-auto mb-16 leading-relaxed font-medium">
+            <p className="text-gray-500 text-lg md:text-xl max-w-2xl mx-auto mb-10 md:mb-16 leading-relaxed font-sans font-medium px-4 md:px-0">
               Step beyond the mundane. Join our elite circle of global wanderers and redefine your perspective on the world with Gowin.
             </p>
 
             <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
               <Link
                 to="/booking"
-                className="relative bg-[#0F4C5C] text-white px-12 py-5 rounded-2xl font-black text-lg transition-all shadow-2xl shadow-[#0F4C5C]/30 flex items-center justify-center gap-4 group/btn hover:-translate-y-1 active:scale-95 w-full sm:w-auto overflow-hidden"
+                className="relative bg-[#FF7F50] text-white px-12 py-5 rounded-2xl font-black font-sans text-lg transition-all shadow-[0_15px_40px_rgba(255,127,80,0.4)] hover:shadow-[0_20px_50px_rgba(255,127,80,0.6)] flex items-center justify-center gap-4 group/btn hover:-translate-y-1 active:scale-95 w-full sm:w-auto overflow-hidden"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-[#FF7F50] to-[#FF7F50] translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500 ease-out"></div>
+                <div className="absolute inset-0 bg-gradient-to-r from-[#e56a42] to-[#e56a42] translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500 ease-out"></div>
                 <span className="relative z-10">Initiate My Travel</span>
                 <ArrowRight className="w-5 h-5 relative z-10 group-hover/btn:translate-x-2 transition-all duration-300" />
               </Link>
               <Link
                 to="/contact"
-                className="bg-transparent text-[#0F4C5C] border-2 border-[#0F4C5C] px-12 py-5 rounded-2xl font-black text-lg transition-all hover:bg-[#0F4C5C]/5 active:scale-95 w-full sm:w-auto whitespace-nowrap"
+                className="bg-[#0F4C5C] text-white border-2 border-[#0F4C5C] px-12 py-5 rounded-2xl font-black font-sans text-lg transition-all hover:bg-[#0a3845] hover:border-[#0a3845] shadow-[0_10px_30px_rgba(15,76,92,0.3)] active:scale-95 w-full sm:w-auto whitespace-nowrap"
               >
                 Consult an Expert
               </Link>

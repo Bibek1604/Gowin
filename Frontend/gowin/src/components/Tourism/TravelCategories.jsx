@@ -2,66 +2,75 @@ import React, { useEffect } from 'react';
 import { Mountain, Palmtree, Tent, Castle, Binoculars, Map, Compass, Wind } from 'lucide-react';
 import useCategoryStore from '../Store/CategoryStore';
 
+const icons = [
+  <Wind className="w-6 h-6" />,
+  <Mountain className="w-6 h-6" />,
+  <Palmtree className="w-6 h-6" />,
+  <Tent className="w-6 h-6" />,
+  <Castle className="w-6 h-6" />,
+  <Binoculars className="w-6 h-6" />,
+  <Compass className="w-6 h-6" />,
+  <Map className="w-6 h-6" />,
+];
+
+const bgImages = [
+  'https://images.unsplash.com/photo-1551632811-561732d1e306?auto=format&fit=crop&w=400&q=80',
+  'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=400&q=80',
+  'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?auto=format&fit=crop&w=400&q=80',
+  'https://images.unsplash.com/photo-1499856871958-5b9627545d1a?auto=format&fit=crop&w=400&q=80',
+  'https://images.unsplash.com/photo-1537996194471-e657df975ab4?auto=format&fit=crop&w=400&q=80',
+];
+
 const TravelCategories = () => {
   const { categories, fetchCategories, isLoading } = useCategoryStore();
 
-  useEffect(() => {
-    fetchCategories();
-  }, [fetchCategories]);
-
-  // Fallback icons for dynamic categories
-  const icons = [
-    <Wind className="w-8 h-8" />,
-    <Mountain className="w-8 h-8" />,
-    <Palmtree className="w-8 h-8" />,
-    <Tent className="w-8 h-8" />,
-    <Castle className="w-8 h-8" />,
-    <Binoculars className="w-8 h-8" />,
-    <Compass className="w-8 h-8" />,
-    <Map className="w-8 h-8" />
-  ];
-
-  const colors = [
-    "bg-[#0F4C5C]/10 text-[#0F4C5C]",
-    "bg-[#FF7F50]/10 text-[#FF7F50]",
-    "bg-[#0F4C5C]/5 text-[#FF7F50]",
-  ];
+  useEffect(() => { fetchCategories(); }, [fetchCategories]);
 
   return (
-    <section className="py-24 bg-[#F8FAFB]">
+    <section className="py-20 md:py-28 bg-[#F8FAFB]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-5xl font-bold text-[#0F4C5C] mb-4 tracking-tight">Our Travel Styles</h2>
-          <p className="text-gray-500 max-w-2xl mx-auto text-lg leading-relaxed">
-            Every traveler is unique. Find the perfect category that matches your wanderlust spirit.
+
+        {/* Header */}
+        <div className="text-center mb-12 md:mb-16">
+          <div className="flex justify-center mb-4">
+            <span className="section-label">Browse by Style</span>
+          </div>
+          <h2 className="heading-font text-4xl md:text-5xl text-[#1a1a2e]">
+            Choose Your <span className="text-[#0F4C5C]">Adventure</span>
+          </h2>
+          <p className="text-gray-500 text-sm md:text-base mt-3 max-w-xl mx-auto leading-relaxed">
+            From mountain treks to tropical retreats — find the perfect experience for your travel style.
           </p>
         </div>
 
         {isLoading ? (
-          <div className="flex flex-wrap justify-center gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
             {[1,2,3,4,5].map(i => (
-              <div key={i} className="w-40 h-48 bg-gray-50 rounded-3xl animate-pulse border border-gray-100" />
+              <div key={i} className="h-52 bg-gray-100 rounded-3xl animate-pulse" />
             ))}
           </div>
         ) : categories.length === 0 ? (
-          <div className="text-center py-12 text-gray-400 font-medium">
-             Categories are currently being curated...
-          </div>
+          <div className="text-center py-16 text-gray-400">Categories coming soon...</div>
         ) : (
-          <div className="flex flex-wrap justify-center gap-6 md:gap-10">
-            {categories.slice(0, 5).map((cat, index) => (
-              <div 
-                key={cat.id} 
-                className="flex flex-col items-center justify-center bg-white p-10 rounded-[2.5rem] shadow-[0_8px_30px_rgb(0,0,0,0.03)] hover:shadow-[0_20px_40px_rgba(15,76,92,0.12)] hover:-translate-y-2 transition-all duration-500 min-w-[180px] cursor-pointer group border border-gray-50 relative overflow-hidden"
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+            {categories.slice(0, 5).map((cat, idx) => (
+              <div
+                key={cat.id}
+                className="group relative rounded-3xl overflow-hidden cursor-pointer h-52 shadow-[0_4px_20px_rgba(0,0,0,0.07)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.13)] transition-all duration-500 hover:-translate-y-2"
               >
-                {/* Background decorative blob */}
-                <div className={`absolute top-0 right-0 w-24 h-24 rounded-full -mr-12 -mt-12 transition-all duration-500 opacity-0 group-hover:opacity-10 ${colors[index % colors.length]}`} />
-                
-                <div className={`p-6 rounded-2xl mb-6 transition-all duration-500 shadow-sm ${colors[index % colors.length]} group-hover:scale-110 group-hover:shadow-lg`}>
-                  {icons[index % icons.length]}
+                <img
+                  src={bgImages[idx % bgImages.length]}
+                  alt={cat.name}
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0a1628]/85 via-[#0a1628]/30 to-transparent" />
+                <div className="absolute inset-0 flex flex-col items-center justify-end p-5 text-center">
+                  <div className="bg-white/15 backdrop-blur-md border border-white/20 p-3 rounded-2xl text-white mb-3 group-hover:bg-[#FF7F50] group-hover:border-[#FF7F50] transition-all duration-300">
+                    {icons[idx % icons.length]}
+                  </div>
+                  <h3 className="text-sm font-bold text-white mb-1">{cat.name}</h3>
+                  <span className="text-[10px] text-white/45 uppercase tracking-widest group-hover:text-[#FF7F50] transition-colors">Explore →</span>
                 </div>
-                <h3 className="text-xl font-bold text-[#0F4C5C] group-hover:text-[#FF7F50] transition-colors">{cat.name}</h3>
-                <p className="text-[10px] uppercase font-extrabold text-[#FF7F50] tracking-[0.2em] mt-3">Explore Now</p>
               </div>
             ))}
           </div>

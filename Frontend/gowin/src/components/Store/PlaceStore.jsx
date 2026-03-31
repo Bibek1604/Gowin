@@ -30,6 +30,7 @@ const usePlaceStore = create((set) => ({
         location: placeData.location,
         duration: placeData.duration,
         category_id: placeData.category_id,
+        destination_type: placeData.destination_type || 'International',
         images: placeData.images, // Array of URLs
         available_dates: placeData.available_dates
       }])
@@ -56,6 +57,7 @@ const usePlaceStore = create((set) => ({
         location: updatedData.location,
         duration: updatedData.duration,
         category_id: updatedData.category_id,
+        destination_type: updatedData.destination_type,
         images: updatedData.images,
         available_dates: updatedData.available_dates
       })

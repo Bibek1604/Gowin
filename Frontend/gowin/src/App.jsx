@@ -153,6 +153,7 @@ function AppContent() {
         <Route path="/login" element={<Login />} />
         <Route path="/" element={<TourismHome />} />
         <Route path="/places/:placeId" element={<DestinationDetails />} />
+        <Route path="/destinations/:type" element={<AllDestinations />} />
         <Route path="/details/all" element={<AllDestinations />} />
         <Route path="/details/:placeId" element={<DestinationDetails />} />
         <Route path="/booking" element={<BookingForm />} />
