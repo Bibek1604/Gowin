@@ -57,7 +57,7 @@ const Hero = () => {
           {/* Heading */}
           <h1 className="heading-font text-5xl sm:text-6xl lg:text-[4.5rem] text-white mb-6 tracking-tight drop-shadow-md mx-auto" style={{ lineHeight: 1.1 }}>
             Explore the World<br />
-            with <span className="text-white/95">GoWin</span> Travels.
+            with <span className="text-white/95">GoWin</span> International.
           </h1>
 
           {/* Subtitle */}
