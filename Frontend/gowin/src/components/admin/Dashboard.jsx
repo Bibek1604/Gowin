@@ -4,13 +4,22 @@ import { supabase } from '../../supabaseClient';
 import usePlaceStore from '../Store/PlaceStore';
 import useBookingStore from '../Store/BookingStore';
 import useCategoryStore from '../Store/CategoryStore';
-import { Map, Calendar, Tags, DollarSign, TrendingUp, User, ListPlus, Activity, Star, Mail, Users } from 'lucide-react';
+import {
+  Map, Calendar, Tags, TrendingUp, Activity,
+  Star, Mail, Users, Plus, ArrowRight, CheckCircle,
+  Clock, XCircle, MapPin
+} from 'lucide-react';
+
+const statusConfig = {
+  Confirmed: { color: 'text-emerald-600 bg-emerald-50', icon: CheckCircle },
+  Cancelled: { color: 'text-red-500 bg-red-50', icon: XCircle },
+  Pending: { color: 'text-amber-600 bg-amber-50', icon: Clock },
+};
 
 function Dashboard() {
   const { places, fetchPlaces } = usePlaceStore();
   const { bookings, fetchBookings } = useBookingStore();
   const { categories, fetchCategories } = useCategoryStore();
-  
   const [messagesCount, setMessagesCount] = useState(0);
   const [subscribersCount, setSubscribersCount] = useState(0);
 
@@ -29,156 +38,204 @@ function Dashboard() {
   };
 
   const stats = useMemo(() => {
-    const totalRevenue = bookings.reduce((sum, b) => sum + (parseFloat(b.amount) || 0), 0);
-    const recentBookings = bookings.slice(-5).reverse();
-
+    const confirmedBookings = bookings.filter(b => b.status === 'Confirmed');
+    const pendingBookings = bookings.filter(b => b.status === 'Pending');
+    const recentBookings = [...bookings].slice(0, 6);
     return {
       totalPlaces: places.length,
       totalBookings: bookings.length,
       totalCategories: categories.length,
-      totalRevenue,
+      confirmedBookings: confirmedBookings.length,
+      pendingBookings: pendingBookings.length,
       recentBookings,
     };
   }, [places, bookings, categories]);
 
   const statCards = [
-    { title: 'Total Places', value: stats.totalPlaces, icon: <Map className="w-6 h-6" />, color: 'text-[#0F4C5C]', bg: 'bg-[#0F4C5C]/10', trend: '+12%' },
-    { title: 'Total Bookings', value: stats.totalBookings, icon: <Calendar className="w-6 h-6" />, color: 'text-[#FF7F50]', bg: 'bg-[#FF7F50]/10', trend: '+23%' },
-    { title: 'New Messages', value: messagesCount, icon: <Mail className="w-6 h-6" />, color: 'text-[#FF7F50]', bg: 'bg-[#FF7F50]/10', trend: 'Live' },
-    { title: 'Subscribers', value: subscribersCount, icon: <Users className="w-6 h-6" />, color: 'text-[#0F4C5C]', bg: 'bg-[#0F4C5C]/10', trend: '+10%' },
+    {
+      title: 'Total Packages',
+      value: stats.totalPlaces,
+      icon: Map,
+      color: 'text-[#0F4C5C]',
+      bg: 'bg-[#0F4C5C]/8',
+      trend: '+12%',
+      link: '/admin/add-place',
+    },
+    {
+      title: 'Total Bookings',
+      value: stats.totalBookings,
+      icon: Calendar,
+      color: 'text-[#FF7F50]',
+      bg: 'bg-[#FF7F50]/8',
+      trend: '+23%',
+      link: '/admin/add-booking',
+    },
+    {
+      title: 'Messages',
+      value: messagesCount,
+      icon: Mail,
+      color: 'text-violet-600',
+      bg: 'bg-violet-50',
+      trend: 'Live',
+      link: '/admin/messages',
+    },
+    {
+      title: 'Subscribers',
+      value: subscribersCount,
+      icon: Users,
+      color: 'text-emerald-600',
+      bg: 'bg-emerald-50',
+      trend: '+10%',
+      link: '/admin/subscribers',
+    },
+  ];
+
+  const quickActions = [
+    { label: 'Add Destination', to: '/admin/add-place', icon: Map, desc: 'Create a new tour package' },
+    { label: 'View Bookings', to: '/admin/add-booking', icon: Calendar, desc: 'Manage reservations' },
+    { label: 'Read Messages', to: '/admin/messages', icon: Mail, desc: 'Customer inquiries' },
+    { label: 'Manage Categories', to: '/admin/add-category', icon: Tags, desc: 'Organise tours by type' },
   ];
 
   return (
-    <div className="min-h-screen bg-transparent p-12 font-sans">
-      
+    <div className="p-4 sm:p-6 lg:p-8 min-h-screen font-sans">
       {/* Header */}
-      <div className="mb-12 flex flex-col md:flex-row justify-between items-end gap-4">
-        <div>
-          <h1 className="text-3xl font-bold text-[#0F4C5C] mb-2 tracking-tight">Overview</h1>
-          <p className="text-gray-500 text-lg">Performance insights for Gowin Travels</p>
-        </div>
-        <div className="flex bg-white rounded-2xl p-1.5 border border-gray-100 shadow-sm">
-           <button className="px-6 py-2 rounded-xl font-bold text-sm bg-[#0F4C5C] text-white shadow-md">Realtime</button>
-           <div className="px-6 py-2 rounded-xl font-bold text-sm text-[#FF7F50] flex items-center gap-2">
-             <div className="w-2 h-2 rounded-full bg-[#FF7F50] animate-pulse" />
-             Live Monitoring
-           </div>
-        </div>
+      <div className="mb-6 lg:mb-8">
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#0F4C5C] tracking-tight">Dashboard</h1>
+        <p className="text-gray-500 text-sm mt-1">Welcome back — here's what's happening at GoWin Travels.</p>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12">
-        {statCards.map((stat, index) => (
-          <div key={index} className="bg-white rounded-[2rem] p-8 shadow-[0_4px_25px_rgb(0,0,0,0.02)] border border-gray-100 flex items-center justify-between group hover:-translate-y-1 transition-all duration-500">
-            <div>
-              <p className="text-gray-400 font-bold text-xs uppercase tracking-widest mb-2">{stat.title}</p>
-              <h3 className="text-3xl font-extrabold text-[#0F4C5C] mb-2">{stat.value}</h3>
-              <div className="flex items-center gap-1 text-xs font-bold text-[#FF7F50] bg-[#FF7F50]/10 px-2 py-1 rounded-md w-fit">
-                <TrendingUp className="w-3 h-3" />
-                <span>{stat.trend}</span>
+      {/* Stat Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 lg:gap-5 mb-6 lg:mb-8">
+        {statCards.map((card, i) => {
+          const Icon = card.icon;
+          return (
+            <Link
+              key={i}
+              to={card.link}
+              className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-300 group"
+            >
+              <div className="flex items-start justify-between mb-3">
+                <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${card.bg} ${card.color} group-hover:scale-110 transition-transform`}>
+                  <Icon className="w-5 h-5" />
+                </div>
+                <span className="text-[10px] font-bold text-[#FF7F50] bg-[#FF7F50]/10 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                  <TrendingUp className="w-2.5 h-2.5" />
+                  {card.trend}
+                </span>
               </div>
-            </div>
-            <div className={`w-16 h-16 rounded-[1.5rem] flex items-center justify-center ${stat.bg} ${stat.color} group-hover:rotate-12 transition-all duration-500`}>
-              {stat.icon}
-            </div>
-          </div>
-        ))}
+              <p className="text-2xl sm:text-3xl font-bold text-[#0F4C5C] mb-1">{card.value}</p>
+              <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">{card.title}</p>
+            </Link>
+          );
+        })}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-5 lg:gap-6">
         {/* Recent Bookings */}
-        <div className="lg:col-span-2 bg-white rounded-[2.5rem] p-10 shadow-[0_4px_25px_rgb(0,0,0,0.02)] border border-gray-100 flex flex-col min-h-[500px]">
-          <div className="flex justify-between items-center mb-10">
-            <div className="flex items-center gap-3">
-               <div className="w-10 h-10 rounded-xl bg-orange-50 flex items-center justify-center text-[#FF7F50]">
-                  <Activity className="w-5 h-5" />
-               </div>
-               <h2 className="text-xl font-bold text-[#0F4C5C]">Recent Bookings</h2>
+        <div className="xl:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+          <div className="flex items-center justify-between p-5 border-b border-gray-50">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-[#FF7F50]/10 flex items-center justify-center">
+                <Activity className="w-4 h-4 text-[#FF7F50]" />
+              </div>
+              <h2 className="text-base font-bold text-[#0F4C5C]">Recent Bookings</h2>
             </div>
-            <Link to="/admin/add-booking" className="text-[#FF7F50] font-bold text-sm hover:underline flex items-center gap-1 group">
-               View All Bookings <span className="group-hover:translate-x-1 transition-transform">→</span>
+            <Link to="/admin/add-booking" className="text-xs font-semibold text-[#FF7F50] hover:underline flex items-center gap-1">
+              View all <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
 
-          <div className="space-y-4 flex-1">
+          <div className="divide-y divide-gray-50">
             {stats.recentBookings.length > 0 ? (
-              stats.recentBookings.map((booking, index) => {
+              stats.recentBookings.map((booking, i) => {
                 const place = places.find(p => p.id === (booking.tour_id || booking.placeId));
+                const status = booking.status || 'Pending';
+                const StatusIcon = statusConfig[status]?.icon || Clock;
                 return (
-                  <div key={index} className="flex items-center justify-between p-5 rounded-3xl bg-gray-50/50 hover:bg-white hover:shadow-lg hover:shadow-gray-200/40 border border-transparent hover:border-gray-100 transition-all duration-300">
-                    <div className="flex items-center gap-4">
-                      <div className="w-12 h-12 bg-white rounded-2xl shadow-sm flex items-center justify-center text-[#0F4C5C] font-bold text-lg border border-gray-50">
-                        {booking.user_name?.[0] || booking.name?.[0] || 'T'}
-                      </div>
-                      <div>
-                        <h4 className="font-bold text-[#0F4C5C]">{booking.user_name || booking.name || 'Anonymous Traveler'}</h4>
-                        <div className="flex items-center gap-2 text-xs text-gray-400 mt-1 font-medium">
-                           <span className="flex items-center gap-1"><Map className="w-3 h-3" /> {place?.title || 'Unknown Place'}</span>
-                           <span>•</span>
-                           <span>{booking.travel_date || booking.travelDate || 'Date N/A'}</span>
-                        </div>
+                  <div key={i} className="flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50/50 transition-colors">
+                    <div className="w-9 h-9 bg-[#0F4C5C]/5 rounded-xl flex items-center justify-center text-[#0F4C5C] font-bold text-sm flex-shrink-0">
+                      {(booking.user_name?.[0] || booking.name?.[0] || 'T').toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-semibold text-[#0F4C5C] truncate">
+                        {booking.user_name || booking.name || 'Traveler'}
+                      </p>
+                      <div className="flex items-center gap-1.5 text-xs text-gray-400 mt-0.5">
+                        <MapPin className="w-3 h-3 flex-shrink-0" />
+                        <span className="truncate">{place?.title || 'Unknown Package'}</span>
+                        {booking.travel_date && (
+                          <>
+                            <span>·</span>
+                            <span className="flex-shrink-0">{booking.travel_date}</span>
+                          </>
+                        )}
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-extrabold text-[#0F4C5C] text-lg">${booking.amount || '0'}</p>
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#FF7F50] bg-[#FF7F50]/10 px-3 py-1 rounded-full mt-1 inline-block">
-                        Paid
-                      </span>
-                    </div>
+                    <span className={`hidden sm:flex items-center gap-1 text-[10px] font-semibold px-2.5 py-1 rounded-full ${statusConfig[status]?.color || 'text-gray-500 bg-gray-50'}`}>
+                      <StatusIcon className="w-3 h-3" />
+                      {status}
+                    </span>
                   </div>
                 );
               })
             ) : (
-              <div className="flex flex-col items-center justify-center h-full text-center py-20 bg-gray-50/50 rounded-[2rem] border border-dashed border-gray-200">
-                <Calendar className="w-16 h-16 text-gray-200 mb-4" />
-                <p className="text-gray-400 font-medium">No bookings recorded yet.</p>
+              <div className="py-16 text-center">
+                <Calendar className="w-12 h-12 text-gray-200 mx-auto mb-3" />
+                <p className="text-gray-400 text-sm">No bookings yet.</p>
               </div>
             )}
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="space-y-8">
-          <div className="bg-[#0F4C5C] rounded-[2.5rem] p-10 shadow-xl shadow-[#0F4C5C]/20 relative overflow-hidden">
-             {/* Decorative circles */}
-             <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/5 rounded-full" />
-             <div className="absolute -bottom-10 -left-10 w-24 h-24 bg-white/5 rounded-full" />
-             
-             <h2 className="text-xl font-bold text-white mb-2 relative z-10">Administrative</h2>
-             <p className="text-white/60 text-sm mb-8 relative z-10">Quick access to management tools</p>
-             
-             <div className="grid grid-cols-1 gap-4 relative z-10">
-                <Link to="/admin/add-place" className="flex items-center gap-4 p-4 rounded-2xl bg-white/10 hover:bg-white/20 transition-all border border-white/10 group">
-                   <div className="w-10 h-10 rounded-xl bg-[#FF7F50] flex items-center justify-center text-white shadow-lg shadow-[#FF7F50]/20">
-                      <ListPlus className="w-5 h-5" />
-                   </div>
-                   <span className="font-bold text-white group-hover:translate-x-1 transition-transform">Create Package</span>
-                </Link>
-                <Link to="/admin/messages" className="flex items-center gap-4 p-4 rounded-2xl bg-white/10 hover:bg-white/20 transition-all border border-white/10 group">
-                   <div className="w-10 h-10 rounded-xl bg-[#FF7F50] flex items-center justify-center text-white shadow-lg shadow-[#FF7F50]/20">
-                      <Mail className="w-5 h-5" />
-                   </div>
-                   <span className="font-bold text-white group-hover:translate-x-1 transition-transform">Read Messages</span>
-                </Link>
-                <Link to="/admin/subscribers" className="flex items-center gap-4 p-4 rounded-2xl bg-white/10 hover:bg-white/20 transition-all border border-white/10 group">
-                   <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-[#0F4C5C]">
-                      <Users className="w-5 h-5" />
-                   </div>
-                   <span className="font-bold text-white group-hover:translate-x-1 transition-transform">Email List</span>
-                </Link>
-             </div>
+        {/* Quick Actions + Summary */}
+        <div className="space-y-5">
+          {/* Quick Actions */}
+          <div className="bg-[#0F4C5C] rounded-2xl p-5 relative overflow-hidden">
+            <div className="absolute -top-8 -right-8 w-32 h-32 bg-white/5 rounded-full pointer-events-none" />
+            <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-white/5 rounded-full pointer-events-none" />
+            <h2 className="text-sm font-bold text-white mb-1 relative z-10">Quick Actions</h2>
+            <p className="text-white/50 text-xs mb-4 relative z-10">Common management tasks</p>
+            <div className="space-y-2 relative z-10">
+              {quickActions.map((action) => {
+                const Icon = action.icon;
+                return (
+                  <Link
+                    key={action.to}
+                    to={action.to}
+                    className="flex items-center gap-3 p-3 rounded-xl bg-white/8 hover:bg-white/15 border border-white/10 transition-all group"
+                  >
+                    <div className="w-8 h-8 rounded-lg bg-[#FF7F50] flex items-center justify-center flex-shrink-0">
+                      <Icon className="w-4 h-4 text-white" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-sm font-semibold text-white group-hover:translate-x-0.5 transition-transform">{action.label}</p>
+                      <p className="text-xs text-white/40">{action.desc}</p>
+                    </div>
+                  </Link>
+                );
+              })}
+            </div>
           </div>
 
-          <div className="bg-white rounded-[2.5rem] p-8 border border-gray-100 shadow-sm text-center">
-             <div className="w-16 h-16 bg-[#FF7F50]/10 rounded-full flex items-center justify-center text-[#FF7F50] mx-auto mb-4">
-                <TrendingUp className="w-8 h-8" />
-             </div>
-             <h4 className="font-bold text-[#0F4C5C] mb-1">High Conversion</h4>
-             <p className="text-xs text-gray-400">Your site traffic is up by 15% this week.</p>
+          {/* Booking summary */}
+          <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
+            <h3 className="text-sm font-bold text-[#0F4C5C] mb-4">Booking Summary</h3>
+            <div className="space-y-3">
+              {[
+                { label: 'Confirmed', value: stats.confirmedBookings, color: 'bg-emerald-500' },
+                { label: 'Pending', value: stats.pendingBookings, color: 'bg-amber-400' },
+                { label: 'Total', value: stats.totalBookings, color: 'bg-[#0F4C5C]' },
+              ].map((item) => (
+                <div key={item.label} className="flex items-center gap-3">
+                  <div className={`w-2.5 h-2.5 rounded-full ${item.color} flex-shrink-0`} />
+                  <span className="text-xs text-gray-500 flex-1">{item.label}</span>
+                  <span className="text-sm font-bold text-[#0F4C5C]">{item.value}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
-
       </div>
     </div>
   );

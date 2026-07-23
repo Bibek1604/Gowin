@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>GoWin Travels — Destination Seeder</title>
+<style>
+  body { font-family: -apple-system, Segoe UI, Roboto, sans-serif; background: #0F4C5C; color: #fff; padding: 24px; }
+  h1 { color: #FF7F50; }
+  #log { background: #08313c; border-radius: 12px; padding: 16px; height: 60vh; overflow-y: auto; font-family: monospace; font-size: 13px; white-space: pre-wrap; }
+  button { background: #FF7F50; color: #fff; border: none; padding: 12px 24px; border-radius: 8px; font-weight: bold; font-size: 15px; cursor: pointer; margin-bottom: 16px; }
+  button:disabled { opacity: 0.5; cursor: not-allowed; }
+  .ok { color: #7CFC9E; }
+  .err { color: #ff8080; }
+  .info { color: #9fd3e0; }
+</style>
+</head>
+<body>
+<h1>GoWin Travels — Destination Seeder</h1>
+<p>Seeds 25 Nepal + 25 international tour packages (with categories, high-quality images, and pricing) into Supabase. Safe to run more than once — it skips destinations that already exist by title.</p>
+<button id="runBtn">Run Seeding</button>
+<div id="log">Ready.</div>
+
+<script type="module">
+import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+
+const SUPABASE_URL = 'https://wbbwibqpdboeqbflqkuj.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_EZQ_0mwppmRfpIXykwpuvw_WwdiKgAP';
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const logEl = document.getElementById('log');
+function log(msg, cls) {
+  const line = document.createElement('div');
+  if (cls) line.className = cls;
+  line.textContent = msg;
+  logEl.appendChild(line);
+  logEl.scrollTop = logEl.scrollHeight;
+}
+
+const img = (id) => `https://images.unsplash.com/photo-${id}?auto=format&fit=crop&w=1200&q=80`;
+
+const CATEGORIES = [
+  { name: 'Trekking', description: 'High-altitude trails and Himalayan adventures', image_url: img('1551632811-561732d1e306') },
+  { name: 'Adventure', description: 'Paragliding, rafting, zip-lining and thrill-seeking activities', image_url: img('1506905925346-21bda4d32df4') },
+  { name: 'Wildlife', description: 'National parks, safaris and nature encounters', image_url: img('1549366021-9f761d450615') },
+  { name: 'Cultural', description: 'Temples, heritage sites and local traditions', image_url: img('1524492412937-b28074a5d7da') },
+  { name: 'Pilgrimage', description: 'Sacred sites and spiritual journeys', image_url: img('1544620347-c4fd4a3d5957') },
+  { name: 'Nature', description: 'Scenic landscapes and outdoor escapes', image_url: img('1742106856193-5cc3424ac450') },
+  { name: 'Luxury', description: 'Premium resorts and bespoke experiences', image_url: img('1512100606965-79612a713bb5') },
+  { name: 'Beach & Relax', description: 'Coastal getaways and relaxing island escapes', image_url: img('1537996194471-e657df975ab4') },
+  { name: 'City Break', description: 'Short urban explorations of the world\'s most iconic cities', image_url: img('1511739001486-6bfe10ce785f') },
+  { name: 'Historical', description: 'Ancient wonders and world-famous heritage landmarks', image_url: img('1710069441986-82759c8a200c') },
+];
+
+const NEPAL = [
+  { title: 'Everest Base Camp Trek', location: 'Solukhumbu, Nepal', category: 'Trekking', price: '1349', duration: '14 Days / 13 Nights', image: img('1516490701338-fd7e5a94d6d7'), description: 'Stand at the foot of the world\'s highest peak. Trek through Sherpa villages, rhododendron forests and glacial moraines on this iconic Himalayan journey.' },
+  { title: 'Annapurna Base Camp Trek', location: 'Annapurna, Kaski, Nepal', category: 'Trekking', price: '999', duration: '12 Days / 11 Nights', image: img('1504214113535-0f172eef0e0e'), description: 'Walk into a natural amphitheatre of 7,000m peaks, through cascading waterfalls, hot springs and warm Gurung villages along the Annapurna Sanctuary trail.' },
+  { title: 'Pokhara Valley & Phewa Lake', location: 'Pokhara, Nepal', category: 'Adventure', price: '749', duration: '6 Days / 5 Nights', image: img('1605640840605-14ac1855827b'), description: 'Paddle on Phewa Lake at sunrise, paraglide over the valley, then relax with front-row views of the Annapurna range.' },
+  { title: 'Chitwan Jungle Safari', location: 'Chitwan, Nepal', category: 'Wildlife', price: '549', duration: '4 Days / 3 Nights', image: img('1549366021-9f761d450615'), description: 'Track one-horned rhinos and Royal Bengal tigers on foot and by jeep through Chitwan National Park, a UNESCO World Heritage site.' },
+  { title: 'Kathmandu Heritage Tour', location: 'Kathmandu, Nepal', category: 'Cultural', price: '399', duration: '4 Days / 3 Nights', image: img('1614082242765-7c98ca0f3df3'), description: 'Explore Pashupatinath, Boudhanath, Swayambhunath and Patan Durbar Square with expert cultural guides in the City of Temples.' },
+  { title: 'Lumbini Buddha Circuit', location: 'Lumbini, Nepal', category: 'Pilgrimage', price: '649', duration: '5 Days / 4 Nights', image: img('1544620347-c4fd4a3d5957'), description: 'Trace the birthplace of Lord Buddha and journey through sacred monasteries and the peaceful garden of the Bodhi tree.' },
+  { title: 'Langtang Valley Trek', location: 'Rasuwa, Nepal', category: 'Trekking', price: '899', duration: '10 Days / 9 Nights', image: img('1434394354979-a235cd36269d'), description: 'A shorter, spectacular alternative to Everest — glacier valleys, yak pastures and Tamang culture just north of Kathmandu.' },
+  { title: 'Manaslu Circuit Trek', location: 'Gorkha, Nepal', category: 'Trekking', price: '1599', duration: '16 Days / 15 Nights', image: img('1434394354979-a235cd36269d'), description: 'Circle the world\'s eighth-highest peak through remote villages and glacial passes on one of Nepal\'s most rewarding off-the-beaten-track treks.' },
+  { title: 'Upper Mustang Trek', location: 'Mustang, Nepal', category: 'Trekking', price: '1899', duration: '14 Days / 13 Nights', image: img('1504214113535-0f172eef0e0e'), description: 'Step into a hidden Himalayan desert kingdom of red cliffs, ancient cave monasteries and Tibetan Buddhist culture.' },
+  { title: 'Gokyo Lakes Trek', location: 'Solukhumbu, Nepal', category: 'Trekking', price: '1499', duration: '15 Days / 14 Nights', image: img('1516490701338-fd7e5a94d6d7'), description: 'Climb Gokyo Ri for one of the best Everest panoramas in the world, past turquoise glacial lakes and the Ngozumpa Glacier.' },
+  { title: 'Poon Hill Trek', location: 'Ghorepani, Nepal', category: 'Trekking', price: '599', duration: '5 Days / 4 Nights', image: img('1504214113535-0f172eef0e0e'), description: 'A perfect short trek to a legendary sunrise viewpoint over the Annapurna and Dhaulagiri ranges.' },
+  { title: 'Rara Lake Trek', location: 'Mugu, Nepal', category: 'Trekking', price: '1799', duration: '12 Days / 11 Nights', image: img('1605640840605-14ac1855827b'), description: 'Journey to Nepal\'s largest and most remote lake, ringed by pine forest in the pristine far-western Himalaya.' },
+  { title: 'Bandipur Heritage Village', location: 'Tanahun, Nepal', category: 'Cultural', price: '349', duration: '3 Days / 2 Nights', image: img('1706188047078-0ba67733fa45'), description: 'Wander car-free Newari streets in a beautifully preserved hilltop trading town with sweeping Himalayan views.' },
+  { title: 'Bardia National Park Safari', location: 'Bardia, Nepal', category: 'Wildlife', price: '699', duration: '5 Days / 4 Nights', image: img('1549366021-9f761d450615'), description: 'Nepal\'s wildest national park — elephant-back and jeep safaris in search of wild tigers, rhinos and gharial crocodiles.' },
+  { title: 'Nagarkot Sunrise Tour', location: 'Bhaktapur, Nepal', category: 'Adventure', price: '199', duration: '2 Days / 1 Night', image: img('1700719401786-f8cf63aa84e7'), description: 'Watch dawn break over the entire Himalayan range, including Everest on a clear day, from this famous hilltop viewpoint.' },
+  { title: 'Bhaktapur Durbar Square Tour', location: 'Bhaktapur, Nepal', category: 'Cultural', price: '149', duration: '1 Day', image: img('1706188047078-0ba67733fa45'), description: 'A living museum of Newari art and architecture, pottery squares and medieval palace courtyards.' },
+  { title: 'Ilam Tea Garden Escape', location: 'Ilam, Nepal', category: 'Nature', price: '449', duration: '4 Days / 3 Nights', image: img('1742106856193-5cc3424ac450'), description: 'Rolling emerald tea estates, misty hills and the laid-back charm of eastern Nepal\'s tea country.' },
+  { title: 'Gosaikunda Lake Trek', location: 'Rasuwa, Nepal', category: 'Trekking', price: '849', duration: '8 Days / 7 Nights', image: img('1605640840605-14ac1855827b'), description: 'A sacred alpine lake trek through Langtang National Park, revered by both Hindu and Buddhist pilgrims.' },
+  { title: 'Muktinath Pilgrimage Tour', location: 'Mustang, Nepal', category: 'Pilgrimage', price: '599', duration: '5 Days / 4 Nights', image: img('1544620347-c4fd4a3d5957'), description: 'Visit one of the most sacred temples for both Hindus and Buddhists, set dramatically at 3,800m in the Mustang highlands.' },
+  { title: 'Sarangkot Paragliding Adventure', location: 'Pokhara, Nepal', category: 'Adventure', price: '299', duration: '2 Days / 1 Night', image: img('1610997686651-98492fd08108'), description: 'Soar above Phewa Lake and the Annapurna foothills on a tandem paragliding flight from Sarangkot.' },
+  { title: 'Kanchenjunga Base Camp Trek', location: 'Taplejung, Nepal', category: 'Trekking', price: '2199', duration: '20 Days / 19 Nights', image: img('1434394354979-a235cd36269d'), description: 'A wild, remote expedition to the base of the world\'s third-highest peak through rhododendron forest and high passes.' },
+  { title: 'Helambu Cultural Trek', location: 'Sindhupalchok, Nepal', category: 'Trekking', price: '749', duration: '7 Days / 6 Nights', image: img('1516490701338-fd7e5a94d6d7'), description: 'An easy-access trek through Sherpa and Tamang villages, monasteries and terraced hillsides close to Kathmandu.' },
+  { title: 'Janakpur Temple Tour', location: 'Janakpur, Nepal', category: 'Pilgrimage', price: '299', duration: '3 Days / 2 Nights', image: img('1544620347-c4fd4a3d5957'), description: 'Explore the mythological birthplace of Sita and the ornate Janaki Mandir in Nepal\'s Mithila heartland.' },
+  { title: 'Dolpo Wilderness Trek', location: 'Dolpa, Nepal', category: 'Trekking', price: '2499', duration: '18 Days / 17 Nights', image: img('1504214113535-0f172eef0e0e'), description: 'A restricted-area expedition into one of the last untouched Trans-Himalayan regions, made famous by "The Snow Leopard".' },
+  { title: 'Trishuli River Rafting', location: 'Trishuli, Nepal', category: 'Adventure', price: '199', duration: '2 Days / 1 Night', image: img('1685550903259-96799741df9e'), description: 'Grade III–IV white-water rapids, riverside camping and canyon scenery just outside Kathmandu.' },
+];
+
+const INTERNATIONAL = [
+  { title: 'Santorini Luxury Escape', location: 'Santorini, Greece', category: 'Luxury', price: '2499', duration: '8 Days / 7 Nights', image: img('1570077188670-e3a8d69ac5ff'), description: 'Perch above the caldera in a whitewashed cliff-side villa and watch the sun melt into the Aegean Sea every evening.' },
+  { title: 'Bali Island Retreat', location: 'Ubud & Seminyak, Bali', category: 'Beach & Relax', price: '1199', duration: '10 Days / 9 Nights', image: img('1537996194471-e657df975ab4'), description: 'Jungle yoga retreats, ancient temple ceremonies and world-class surf breaks blend seamlessly on the Island of the Gods.' },
+  { title: 'Swiss Alps Adventure', location: 'Interlaken, Switzerland', category: 'Adventure', price: '3199', duration: '7 Days / 6 Nights', image: img('1506905925346-21bda4d32df4'), description: 'Ski pristine powder, hike azure alpine lakes and zip-line over glaciers in the adventure capital of Europe.' },
+  { title: 'Maldives Overwater Villa', location: 'North Malé Atoll, Maldives', category: 'Luxury', price: '4299', duration: '7 Days / 6 Nights', image: img('1512100606965-79612a713bb5'), description: 'Step from your glass-floor villa directly into turquoise lagoons teeming with manta rays, turtles and neon reef fish.' },
+  { title: 'Kyoto Cultural Journey', location: 'Kyoto, Japan', category: 'Cultural', price: '2199', duration: '9 Days / 8 Nights', image: img('1493976040374-85c8e12f0c0e'), description: 'Walk bamboo groves at dawn, take part in a tea ceremony and marvel at 1,000 crimson torii gates at Fushimi Inari.' },
+  { title: 'Safari in Kenya', location: 'Maasai Mara, Kenya', category: 'Wildlife', price: '3799', duration: '10 Days / 9 Nights', image: img('1547471080-7cc2caa01a7e'), description: 'Witness the Great Migration, spot the Big Five and sleep under a billion stars in a luxury tented camp in the savanna.' },
+  { title: 'Paris Romance Getaway', location: 'Paris, France', category: 'City Break', price: '2299', duration: '6 Days / 5 Nights', image: img('1511739001486-6bfe10ce785f'), description: 'Croissants at sunrise, the Louvre by afternoon and the Eiffel Tower sparkling every hour after dark.' },
+  { title: 'Dubai Desert & Skyline', location: 'Dubai, UAE', category: 'Luxury', price: '1899', duration: '5 Days / 4 Nights', image: img('1746731341047-76b2652ea843'), description: 'Desert dune-bashing by day, Burj Khalifa views by night — futuristic luxury meets Arabian tradition.' },
+  { title: 'Machu Picchu Trek', location: 'Cusco, Peru', category: 'Adventure', price: '2799', duration: '9 Days / 8 Nights', image: img('1568805746970-0bbae56ab18b'), description: 'Hike the legendary Inca Trail through cloud forest and mountain passes to the lost city at sunrise.' },
+  { title: 'Egypt Pyramids & Nile Cruise', location: 'Cairo, Egypt', category: 'Historical', price: '2399', duration: '8 Days / 7 Nights', image: img('1710069441986-82759c8a200c'), description: 'Stand before the Great Pyramids of Giza, then drift down the Nile past temples that have stood for millennia.' },
+  { title: 'Venice Canal Romance', location: 'Venice, Italy', category: 'City Break', price: '1999', duration: '5 Days / 4 Nights', image: img('1767199289290-010e7caf8240'), description: 'Glide past centuries-old palazzos by gondola through a city built entirely on water.' },
+  { title: 'Sydney Harbour Explorer', location: 'Sydney, Australia', category: 'City Break', price: '3299', duration: '8 Days / 7 Nights', image: img('1758907598809-c2d41574478c'), description: 'Climb the Harbour Bridge, tour the Opera House and unwind on Bondi Beach in Australia\'s iconic waterfront city.' },
+  { title: 'Bangkok Temple & City Tour', location: 'Bangkok, Thailand', category: 'Cultural', price: '999', duration: '6 Days / 5 Nights', image: img('1755251042986-91270ffd76f5'), description: 'Golden temples, floating markets and legendary street food along the Chao Phraya River.' },
+  { title: 'Petra & Jordan Desert', location: 'Petra, Jordan', category: 'Historical', price: '2199', duration: '7 Days / 6 Nights', image: img('1551171129-8ce1ebb911b3'), description: 'Walk the narrow Siq to the rose-red Treasury, then camp beneath the stars in the Wadi Rum desert.' },
+  { title: 'Iceland Northern Lights', location: 'Reykjavik, Iceland', category: 'Adventure', price: '2999', duration: '6 Days / 5 Nights', image: img('1506905925346-21bda4d32df4'), description: 'Chase the aurora borealis, soak in geothermal lagoons and explore glaciers, waterfalls and volcanoes.' },
+  { title: 'Singapore City Escape', location: 'Singapore', category: 'City Break', price: '1599', duration: '5 Days / 4 Nights', image: img('1744705221117-9c726f9497b0'), description: 'Gardens by the Bay, Michelin-starred hawker food and a futuristic skyline in one of Asia\'s cleanest cities.' },
+  { title: 'Great Wall of China Tour', location: 'Beijing, China', category: 'Historical', price: '1799', duration: '7 Days / 6 Nights', image: img('1693721783596-afebf1d4354f'), description: 'Walk the Mutianyu section of the Great Wall and explore the Forbidden City and Tiananmen Square.' },
+  { title: 'Barcelona Culture & Beach', location: 'Barcelona, Spain', category: 'Beach & Relax', price: '1699', duration: '6 Days / 5 Nights', image: img('1745091723338-cbe6561908ea'), description: 'Gaudí\'s Sagrada Família by day, Mediterranean beach clubs and tapas by night.' },
+  { title: 'Amsterdam Canal Discovery', location: 'Amsterdam, Netherlands', category: 'City Break', price: '1499', duration: '5 Days / 4 Nights', image: img('1767199289290-010e7caf8240'), description: 'Cycle past gabled houses, tulip markets and centuries-old canals in one of Europe\'s most charming capitals.' },
+  { title: 'Cape Town Adventure', location: 'Cape Town, South Africa', category: 'Adventure', price: '2899', duration: '8 Days / 7 Nights', image: img('1744604030401-b24c5975a574'), description: 'Table Mountain cable cars, Cape Point safaris and world-class vineyards in the Winelands.' },
+  { title: 'Rome Colosseum & Vatican', location: 'Rome, Italy', category: 'Historical', price: '1899', duration: '6 Days / 5 Nights', image: img('1514896856000-91cb6de818e0'), description: 'Step into the Colosseum\'s ancient arena, then marvel at the Sistine Chapel in Vatican City.' },
+  { title: 'New York City Highlights', location: 'New York, USA', category: 'City Break', price: '2599', duration: '6 Days / 5 Nights', image: img('1754766621748-2a96cbf56a1f'), description: 'Times Square lights, Central Park strolls and skyline views from the top of the Rock.' },
+  { title: 'Phuket Beach Paradise', location: 'Phuket, Thailand', category: 'Beach & Relax', price: '1099', duration: '7 Days / 6 Nights', image: img('1537996194471-e657df975ab4'), description: 'White-sand beaches, island-hopping boat trips and legendary Thai sunsets.' },
+  { title: 'Dubrovnik Coastal Charm', location: 'Dubrovnik, Croatia', category: 'City Break', price: '1799', duration: '6 Days / 5 Nights', image: img('1570077188670-e3a8d69ac5ff'), description: 'Walk the medieval city walls above the sparkling Adriatic in the "Pearl of the Adriatic".' },
+  { title: 'Queenstown Adventure Escape', location: 'Queenstown, New Zealand', category: 'Adventure', price: '3499', duration: '8 Days / 7 Nights', image: img('1506905925346-21bda4d32df4'), description: 'Bungee jumping, jet boating and Milford Sound cruises in the adventure capital of the world.' },
+];
+
+async function ensureCategories() {
+  log('Checking categories…', 'info');
+  const { data: existing, error } = await supabase.from('categories').select('id,name');
+  if (error) throw error;
+  const map = {};
+  (existing || []).forEach(c => { map[c.name] = c.id; });
+
+  const missing = CATEGORIES.filter(c => !map[c.name]);
+  if (missing.length) {
+    const { data: inserted, error: insErr } = await supabase.from('categories').insert(missing).select();
+    if (insErr) throw insErr;
+    inserted.forEach(c => { map[c.name] = c.id; });
+    log(`Created ${inserted.length} new categories.`, 'ok');
+  } else {
+    log('All categories already exist.', 'ok');
+  }
+  return map;
+}
+
+async function seedDestinations(list, destinationType, categoryMap) {
+  log(`\nSeeding ${destinationType} destinations…`, 'info');
+  const { data: existingPackages, error } = await supabase.from('tour_packages').select('title');
+  if (error) throw error;
+  const existingTitles = new Set((existingPackages || []).map(p => p.title.trim().toLowerCase()));
+
+  let created = 0, skipped = 0;
+  for (const dest of list) {
+    if (existingTitles.has(dest.title.trim().toLowerCase())) {
+      log(`  skip (exists): ${dest.title}`, 'info');
+      skipped++;
+      continue;
+    }
+    const categoryId = categoryMap[dest.category];
+    const { error: insErr } = await supabase.from('tour_packages').insert([{
+      title: dest.title,
+      description: dest.description,
+      price: dest.price,
+      location: dest.location,
+      duration: dest.duration,
+      category_id: categoryId || null,
+      destination_type: destinationType,
+      images: [dest.image],
+      available_dates: [],
+    }]);
+    if (insErr) {
+      log(`  FAILED: ${dest.title} — ${insErr.message}`, 'err');
+    } else {
+      log(`  + ${dest.title}`, 'ok');
+      created++;
+    }
+  }
+  log(`${destinationType}: ${created} created, ${skipped} skipped.`, 'info');
+}
+
+document.getElementById('runBtn').addEventListener('click', async () => {
+  const btn = document.getElementById('runBtn');
+  btn.disabled = true;
+  logEl.innerHTML = '';
+  try {
+    const categoryMap = await ensureCategories();
+    await seedDestinations(NEPAL, 'National', categoryMap);
+    await seedDestinations(INTERNATIONAL, 'International', categoryMap);
+    log('\nDone! Refresh the admin Manage Destinations page to see everything.', 'ok');
+  } catch (e) {
+    log('\nFATAL ERROR: ' + (e.message || e), 'err');
+    console.error(e);
+  } finally {
+    btn.disabled = false;
+  }
+});
+</script>
+</body>
+</html>

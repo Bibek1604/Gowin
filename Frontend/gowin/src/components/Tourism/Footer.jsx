@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Mail, Instagram, Facebook, Twitter, ChevronRight, CheckCircle } from 'lucide-react';
+import { Mail, Facebook, ChevronRight, CheckCircle, MapPin, Phone, Send } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { supabase } from '../../supabaseClient';
 import gowinLogo from '../../assets/gowin.jpg';
@@ -13,9 +13,7 @@ const Footer = () => {
   const { places, fetchPlaces } = usePlaceStore();
 
   useEffect(() => {
-    if (places.length === 0) {
-      fetchPlaces();
-    }
+    if (places.length === 0) fetchPlaces();
   }, [fetchPlaces, places.length]);
 
   const footerDestinations = places.slice(0, 5);
@@ -25,11 +23,9 @@ const Footer = () => {
     if (!email) return;
     setIsSubscribing(true);
     setSubError('');
-
     const { error } = await supabase
       .from('newsletter_subscribers')
       .insert([{ email }]);
-
     setIsSubscribing(false);
     if (error) {
       if (error.code === '23505') {
@@ -44,44 +40,69 @@ const Footer = () => {
   };
 
   return (
-    <footer className="bg-white pt-20 pb-10 border-t border-gray-100">
+    <footer className="bg-[#0a1f2b] pt-16 sm:pt-20 pb-8 sm:pb-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
-          
-          <div>
-             <div className="flex items-center gap-3 mb-6">
-               <div className="w-10 h-10 rounded-xl overflow-hidden shadow-sm">
-                  <img src={gowinLogo} alt="Gowin" className="w-full h-full object-cover" />
-               </div>
-               <span className="font-bold text-2xl text-[#0F4C5C]">Gowin</span>
-             </div>
-            <p className="text-gray-500 mb-6 leading-relaxed text-sm">
-              Elite concierge dedicated to curating the world's most breathtaking travel experiences.
+
+        {/* Main grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10 sm:gap-12 mb-12 sm:mb-16">
+
+          {/* Brand */}
+          <div className="sm:col-span-2 lg:col-span-1">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl overflow-hidden shadow-sm border border-white/10">
+                <img src={gowinLogo} alt="Gowin" className="w-full h-full object-cover" />
+              </div>
+              <span className="font-bold text-xl sm:text-2xl text-white">GoWin <span className="text-[#FF7F50]">Travels</span></span>
+            </div>
+            <p className="text-white/50 mb-6 leading-relaxed text-sm max-w-xs">
+              Elite concierge dedicated to curating the world's most breathtaking travel experiences since 2024.
             </p>
-            <div className="flex gap-4">
-              <a href="https://www.facebook.com/share/15cfo9obmC3/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-gray-50 rounded-full flex items-center justify-center text-gray-500 hover:bg-[#0F4C5C] hover:text-white transition-colors">
-                <Facebook className="w-5 h-5" />
+
+            {/* Contact info */}
+            <div className="space-y-2 mb-6">
+              <div className="flex items-center gap-2 text-white/40 text-xs">
+                <Phone className="w-3.5 h-3.5 text-[#FF7F50] flex-shrink-0" />
+                <span>+977-XXXX-XXXXX</span>
+              </div>
+              <div className="flex items-center gap-2 text-white/40 text-xs">
+                <Mail className="w-3.5 h-3.5 text-[#FF7F50] flex-shrink-0" />
+                <span>info@gowintravels.com</span>
+              </div>
+            </div>
+
+            <div className="flex gap-3">
+              <a
+                href="https://www.facebook.com/share/15cfo9obmC3/?mibextid=wwXIfr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-9 h-9 bg-white/5 border border-white/10 rounded-xl flex items-center justify-center text-white/40 hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2] transition-all"
+              >
+                <Facebook className="w-4 h-4" />
               </a>
             </div>
           </div>
 
+          {/* Destinations */}
           <div>
-            <h4 className="font-bold text-[#0F4C5C] text-xl mb-6">Destinations</h4>
-            <ul className="space-y-4">
+            <h4 className="font-bold text-white text-sm sm:text-base mb-5 uppercase tracking-widest">Destinations</h4>
+            <ul className="space-y-3">
               {footerDestinations.length > 0 ? (
                 footerDestinations.map((dest) => (
                   <li key={dest.id}>
-                    <Link to={`/places/${dest.id}`} className="text-gray-500 hover:text-[#FF7F50] transition-colors flex items-center gap-2 group">
-                      <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#FF7F50] transition-colors" />
-                      {dest.title}
+                    <Link
+                      to={`/places/${dest.id}`}
+                      className="text-white/45 hover:text-[#FF7F50] transition-colors flex items-center gap-2 group text-sm"
+                    >
+                      <ChevronRight className="w-3.5 h-3.5 text-white/20 group-hover:text-[#FF7F50] transition-colors flex-shrink-0" />
+                      <span className="truncate">{dest.title}</span>
                     </Link>
                   </li>
                 ))
               ) : (
                 ['Maldives', 'Swiss Alps', 'Safari', 'Santorini', 'Kyoto'].map((link, i) => (
                   <li key={i}>
-                    <Link to="/details/all" className="text-gray-500 hover:text-[#FF7F50] transition-colors flex items-center gap-2 group">
-                      <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#FF7F50] transition-colors" />
+                    <Link to="/details/all" className="text-white/45 hover:text-[#FF7F50] transition-colors flex items-center gap-2 group text-sm">
+                      <ChevronRight className="w-3.5 h-3.5 text-white/20 group-hover:text-[#FF7F50] transition-colors flex-shrink-0" />
                       {link}
                     </Link>
                   </li>
@@ -90,19 +111,23 @@ const Footer = () => {
             </ul>
           </div>
 
+          {/* Quick Links */}
           <div>
-            <h4 className="font-bold text-[#0F4C5C] text-xl mb-6">Quick Links</h4>
-            <ul className="space-y-4">
+            <h4 className="font-bold text-white text-sm sm:text-base mb-5 uppercase tracking-widest">Quick Links</h4>
+            <ul className="space-y-3">
               {[
                 { name: 'About Us', link: '/about' },
                 { name: 'Travel Guides', link: '/guides' },
                 { name: 'Refund Policy', link: '/refund' },
                 { name: 'Privacy Policy', link: '/privacy' },
-                { name: 'Contact Support', link: '/support' }
+                { name: 'Contact Support', link: '/support' },
               ].map((item, i) => (
                 <li key={i}>
-                  <Link to={item.link} className="text-gray-500 hover:text-[#0F4C5C] transition-colors flex items-center gap-2 group">
-                    <ChevronRight className="w-4 h-4 text-gray-300 group-hover:text-[#0F4C5C] transition-colors" />
+                  <Link
+                    to={item.link}
+                    className="text-white/45 hover:text-white transition-colors flex items-center gap-2 group text-sm"
+                  >
+                    <ChevronRight className="w-3.5 h-3.5 text-white/20 group-hover:text-white transition-colors flex-shrink-0" />
                     {item.name}
                   </Link>
                 </li>
@@ -110,44 +135,61 @@ const Footer = () => {
             </ul>
           </div>
 
+          {/* Newsletter */}
           <div>
-            <h4 className="font-bold text-[#0F4C5C] text-xl mb-6">Newsletter</h4>
-            <p className="text-gray-500 mb-4 text-sm">Subscribe to get special offers, free travel guides, and insights.</p>
-            
+            <h4 className="font-bold text-white text-sm sm:text-base mb-3 sm:mb-4 uppercase tracking-widest">Newsletter</h4>
+            <p className="text-white/45 mb-4 text-sm leading-relaxed">
+              Get special offers, free travel guides, and destination inspiration.
+            </p>
+
             {subscribed ? (
-              <div className="flex items-center gap-2 text-[#FF7F50] font-medium bg-[#FF7F50]/10 px-4 py-3 rounded-xl">
-                <CheckCircle className="w-5 h-5" />
+              <div className="flex items-center gap-2 text-[#FF7F50] font-medium bg-[#FF7F50]/10 border border-[#FF7F50]/20 px-4 py-3 rounded-xl text-sm">
+                <CheckCircle className="w-4 h-4 flex-shrink-0" />
                 You're subscribed!
               </div>
             ) : (
-              <form onSubmit={handleSubscribe} className="flex flex-col gap-3">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Your email address"
-                  required
-                  className="bg-gray-50 border border-gray-100 px-4 py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#0F4C5C]"
-                />
-                {subError && <p className="text-red-500 text-xs">{subError}</p>}
-                <button
-                  type="submit"
-                  disabled={isSubscribing}
-                  className="bg-[#0F4C5C] hover:bg-[#0c3e4b] text-white py-3 rounded-xl font-medium transition-colors disabled:opacity-60"
-                >
-                  {isSubscribing ? 'Subscribing...' : 'Subscribe'}
-                </button>
+              <form onSubmit={handleSubscribe} className="space-y-2.5">
+                <div className="flex gap-2">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Your email address"
+                    required
+                    className="flex-1 bg-white/5 border border-white/10 text-white placeholder-white/30 px-3 sm:px-4 py-2.5 sm:py-3 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FF7F50]/30 focus:border-[#FF7F50]/40 text-sm min-w-0 transition-all"
+                  />
+                  <button
+                    type="submit"
+                    disabled={isSubscribing}
+                    className="bg-[#FF7F50] hover:bg-[#e56a42] text-white p-2.5 sm:p-3 rounded-xl transition-colors disabled:opacity-60 flex-shrink-0 flex items-center justify-center"
+                    title="Subscribe"
+                  >
+                    <Send className="w-4 h-4" />
+                  </button>
+                </div>
+                {subError && <p className="text-red-400 text-xs">{subError}</p>}
               </form>
             )}
+
+            {/* Trust badges */}
+            <div className="mt-5 flex flex-wrap gap-2">
+              {['Secure', 'No Spam', 'Unsubscribe anytime'].map((t, i) => (
+                <span key={i} className="text-[10px] text-white/25 border border-white/10 px-2 py-1 rounded-lg">
+                  {t}
+                </span>
+              ))}
+            </div>
           </div>
 
         </div>
 
-        <div className="border-t border-gray-100 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-gray-400 text-sm">© 2026 Gowin. All rights reserved.</p>
-          <div className="flex gap-6 text-sm">
-            <Link to="/terms" className="text-gray-400 hover:text-[#0F4C5C]">Terms & Conditions</Link>
-            <Link to="/privacy" className="text-gray-400 hover:text-[#0F4C5C]">Privacy</Link>
+        {/* Bottom bar */}
+        <div className="border-t border-white/8 pt-7 sm:pt-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+          <p className="text-white/30 text-xs sm:text-sm">© 2026 GoWin Travels. All rights reserved.</p>
+          <div className="flex flex-wrap justify-center gap-4 sm:gap-6 text-xs">
+            <Link to="/terms" className="text-white/30 hover:text-white/60 transition-colors">Terms & Conditions</Link>
+            <Link to="/privacy" className="text-white/30 hover:text-white/60 transition-colors">Privacy Policy</Link>
+            <Link to="/refund" className="text-white/30 hover:text-white/60 transition-colors">Refund Policy</Link>
           </div>
         </div>
       </div>

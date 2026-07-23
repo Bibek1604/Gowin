@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Search, MapPin, ArrowRight, Shield, Globe, Users, Award } from 'lucide-react';
+import React, { useState, useEffect, useCallback } from 'react';
+import { Search, MapPin, ArrowRight, Globe, Users, TrendingUp, ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import usePlaceStore from '../Store/PlaceStore';
+import { HERO_SLIDES, STATS } from '../../data/seedData';
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -9,16 +10,35 @@ const Hero = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [suggestions, setSuggestions] = useState([]);
   const [showDropdown, setShowDropdown] = useState(false);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isTransitioning, setIsTransitioning] = useState(false);
 
   useEffect(() => { fetchPlaces(); }, [fetchPlaces]);
+
+  const goToSlide = useCallback((idx) => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setTimeout(() => {
+      setActiveSlide(idx);
+      setIsTransitioning(false);
+    }, 300);
+  }, [isTransitioning]);
+
+  // Auto-advance slides
+  useEffect(() => {
+    const timer = setInterval(() => {
+      goToSlide((activeSlide + 1) % HERO_SLIDES.length);
+    }, 6000);
+    return () => clearInterval(timer);
+  }, [activeSlide, goToSlide]);
 
   const handleSearchChange = (e) => {
     const value = e.target.value;
     setSearchTerm(value);
     if (value.trim().length > 0) {
       const filtered = places.filter(p =>
-        p.title.toLowerCase().includes(value.toLowerCase()) ||
-        p.location.toLowerCase().includes(value.toLowerCase())
+        p.title?.toLowerCase().includes(value.toLowerCase()) ||
+        p.location?.toLowerCase().includes(value.toLowerCase())
       ).slice(0, 6);
       setSuggestions(filtered);
     } else {
@@ -33,69 +53,99 @@ const Hero = () => {
     setShowDropdown(false);
   };
 
-  return (
-    <section className="relative min-h-screen flex items-center overflow-hidden pt-16">
-      {/* Background */}
-      <div className="absolute inset-0 z-0">
-        <img
-          src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?auto=format&fit=crop&w=2070&q=90"
-          alt="World Travel"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0a1f2b]/95 via-[#0F4C5C]/80 to-[#0F4C5C]/30" />
-      </div>
+  const slide = HERO_SLIDES[activeSlide];
+  const stats = [
+    { value: places.length > 0 ? `${places.length}+` : '50+', label: 'Destinations', icon: <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
+    { value: '100+', label: 'Happy Travelers', icon: <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
+    { value: '5+', label: 'Years Experience', icon: <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
+  ];
 
-      <div className="relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 md:py-32 flex flex-col items-center justify-center text-center">
-        <div className="max-w-3xl mx-auto flex flex-col items-center">
+  return (
+    <section className="relative min-h-screen flex flex-col overflow-hidden pt-16">
+      {/* Background slides */}
+      {HERO_SLIDES.map((s, i) => (
+        <div
+          key={i}
+          className={`absolute inset-0 transition-opacity duration-700 ${i === activeSlide ? 'opacity-100' : 'opacity-0'}`}
+        >
+          <img
+            src={s.image}
+            alt={s.badge}
+            className="w-full h-full object-cover"
+          />
+        </div>
+      ))}
+
+      {/* Gradient overlay */}
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0a1f2b]/95 via-[#0F4C5C]/80 to-[#0a1820]/55 z-10" />
+      {/* Ambient glows */}
+      <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-[#FF7F50]/6 rounded-full blur-[140px] pointer-events-none z-10" />
+      <div className="absolute bottom-1/4 left-1/6 w-[350px] h-[350px] bg-[#0F4C5C]/20 rounded-full blur-[100px] pointer-events-none z-10" />
+
+      {/* Main content */}
+      <div className="relative z-20 flex-1 flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-28">
+        <div className="max-w-3xl mx-auto flex flex-col items-center w-full text-center">
 
           {/* Badge */}
-          <div className="inline-flex items-center justify-center gap-2.5 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-2 rounded-full mb-8 shadow-sm">
+          <div
+            key={activeSlide}
+            className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full mb-6 sm:mb-7 animate-fadeIn"
+          >
             <span className="w-2 h-2 bg-[#FF7F50] rounded-full animate-pulse shadow-[0_0_8px_rgba(255,127,80,0.8)]" />
-            <span className="text-white/90 text-[10px] font-bold uppercase tracking-[0.25em]">Nepal's Premier Agency</span>
+            <span className="text-white/90 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.25em]">
+              {slide.badge}
+            </span>
           </div>
 
-          {/* Heading */}
-          <h1 className="heading-font text-5xl sm:text-6xl lg:text-[4.5rem] text-white mb-6 tracking-tight drop-shadow-md mx-auto" style={{ lineHeight: 1.1 }}>
-            Explore the World<br />
-            with <span className="text-white/95">GoWin</span> International.
+          {/* Headline */}
+          <h1
+            key={`h-${activeSlide}`}
+            className="heading-font text-4xl sm:text-5xl lg:text-[4.25rem] text-white mb-4 sm:mb-5 tracking-tight drop-shadow-lg animate-slideUp px-2"
+            style={{ lineHeight: 1.1 }}
+          >
+            {slide.headline[0]}<br />
+            <span className="text-[#FF7F50]">{slide.headline[1]}</span>
           </h1>
 
           {/* Subtitle */}
-          <p className="text-white/70 text-base md:text-lg font-medium leading-relaxed max-w-xl mb-10 mx-auto">
-            Discover breathtaking destinations across the globe. Premium travel experiences crafted for the curious, bold, and adventurous.
+          <p
+            key={`s-${activeSlide}`}
+            className="text-white/70 text-sm sm:text-base md:text-lg font-medium leading-relaxed max-w-xl mb-8 sm:mb-10 px-2 animate-fadeIn"
+          >
+            {slide.sub}
           </p>
 
           {/* Search Bar */}
-          <div className="relative w-full max-w-xl mx-auto mb-10 text-left">
-            <div className="flex items-center bg-white rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.25)] overflow-visible pl-4 pr-2 py-2 gap-2">
-              <MapPin className="text-[#FF7F50] h-5 w-5 flex-shrink-0" />
+          <div className="relative w-full max-w-xl mx-auto mb-6 sm:mb-8 text-left">
+            <div className="flex items-center bg-white rounded-xl sm:rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.3)] pl-3 sm:pl-4 pr-2 py-1.5 sm:py-2 gap-2 border border-white/10">
+              <MapPin className="text-[#FF7F50] h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
               <input
-                id="hero-search"
                 type="text"
                 value={searchTerm}
                 onChange={handleSearchChange}
                 onFocus={() => setShowDropdown(true)}
                 onBlur={() => setTimeout(() => setShowDropdown(false), 250)}
                 placeholder="Where do you want to go?"
-                className="flex-1 text-sm font-medium text-[#1a1a2e] placeholder-gray-300 bg-transparent focus:outline-none py-2"
+                className="flex-1 text-xs sm:text-sm font-medium text-[#1a1a2e] placeholder-gray-400 bg-transparent focus:outline-none py-2 min-w-0"
               />
               <button
                 onClick={() => navigate('/details/all')}
-                className="btn-primary"
+                className="btn-primary text-xs sm:text-sm px-3 sm:px-5 py-2 sm:py-2.5 flex-shrink-0 rounded-lg sm:rounded-xl"
               >
-                <Search className="h-4 w-4" /> Explore
+                <Search className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                <span>Explore</span>
               </button>
             </div>
 
-            {/* Suggestions */}
+            {/* Dropdown */}
             {showDropdown && places.length > 0 && (
-              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50">
-                <div className="max-h-[260px] overflow-y-auto">
-                  {(searchTerm ? suggestions : places.slice(0, 6)).map((place, idx) => (
+              <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl sm:rounded-2xl shadow-2xl border border-gray-100 overflow-hidden z-50">
+                <div className="max-h-[220px] sm:max-h-[260px] overflow-y-auto">
+                  {(searchTerm ? suggestions : places.slice(0, 6)).map((place) => (
                     <button
                       key={place.id}
                       onClick={() => selectPlace(place.id)}
-                      className="w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-gray-50 border-b border-gray-50 last:border-0 transition-colors group"
+                      className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left flex items-center gap-3 hover:bg-gray-50 border-b border-gray-50 last:border-0 transition-colors group"
                     >
                       <div className="w-8 h-8 bg-[#FF7F50]/10 rounded-lg flex items-center justify-center flex-shrink-0">
                         <MapPin className="w-3.5 h-3.5 text-[#FF7F50]" />
@@ -104,7 +154,7 @@ const Hero = () => {
                         <p className="text-sm font-semibold text-[#1a1a2e] truncate group-hover:text-[#FF7F50] transition-colors">{place.title}</p>
                         <p className="text-xs text-gray-400">{place.location}</p>
                       </div>
-                      <ArrowRight className="w-4 h-4 text-gray-200 group-hover:text-[#FF7F50] transition-colors" />
+                      <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-[#FF7F50] transition-colors flex-shrink-0" />
                     </button>
                   ))}
                 </div>
@@ -117,37 +167,79 @@ const Hero = () => {
             )}
           </div>
 
-          {/* Quick search tags */}
-          <div className="flex items-center justify-center gap-3 flex-wrap">
-            <span className="text-white/50 text-xs uppercase tracking-widest font-bold">Popular:</span>
-            {places.slice(0, 4).map((p) => (
-              <Link key={p.id} to={`/places/${p.id}`}
-                className="text-xs font-medium text-white/90 bg-white/10 backdrop-blur-sm border border-white/20 px-3 py-1.5 rounded-lg hover:bg-white/20 hover:text-white transition-all shadow-sm"
-              >
-                {p.title}
-              </Link>
-            ))}
+          {/* Quick CTA links */}
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-center">
+            <Link
+              to={slide.link}
+              className="flex items-center gap-2 px-5 py-2.5 bg-[#FF7F50] text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-[#e56a42] transition-all shadow-lg shadow-[#FF7F50]/30 hover:scale-105"
+            >
+              {slide.cta} <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+            <Link
+              to="/about"
+              className="flex items-center gap-2 px-5 py-2.5 bg-white/10 backdrop-blur-sm border border-white/20 text-white text-xs sm:text-sm font-semibold rounded-xl hover:bg-white/20 transition-all"
+            >
+              <Play className="w-3.5 h-3.5 fill-white" /> Our Story
+            </Link>
           </div>
+
+          {/* Popular tags from DB */}
+          {places.length > 0 && (
+            <div className="flex items-center justify-center gap-2 flex-wrap mt-5 px-2">
+              <span className="text-white/40 text-[9px] sm:text-[10px] uppercase tracking-widest font-bold">Popular:</span>
+              {places.slice(0, 4).map((p) => (
+                <Link
+                  key={p.id}
+                  to={`/places/${p.id}`}
+                  className="text-[10px] sm:text-xs font-medium text-white/80 bg-white/10 backdrop-blur-sm border border-white/20 px-3 py-1 rounded-lg hover:bg-white/20 hover:text-white transition-all"
+                >
+                  {p.title}
+                </Link>
+              ))}
+            </div>
+          )}
         </div>
 
-        {/* Stats strip */}
-        <div className="mt-20 md:mt-24 flex flex-wrap justify-center gap-10 md:gap-16 border-t border-white/10 pt-10 w-full max-w-4xl mx-auto">
-          {[
-            { value: `${places.length || '50'}+`, label: 'Destinations' },
-            { value: '100+', label: 'Happy Travelers' },
-            { value: '5+ Years', label: 'Experience' },
-          ].map((s, i) => (
+        {/* Stats */}
+        <div className="mt-12 sm:mt-16 lg:mt-20 w-full max-w-3xl mx-auto border-t border-white/10 pt-8 grid grid-cols-3 gap-4 sm:gap-8 md:gap-16">
+          {stats.map((s, i) => (
             <div key={i} className="text-center">
-              <div className="text-3xl md:text-4xl font-black text-white px-4">{s.value}</div>
-              <div className="text-xs text-white/50 font-bold uppercase tracking-widest mt-1">{s.label}</div>
+              <div className="flex items-center justify-center gap-1.5 text-[#FF7F50]/60 mb-1">
+                {s.icon}
+              </div>
+              <div className="text-2xl sm:text-3xl md:text-4xl font-black text-white">{s.value}</div>
+              <div className="text-[9px] sm:text-[10px] text-white/45 font-bold uppercase tracking-widest mt-1">{s.label}</div>
             </div>
           ))}
         </div>
       </div>
 
+      {/* Slide controls */}
+      <div className="absolute bottom-20 sm:bottom-24 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3">
+        <button
+          onClick={() => goToSlide((activeSlide - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
+          className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/25 transition-all"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
+        {HERO_SLIDES.map((_, i) => (
+          <button
+            key={i}
+            onClick={() => goToSlide(i)}
+            className={`rounded-full transition-all duration-300 ${i === activeSlide ? 'w-6 h-2 bg-[#FF7F50]' : 'w-2 h-2 bg-white/30 hover:bg-white/60'}`}
+          />
+        ))}
+        <button
+          onClick={() => goToSlide((activeSlide + 1) % HERO_SLIDES.length)}
+          className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/25 transition-all"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </button>
+      </div>
+
       {/* Wave divider */}
-      <div className="absolute left-0 right-0 z-10" style={{ bottom: '-1px' }}>
-        <svg viewBox="0 0 1440 70" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full" style={{ display: 'block' }}>
+      <div className="absolute left-0 right-0 z-20" style={{ bottom: '-1px' }}>
+        <svg viewBox="0 0 1440 70" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full block">
           <path d="M0 70L48 60.8C96 52 192 34 288 29.2C384 25 480 34 576 41.2C672 48 768 53 864 51.3C960 50 1056 42 1152 39.2C1248 36 1344 38 1392 39L1440 40V70H0Z" fill="white" />
         </svg>
       </div>

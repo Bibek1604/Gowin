@@ -1,91 +1,77 @@
 import React from 'react';
-import { ShieldCheck, PiggyBank, CalendarCheck, Headphones, Star, Globe, Heart, Zap } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
+import { ArrowRight } from 'lucide-react';
+import { WHY_CHOOSE_US } from '../../data/seedData';
 
-const features = [
-  {
-    id: 1,
-    title: "Vetted Local Experts",
-    desc: "Our guides are certified specialists with centuries of combined cultural heritage knowledge.",
-    icon: <ShieldCheck className="w-10 h-10" />,
-    color: "text-[#0F4C5C] bg-[#0F4C5C]/5"
-  },
-  {
-    id: 2,
-    title: "Transparent Worth",
-    desc: "Premium excellence at clear, honest pricing. No hidden fees or unexpected surcharges.",
-    icon: <PiggyBank className="w-10 h-10" />,
-    color: "text-[#FF7F50] bg-[#FF7F50]/5"
-  },
-  {
-    id: 3,
-    title: "Effortless Interface",
-    desc: "Book your entire global itinerary in under three minutes through our streamlined portal.",
-    icon: <Zap className="w-10 h-10" />,
-    color: "text-[#FF7F50] bg-[#FF7F50]/5"
-  },
-  {
-    id: 4,
-    title: "Elite Concierge 24/7",
-    desc: "A dedicated human support team available across every time zone to ensure your comfort.",
-    icon: <Headphones className="w-10 h-10" />,
-    color: "text-[#0F4C5C] bg-[#0F4C5C]/5"
-  }
-];
+const WhyChooseUs = () => (
+  <section className="py-16 sm:py-20 md:py-24 bg-white relative overflow-hidden">
+    <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{
+      backgroundImage: 'radial-gradient(#0F4C5C 1px, transparent 1px)',
+      backgroundSize: '32px 32px',
+    }} />
+    <div className="absolute top-0 left-0 w-96 h-96 bg-[#0F4C5C]/4 rounded-full blur-3xl -ml-32 -mt-32 pointer-events-none" />
 
-const WhyChooseUs = () => {
-  return (
-    <section className="py-32 bg-white relative overflow-hidden font-sans">
-
-      {/* Background Subtle Title */}
-      <h2 className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-[15rem] font-bold text-gray-50 opacity-[0.4] select-none pointer-events-none whitespace-nowrap">
-        GOWIN
-      </h2>
-
-      <div className="max-w-7xl mx-auto px-6 sm:px-12 relative z-10">
-        <div className="text-center mb-24">
-
-          <h2 className="text-5xl md:text-6xl font-extrabold text-[#0F4C5C] mb-8 tracking-tighter">Beyond the Ordinary.</h2>
-          <p className="text-gray-500 max-w-2xl mx-auto text-lg leading-relaxed font-medium">
-            We don't just sell tours; we curate life-defining chapters. Our commitment to excellence defines every mile of your journey.
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      {/* Header */}
+      <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12 sm:mb-14">
+        <div>
+          <span className="section-label mb-3 block">Why GoWin?</span>
+          <h2 className="heading-font text-3xl sm:text-4xl md:text-5xl text-[#1a1a2e]">
+            Travel Smarter, <span className="text-[#FF7F50]">Explore Further</span>
+          </h2>
+          <p className="text-gray-500 text-sm md:text-base mt-3 max-w-lg leading-relaxed">
+            We're not just a travel agency — we're your local Nepal experts with a global reach, dedicated to crafting journeys that exceed expectations.
           </p>
         </div>
+        <Link to="/about" className="btn-primary flex-shrink-0 self-start lg:self-auto">
+          About Us <ArrowRight className="w-4 h-4" />
+        </Link>
+      </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
-          {features.map(feature => (
-            <div key={feature.id} className="bg-white p-10 rounded-[3rem] shadow-[0_10px_40px_rgb(0,0,0,0.02)] border border-gray-100 hover:shadow-[0_25px_60px_rgba(15,76,92,0.1)] hover:-translate-y-3 transition-all duration-500 group relative">
+      {/* Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
+        {WHY_CHOOSE_US.map((item, idx) => (
+          <motion.div
+            key={idx}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: idx * 0.07 }}
+            className="group p-5 sm:p-6 rounded-2xl border border-gray-100 bg-white hover:bg-[#F8FAFB] hover:border-[#0F4C5C]/10 hover:shadow-md transition-all duration-300 cursor-default"
+          >
+            <div className="text-3xl mb-4">{item.icon}</div>
+            <h3 className="text-base font-bold text-[#0F4C5C] mb-2 group-hover:text-[#FF7F50] transition-colors">{item.title}</h3>
+            <p className="text-gray-500 text-sm leading-relaxed">{item.desc}</p>
+          </motion.div>
+        ))}
+      </div>
 
-              <div className={`w-24 h-24 rounded-[2rem] flex items-center justify-center mb-10 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 ${feature.color}`}>
-                {feature.icon}
-              </div>
-
-              <h3 className="text-2xl font-extrabold text-[#0F4C5C] mb-4 tracking-tight group-hover:text-[#FF7F50] transition-colors">{feature.title}</h3>
-              <p className="text-[#0F4C5C]/50 leading-relaxed text-sm font-medium">
-                {feature.desc}
-              </p>
-
-              {/* Decorative Corner Link Icon */}
-              <div className="absolute bottom-8 right-8 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-                <Heart className="w-5 h-5 text-[#FF7F50] fill-[#FF7F50]" />
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* Bottom Social Proof */}
-        <div className="mt-24 pt-16 border-t border-gray-50 flex flex-wrap justify-center gap-16 opacity-30 grayscale hover:grayscale-0 transition-all duration-700">
-          <div className="flex items-center gap-3 font-bold text-2xl text-[#0F4C5C]">
-            <Globe className="w-6 h-6" /> National Trust
-          </div>
-          <div className="flex items-center gap-3 font-bold text-2xl text-[#0F4C5C]">
-            <ShieldCheck className="w-6 h-6" /> SafeTravels
-          </div>
-          <div className="flex items-center gap-3 font-bold text-2xl text-[#0F4C5C]">
-            <Star className="w-6 h-6" /> Global Guild
+      {/* Nepal specialty banner */}
+      <div className="mt-10 sm:mt-12 relative rounded-2xl sm:rounded-3xl overflow-hidden">
+        <img
+          src="https://images.unsplash.com/photo-1516490701338-fd7e5a94d6d7?auto=format&fit=crop&w=1400&q=80"
+          alt="Himalayas Nepal"
+          className="w-full h-48 sm:h-64 object-cover object-top"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a1f2b]/90 via-[#0F4C5C]/70 to-transparent" />
+        <div className="absolute inset-0 flex items-center px-6 sm:px-10">
+          <div className="max-w-lg">
+            <span className="inline-block text-[10px] font-bold text-[#FF7F50] uppercase tracking-widest mb-2">🇳🇵 Nepal Specialists</span>
+            <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-white mb-3 leading-tight">
+              The Best of Nepal, Guided by Locals
+            </h3>
+            <p className="text-white/70 text-xs sm:text-sm leading-relaxed mb-4 max-w-sm">
+              Born in Kathmandu, we know every mountain trail, every hidden monastery and every teahouse worth visiting.
+            </p>
+            <Link to="/destinations/national" className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#FF7F50] text-white text-sm font-bold rounded-xl hover:bg-[#e56a42] transition-all shadow-lg">
+              Explore Nepal <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
           </div>
         </div>
       </div>
-    </section>
-  );
-};
+    </div>
+  </section>
+);
 
 export default WhyChooseUs;

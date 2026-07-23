@@ -1,57 +1,64 @@
 import React from 'react';
-import { Send, Globe, ArrowRight, Star } from 'lucide-react';
+import { ArrowRight, Phone } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
-const CTA = () => {
-  return (
-    <section className="py-32 relative overflow-hidden bg-white font-sans">
-      <div className="max-w-7xl mx-auto px-6 sm:px-12 relative z-10">
+const CTA = () => (
+  <section className="relative py-20 sm:py-24 overflow-hidden">
+    {/* Background */}
+    <div className="absolute inset-0">
+      <img
+        src="https://images.unsplash.com/photo-1605640840605-14ac1855827b?auto=format&fit=crop&w=1600&q=80"
+        alt="Travel CTA"
+        className="w-full h-full object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0a1f2b]/96 via-[#0F4C5C]/88 to-[#0a2430]/80" />
+    </div>
 
-        {/* Main CTA Card */}
-        <div className="bg-white rounded-[4rem] p-12 md:p-24 text-center shadow-[0_40px_100px_rgba(0,0,0,0.05)] border border-gray-100 relative overflow-hidden group">
-
-          {/* New Soft Decorative elements for Light Theme */}
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-gradient-to-br from-[#3B82F6]/5 to-transparent rounded-full blur-[100px] -translate-y-1/2 translate-x-1/2 transition-transform duration-1000 group-hover:scale-110"></div>
-          <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-[#0F4C5C]/5 to-transparent rounded-full blur-[100px] translate-y-1/2 -translate-x-1/2 transition-transform duration-1000 group-hover:scale-110"></div>
-
-          {/* Subtle concentric rings for depth */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] border border-gray-100/50 rounded-full" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] border border-gray-100/30 rounded-full" />
-
-          <div className="relative z-10">
-
-
-            <h2 className="text-4xl sm:text-5xl md:text-7xl font-black text-[#0F4C5C] mb-6 md:mb-8 tracking-tight leading-tight max-w-4xl mx-auto heading-font">
-              Your Ethereal Journey <br /> Begins with One Click.
-            </h2>
-
-            <p className="text-gray-500 text-lg md:text-xl max-w-2xl mx-auto mb-10 md:mb-16 leading-relaxed font-sans font-medium px-4 md:px-0">
-              Step beyond the mundane. Join our elite circle of global wanderers and redefine your perspective on the world with Gowin.
-            </p>
-
-            <div className="flex flex-col sm:flex-row justify-center items-center gap-6">
-              <Link
-                to="/booking"
-                className="relative bg-[#FF7F50] text-white px-12 py-5 rounded-2xl font-black font-sans text-lg transition-all shadow-[0_15px_40px_rgba(255,127,80,0.4)] hover:shadow-[0_20px_50px_rgba(255,127,80,0.6)] flex items-center justify-center gap-4 group/btn hover:-translate-y-1 active:scale-95 w-full sm:w-auto overflow-hidden"
-              >
-                <div className="absolute inset-0 bg-gradient-to-r from-[#e56a42] to-[#e56a42] translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500 ease-out"></div>
-                <span className="relative z-10">Initiate My Travel</span>
-                <ArrowRight className="w-5 h-5 relative z-10 group-hover/btn:translate-x-2 transition-all duration-300" />
-              </Link>
-              <Link
-                to="/contact"
-                className="bg-[#0F4C5C] text-white border-2 border-[#0F4C5C] px-12 py-5 rounded-2xl font-black font-sans text-lg transition-all hover:bg-[#0a3845] hover:border-[#0a3845] shadow-[0_10px_30px_rgba(15,76,92,0.3)] active:scale-95 w-full sm:w-auto whitespace-nowrap"
-              >
-                Consult an Expert
-              </Link>
-            </div>
-
-
-          </div>
+    <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+      >
+        <div className="inline-flex items-center gap-2 bg-[#FF7F50]/20 border border-[#FF7F50]/30 px-4 py-1.5 rounded-full mb-6">
+          <span className="w-2 h-2 bg-[#FF7F50] rounded-full animate-pulse" />
+          <span className="text-[#FF7F50] text-[10px] font-bold uppercase tracking-widest">Limited Spots Available</span>
         </div>
-      </div>
-    </section>
-  );
-};
+
+        <h2 className="heading-font text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white mb-5 leading-tight">
+          Your Dream Trip Is<br />
+          <span className="text-[#FF7F50]">One Click Away</span>
+        </h2>
+
+        <p className="text-white/65 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-8 sm:mb-10">
+          From the peaks of the Himalayas to the beaches of the Maldives — let GoWin Travels handle every detail while you focus on making memories.
+        </p>
+
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+          <Link
+            to="/booking"
+            className="w-full sm:w-auto flex items-center justify-center gap-2.5 px-7 py-4 bg-[#FF7F50] text-white font-bold text-sm rounded-xl hover:bg-[#e56a42] transition-all shadow-xl shadow-[#FF7F50]/30 hover:scale-105"
+          >
+            Book Your Trip Now <ArrowRight className="w-4 h-4" />
+          </Link>
+          <a
+            href="tel:+9779851410966"
+            className="w-full sm:w-auto flex items-center justify-center gap-2.5 px-7 py-4 bg-white/10 backdrop-blur-sm border border-white/20 text-white font-bold text-sm rounded-xl hover:bg-white/20 transition-all"
+          >
+            <Phone className="w-4 h-4" /> +977 9851410966
+          </a>
+        </div>
+
+        {/* Trust signals */}
+        <div className="flex items-center justify-center gap-6 mt-8 flex-wrap">
+          {['✅ Free Cancellation', '🔒 Secure Booking', '24/7 Support'].map((t, i) => (
+            <span key={i} className="text-white/50 text-xs font-medium">{t}</span>
+          ))}
+        </div>
+      </motion.div>
+    </div>
+  </section>
+);
 
 export default CTA;

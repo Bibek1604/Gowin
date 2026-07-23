@@ -28,7 +28,7 @@ const Subscribers = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Remove this subscriber?')) {
+    if (window.confirm('Remove this subscriber from the mailing list?')) {
       const { error } = await supabase
         .from('newsletter_subscribers')
         .delete()
@@ -47,7 +47,7 @@ const Subscribers = () => {
   );
 
   return (
-    <div className="p-12 font-sans min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 font-sans min-h-screen">
       <Toaster position="top-right" />
       <div className="max-w-4xl mx-auto">
         

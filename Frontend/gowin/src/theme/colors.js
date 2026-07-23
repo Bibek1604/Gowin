@@ -39,8 +39,18 @@ export const colors = {
     md: '0 4px 12px rgba(15, 76, 92, 0.08)',
     lg: '0 8px 24px rgba(15, 76, 92, 0.12)',
     xl: '0 16px 48px rgba(15, 76, 92, 0.15)',
-    card: '0 2px 8px rgba(15, 76, 92, 0.1)',
-    cardHover: '0 8px 32px rgba(15, 76, 92, 0.2)',
+    card: '0 2px 16px rgba(15, 76, 92, 0.08)',
+    cardHover: '0 24px 56px rgba(15, 76, 92, 0.22)',
+  },
+  glass: {
+    light: 'rgba(255, 255, 255, 0.9)',
+    dark: 'rgba(15, 76, 92, 0.85)',
+    border: 'rgba(255, 255, 255, 0.2)',
+  },
+  radius: {
+    card: '26px',
+    pill: '9999px',
+    control: '14px',
   },
 };
 

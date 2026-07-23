@@ -49,7 +49,7 @@ const Messages = () => {
   );
 
   return (
-    <div className="p-12 font-sans min-h-screen">
+    <div className="p-4 sm:p-6 lg:p-8 font-sans min-h-screen">
       <Toaster position="top-right" />
       <div className="max-w-6xl mx-auto">
         
