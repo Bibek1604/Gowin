@@ -9,47 +9,47 @@ const steps = [
     title: 'Choose Destination',
     desc: 'Browse our handpicked global collection and find the perfect destination that speaks to your soul.',
     icon: <Search className="w-5 h-5 sm:w-6 sm:h-6" />,
-    accent: 'bg-[#FF7F50]',
+    accent: 'bg-[#10B981]',
     iconColor: 'text-white',
-    gradient: 'from-[#FF7F50]/10 to-transparent',
+    gradient: 'from-[#10B981]/10 to-transparent',
   },
   {
     num: '02',
     title: 'Book Your Trip',
     desc: 'Secure your spot through our fast, encrypted booking system with flexible payment options.',
     icon: <CalendarCheck className="w-5 h-5 sm:w-6 sm:h-6" />,
-    accent: 'bg-[#0F4C5C]',
+    accent: 'bg-[#1E3A8A]',
     iconColor: 'text-white',
-    gradient: 'from-[#0F4C5C]/10 to-transparent',
+    gradient: 'from-[#1E3A8A]/10 to-transparent',
   },
   {
     num: '03',
     title: 'Pack & Fly',
     desc: 'Receive your premium travel kit and get ready for an extraordinary adventure.',
     icon: <PlaneTakeoff className="w-5 h-5 sm:w-6 sm:h-6" />,
-    accent: 'bg-[#FF7F50]',
+    accent: 'bg-[#10B981]',
     iconColor: 'text-white',
-    gradient: 'from-[#FF7F50]/10 to-transparent',
+    gradient: 'from-[#10B981]/10 to-transparent',
   },
   {
     num: '04',
     title: 'Make Memories',
     desc: 'Experience the world with our expert local guides and world-class travel support.',
     icon: <CheckCircle className="w-5 h-5 sm:w-6 sm:h-6" />,
-    accent: 'bg-[#0F4C5C]',
+    accent: 'bg-[#1E3A8A]',
     iconColor: 'text-white',
-    gradient: 'from-[#0F4C5C]/10 to-transparent',
+    gradient: 'from-[#1E3A8A]/10 to-transparent',
   },
 ];
 
 const BookingSteps = () => (
   <section className="py-16 sm:py-20 md:py-28 bg-white relative overflow-hidden">
     <div className="absolute inset-0 opacity-[0.025] pointer-events-none" style={{
-      backgroundImage: 'radial-gradient(#0F4C5C 1px, transparent 1px)',
+      backgroundImage: 'radial-gradient(#1E3A8A 1px, transparent 1px)',
       backgroundSize: '28px 28px'
     }} />
-    <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#FF7F50]/5 rounded-full blur-3xl pointer-events-none" />
-    <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#0F4C5C]/5 rounded-full blur-3xl pointer-events-none" />
+    <div className="absolute -top-40 -right-40 w-96 h-96 bg-[#10B981]/5 rounded-full blur-3xl pointer-events-none" />
+    <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-[#1E3A8A]/5 rounded-full blur-3xl pointer-events-none" />
 
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
 
@@ -57,8 +57,8 @@ const BookingSteps = () => (
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end mb-12 sm:mb-14 md:mb-20 gap-6 sm:gap-8">
         <div>
           <span className="section-label mb-3 sm:mb-4 block">Simple Process</span>
-          <h2 className="heading-font text-3xl sm:text-4xl md:text-5xl text-[#1a1a2e]">
-            How It <span className="text-[#FF7F50]">Works</span>
+          <h2 className="heading-font text-3xl sm:text-4xl md:text-5xl text-[#0F172A]">
+            How It <span className="text-[#10B981]">Works</span>
           </h2>
           <p className="text-gray-500 text-sm md:text-base mt-2 sm:mt-3 max-w-lg leading-relaxed">
             Planning your dream trip is simple with GoWin. Four easy steps to your next great adventure.
@@ -86,7 +86,7 @@ const BookingSteps = () => (
             )}
 
             {/* Watermark number */}
-            <div className="absolute top-4 right-5 text-[#0F4C5C]/6 text-5xl sm:text-6xl font-black leading-none select-none">
+            <div className="absolute top-4 right-5 text-[#1E3A8A]/6 text-5xl sm:text-6xl font-black leading-none select-none">
               {step.num}
             </div>
 
@@ -100,7 +100,7 @@ const BookingSteps = () => (
               <span className="text-[9px] font-black text-gray-400 uppercase tracking-widest">Step {step.num}</span>
             </div>
 
-            <h3 className="text-sm sm:text-base font-bold text-[#1a1a2e] mb-2">{step.title}</h3>
+            <h3 className="text-sm sm:text-base font-bold text-[#0F172A] mb-2">{step.title}</h3>
             <p className="text-gray-500 text-xs sm:text-sm leading-relaxed">{step.desc}</p>
           </motion.div>
         ))}
@@ -121,7 +121,7 @@ const BookingSteps = () => (
             viewport={{ once: true }}
             transition={{ delay: i * 0.1 }}
           >
-            <div className="text-xl sm:text-2xl font-black text-[#FF7F50]">{item.val}</div>
+            <div className="text-xl sm:text-2xl font-black text-[#10B981]">{item.val}</div>
             <div className="text-gray-400 text-[10px] sm:text-xs uppercase tracking-widest mt-1">{item.label}</div>
           </motion.div>
         ))}

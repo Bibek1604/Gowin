@@ -56,11 +56,11 @@ const Messages = () => {
         {/* Header */}
         <div className="flex justify-between items-end mb-12">
           <div>
-            <h1 className="text-3xl font-bold text-[#0F4C5C] tracking-tight">Contact Messages</h1>
+            <h1 className="text-3xl font-bold text-[#1E3A8A] tracking-tight">Contact Messages</h1>
             <p className="text-gray-500 text-lg mt-1">Direct inquiries from your travel site</p>
           </div>
           <div className="bg-white rounded-2xl border border-gray-100 px-6 py-3 shadow-sm">
-            <span className="text-2xl font-bold text-[#0F4C5C]">{messages.length}</span>
+            <span className="text-2xl font-bold text-[#1E3A8A]">{messages.length}</span>
             <span className="text-gray-400 text-sm font-medium ml-2">Total Inquiries</span>
           </div>
         </div>
@@ -71,7 +71,7 @@ const Messages = () => {
           <input
             type="text"
             placeholder="Search by name, email or message..."
-            className="w-full pl-14 pr-6 py-4 bg-white border border-gray-100 rounded-[1.5rem] focus:outline-none focus:ring-2 focus:ring-[#FF7F50] shadow-[0_4px_20px_rgb(0,0,0,0.02)] transition-all"
+            className="w-full pl-14 pr-6 py-4 bg-white border border-gray-100 rounded-[1.5rem] focus:outline-none focus:ring-2 focus:ring-[#10B981] shadow-[0_4px_20px_rgb(0,0,0,0.02)] transition-all"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -94,17 +94,17 @@ const Messages = () => {
                 <div className="flex flex-col md:flex-row justify-between gap-6">
                   <div className="flex-1">
                     <div className="flex items-center gap-4 mb-4">
-                      <div className="w-12 h-12 rounded-2xl bg-[#0F4C5C]/5 flex items-center justify-center text-[#0F4C5C]">
+                      <div className="w-12 h-12 rounded-2xl bg-[#1E3A8A]/5 flex items-center justify-center text-[#1E3A8A]">
                          <User className="w-6 h-6" />
                       </div>
                       <div>
-                        <h3 className="font-bold text-[#0F4C5C] text-lg leading-tight">{msg.name}</h3>
+                        <h3 className="font-bold text-[#1E3A8A] text-lg leading-tight">{msg.name}</h3>
                         <p className="text-sm text-gray-400">{msg.email}</p>
                       </div>
                     </div>
                     
                     <div className="flex items-center gap-6 mb-6">
-                       <div className="flex items-center gap-2 text-xs font-bold text-[#FF7F50] bg-[#FF7F50]/10 px-3 py-1.5 rounded-xl">
+                       <div className="flex items-center gap-2 text-xs font-bold text-[#10B981] bg-[#10B981]/10 px-3 py-1.5 rounded-xl">
                           <MapPin className="w-3.5 h-3.5" />
                           {msg.destination || 'General Inquiry'}
                        </div>
@@ -120,7 +120,7 @@ const Messages = () => {
                   </div>
 
                   <div className="flex md:flex-col justify-end gap-2">
-                    <a href={`mailto:${msg.email}`} className="p-3 rounded-xl bg-[#FF7F50]/10 text-[#FF7F50] hover:bg-[#FF7F50] hover:text-white transition-all flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-widest px-6 md:px-3">
+                    <a href={`mailto:${msg.email}`} className="p-3 rounded-xl bg-[#10B981]/10 text-[#10B981] hover:bg-[#10B981] hover:text-white transition-all flex items-center justify-center gap-2 font-bold text-xs uppercase tracking-widest px-6 md:px-3">
                        <Mail className="w-4 h-4" /> <span className="md:hidden">Reply</span>
                     </a>
                     <button 

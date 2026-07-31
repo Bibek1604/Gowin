@@ -1,21 +1,21 @@
 /**
  * Go Win International Brand Theme
  * Standardized Brand Colors:
- * - Navy: #0F4C5C (Primary brand identity)
- * - Coral: #FF7F50 (Accent and action highlights)
+ * - Navy: #1E3A8A (Primary brand identity)
+ * - Coral: #10B981 (Accent and action highlights)
  */
 export const colors = {
   primary: {
-    navy: '#0F4C5C',        // Brand Navy
-    navyDark: '#0a3845',
-    navyLight: '#186d82',
-    navyMuted: '#f8fafb',
+    navy: '#1E3A8A',        // Brand Navy
+    navyDark: '#172554',
+    navyLight: '#2563EB',
+    navyMuted: '#F8FAFC',
     midnight: '#020608',    
   },
   accent: {
-    coral: '#FF7F50',       // Brand Coral
-    coralDark: '#e56a42',
-    coralLight: '#ff9a7a',
+    coral: '#10B981',       // Brand Coral
+    coralDark: '#059669',
+    coralLight: '#34D399',
     skyBlue: '#38bdf8',     
   },  
   neutral: {
@@ -27,24 +27,24 @@ export const colors = {
     charcoal: '#0f172a',    
   },
   gradients: {
-    primary: 'linear-gradient(135deg, #0F4C5C 0%, #186d82 100%)',
-    warm: 'linear-gradient(135deg, #FF7F50 0%, #ff9a7a 100%)',
-    cool: 'linear-gradient(135deg, #186d82 0%, #0F4C5C 100%)',
-    subtle: 'linear-gradient(135deg, #ffffff 0%, #f8fafb 100%)',
-    hero: 'linear-gradient(135deg, rgba(15, 76, 92, 0.95) 0%, rgba(24, 109, 130, 0.9) 100%)',
-    overlay: 'linear-gradient(180deg, rgba(15, 76, 92, 0.7) 0%, rgba(15, 76, 92, 0.4) 100%)',
+    primary: 'linear-gradient(135deg, #1E3A8A 0%, #2563EB 100%)',
+    warm: 'linear-gradient(135deg, #10B981 0%, #34D399 100%)',
+    cool: 'linear-gradient(135deg, #2563EB 0%, #1E3A8A 100%)',
+    subtle: 'linear-gradient(135deg, #ffffff 0%, #F8FAFC 100%)',
+    hero: 'linear-gradient(135deg, rgba(30,58,138, 0.95) 0%, rgba(24, 109, 130, 0.9) 100%)',
+    overlay: 'linear-gradient(180deg, rgba(30,58,138, 0.7) 0%, rgba(30,58,138, 0.4) 100%)',
   },
   shadows: {
-    sm: '0 2px 4px rgba(15, 76, 92, 0.05)',
-    md: '0 4px 12px rgba(15, 76, 92, 0.08)',
-    lg: '0 8px 24px rgba(15, 76, 92, 0.12)',
-    xl: '0 16px 48px rgba(15, 76, 92, 0.15)',
-    card: '0 2px 16px rgba(15, 76, 92, 0.08)',
-    cardHover: '0 24px 56px rgba(15, 76, 92, 0.22)',
+    sm: '0 2px 4px rgba(30,58,138, 0.05)',
+    md: '0 4px 12px rgba(30,58,138, 0.08)',
+    lg: '0 8px 24px rgba(30,58,138, 0.12)',
+    xl: '0 16px 48px rgba(30,58,138, 0.15)',
+    card: '0 2px 16px rgba(30,58,138, 0.08)',
+    cardHover: '0 24px 56px rgba(30,58,138, 0.22)',
   },
   glass: {
     light: 'rgba(255, 255, 255, 0.9)',
-    dark: 'rgba(15, 76, 92, 0.85)',
+    dark: 'rgba(30,58,138, 0.85)',
     border: 'rgba(255, 255, 255, 0.2)',
   },
   radius: {

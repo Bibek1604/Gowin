@@ -69,7 +69,7 @@ function ManageBookings() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[#0F4C5C] tracking-tight">Manage Bookings</h1>
+          <h1 className="text-2xl font-bold text-[#1E3A8A] tracking-tight">Manage Bookings</h1>
           <p className="text-gray-500 text-sm mt-0.5">Track and manage all customer reservations</p>
         </div>
         <div className="flex items-center gap-2">
@@ -89,7 +89,7 @@ function ManageBookings() {
           <input
             type="text"
             placeholder="Search by name or email..."
-            className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#FF7F50]/20 focus:border-[#FF7F50]/40 transition-all"
+            className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 focus:border-[#10B981]/40 transition-all"
             value={searchTerm}
             onChange={e => setSearchTerm(e.target.value)}
           />
@@ -101,8 +101,8 @@ function ManageBookings() {
               onClick={() => setFilterStatus(status)}
               className={`px-4 py-2 rounded-lg text-xs font-semibold transition-all ${
                 filterStatus === status
-                  ? 'bg-[#0F4C5C] text-white shadow-sm'
-                  : 'bg-gray-50 text-gray-500 border border-gray-100 hover:text-[#0F4C5C]'
+                  ? 'bg-[#1E3A8A] text-white shadow-sm'
+                  : 'bg-gray-50 text-gray-500 border border-gray-100 hover:text-[#1E3A8A]'
               }`}
             >
               {status}
@@ -152,18 +152,23 @@ function ManageBookings() {
                   >
                     {/* Customer */}
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 bg-[#0F4C5C]/5 rounded-lg flex items-center justify-center text-[#0F4C5C] font-bold text-xs flex-shrink-0">
+                      <div className="w-8 h-8 bg-[#1E3A8A]/5 rounded-lg flex items-center justify-center text-[#1E3A8A] font-bold text-xs flex-shrink-0">
                         {(booking.user_name?.[0] || 'T').toUpperCase()}
                       </div>
                       <div className="min-w-0">
-                        <p className="text-sm font-semibold text-[#0F4C5C] truncate">{booking.user_name || 'Traveler'}</p>
+                        <p className="text-sm font-semibold text-[#1E3A8A] truncate">{booking.user_name || 'Traveler'}</p>
                         <p className="text-xs text-gray-400 truncate">{booking.user_email || ''}</p>
+                        {booking.phone && (
+                          <p className="text-xs text-gray-400 truncate flex items-center gap-1 mt-0.5">
+                            <Phone className="w-3 h-3 flex-shrink-0" /> {booking.phone}
+                          </p>
+                        )}
                       </div>
                     </div>
 
                     {/* Destination */}
                     <div className="flex items-center gap-1.5 text-sm text-gray-600 min-w-0">
-                      <MapPin className="w-3.5 h-3.5 text-[#FF7F50] flex-shrink-0" />
+                      <MapPin className="w-3.5 h-3.5 text-[#10B981] flex-shrink-0" />
                       <span className="truncate">{getPlaceName(booking.tour_id)}</span>
                     </div>
 
@@ -228,7 +233,7 @@ function ManageBookings() {
               <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-3">
                 <Trash2 className="w-5 h-5 text-red-500" />
               </div>
-              <h3 className="text-base font-bold text-[#0F4C5C] mb-1">Delete Booking?</h3>
+              <h3 className="text-base font-bold text-[#1E3A8A] mb-1">Delete Booking?</h3>
               <p className="text-sm text-gray-500 mb-5">This action cannot be undone.</p>
               <div className="flex gap-3">
                 <button onClick={() => setDeleteConfirmId(null)} className="flex-1 py-2.5 text-sm font-semibold text-gray-500 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors">Cancel</button>

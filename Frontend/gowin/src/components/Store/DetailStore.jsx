@@ -1,11 +1,21 @@
 import { create } from 'zustand';
 import { supabase } from '../../supabaseClient';
 
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
 const useDetailsStore = create((set) => ({
   details: [],
   isLoading: false,
 
   fetchDetails: async (placeId) => {
+    // Seed-data places (e.g. "seed-n1") aren't real DB rows — place_id is a uuid
+    // column, so querying it with a non-uuid string throws a Postgres 22P02 error.
+    // Skip the network call entirely and just report no saved details.
+    if (placeId && !UUID_RE.test(String(placeId))) {
+      set({ details: [], isLoading: false });
+      return;
+    }
+
     set({ isLoading: true });
     const query = supabase.from('place_details').select('*');
     if (placeId) query.eq('place_id', placeId);

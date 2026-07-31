@@ -1,11 +1,17 @@
 import { create } from "zustand";
 import { supabase } from "../../supabaseClient";
 
-const usePlaceStore = create((set) => ({
+const usePlaceStore = create((set, get) => ({
   places: [],
   isLoading: false,
 
   fetchPlaces: async () => {
+    // Dedupe only truly-concurrent calls (many components mounting at once).
+    // set() is synchronous, so the first caller flips isLoading before any
+    // other caller in the same tick can slip through. Must NOT permanently
+    // lock this out after one fetch — new/edited destinations from admin
+    // need every subsequent call to hit the DB again, not serve stale data.
+    if (get().isLoading) return;
     set({ isLoading: true });
     const { data, error } = await supabase
       .from('tour_packages')
@@ -92,5 +98,16 @@ const usePlaceStore = create((set) => ({
     return { success: true };
   },
 }));
+
+// Live sync: any insert/update/delete on tour_packages — from this admin
+// panel, another admin, or another tab — refetches automatically so every
+// open page reflects it immediately. No polling, no manual reload.
+// Requires Realtime enabled for this table (see supabase/migrations).
+supabase
+  .channel('tour_packages_realtime')
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'tour_packages' }, () => {
+    usePlaceStore.getState().fetchPlaces();
+  })
+  .subscribe();
 
 export default usePlaceStore;

@@ -12,7 +12,7 @@ const CTA = () => (
         alt="Travel CTA"
         className="w-full h-full object-cover"
       />
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0a1f2b]/96 via-[#0F4C5C]/88 to-[#0a2430]/80" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0B1220]/96 via-[#1E3A8A]/88 to-[#0a2430]/80" />
     </div>
 
     <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
@@ -21,14 +21,14 @@ const CTA = () => (
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true }}
       >
-        <div className="inline-flex items-center gap-2 bg-[#FF7F50]/20 border border-[#FF7F50]/30 px-4 py-1.5 rounded-full mb-6">
-          <span className="w-2 h-2 bg-[#FF7F50] rounded-full animate-pulse" />
-          <span className="text-[#FF7F50] text-[10px] font-bold uppercase tracking-widest">Limited Spots Available</span>
+        <div className="inline-flex items-center gap-2 bg-[#10B981]/20 border border-[#10B981]/30 px-4 py-1.5 rounded-full mb-6">
+          <span className="w-2 h-2 bg-[#10B981] rounded-full animate-pulse" />
+          <span className="text-[#10B981] text-[10px] font-bold uppercase tracking-widest">Limited Spots Available</span>
         </div>
 
         <h2 className="heading-font text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-white mb-5 leading-tight">
           Your Dream Trip Is<br />
-          <span className="text-[#FF7F50]">One Click Away</span>
+          <span className="text-[#10B981]">One Click Away</span>
         </h2>
 
         <p className="text-white/65 text-sm sm:text-base md:text-lg leading-relaxed max-w-2xl mx-auto mb-8 sm:mb-10">
@@ -38,7 +38,7 @@ const CTA = () => (
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
             to="/booking"
-            className="w-full sm:w-auto flex items-center justify-center gap-2.5 px-7 py-4 bg-[#FF7F50] text-white font-bold text-sm rounded-xl hover:bg-[#e56a42] transition-all shadow-xl shadow-[#FF7F50]/30 hover:scale-105"
+            className="w-full sm:w-auto flex items-center justify-center gap-2.5 px-7 py-4 bg-[#10B981] text-white font-bold text-sm rounded-xl hover:bg-[#059669] transition-all shadow-xl shadow-[#10B981]/30 hover:scale-105"
           >
             Book Your Trip Now <ArrowRight className="w-4 h-4" />
           </Link>

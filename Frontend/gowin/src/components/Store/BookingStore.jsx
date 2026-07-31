@@ -27,8 +27,9 @@ const useBookingStore = create((set) => ({
         tour_id: bookingData.tour_id || bookingData.placeId,
         user_name: bookingData.name || bookingData.user_name,
         user_email: bookingData.email || bookingData.user_email,
-        num_people: parseInt(bookingData.num_people || bookingData.guests),
+        num_people: parseInt(bookingData.num_people || bookingData.guests, 10) || 1,
         travel_date: bookingData.travel_date || bookingData.date,
+        phone: bookingData.phone || null,
         status: 'Pending'
       }])
       .select();

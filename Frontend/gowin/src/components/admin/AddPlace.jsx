@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import {
   MapPin, Clock, DollarSign, Plus, Edit2, Trash2,
@@ -27,6 +27,8 @@ const ManageDestinations = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState('All');
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const submittingRef = useRef(false);
 
   const { places, addPlace, updatePlace, deletePlace, fetchPlaces, isLoading } = usePlaceStore();
   const { categories, fetchCategories } = useCategoryStore();
@@ -76,17 +78,25 @@ const ManageDestinations = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (submittingRef.current) return;
     if (!form.title.trim() || !form.category_id) {
       toast.error('Title and category are required');
       return;
     }
-    const res = editingId ? await updatePlace(editingId, form) : await addPlace(form);
-    if (res.success) {
-      toast.success(editingId ? 'Destination updated successfully' : 'Destination created successfully');
-      closeModal();
-      fetchPlaces();
-    } else {
-      toast.error('Operation failed. Please try again.');
+    submittingRef.current = true;
+    setIsSaving(true);
+    try {
+      const res = editingId ? await updatePlace(editingId, form) : await addPlace(form);
+      if (res.success) {
+        toast.success(editingId ? 'Destination updated successfully' : 'Destination created successfully');
+        closeModal();
+        fetchPlaces();
+      } else {
+        toast.error('Operation failed. Please try again.');
+      }
+    } finally {
+      submittingRef.current = false;
+      setIsSaving(false);
     }
   };
 
@@ -117,12 +127,12 @@ const ManageDestinations = () => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-[#0F4C5C] tracking-tight">Manage Destinations</h1>
+          <h1 className="text-2xl font-bold text-[#1E3A8A] tracking-tight">Manage Destinations</h1>
           <p className="text-gray-500 text-sm mt-0.5">Add, edit and manage tour packages</p>
         </div>
         <button
           onClick={() => openModal()}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-white bg-[#0F4C5C] hover:bg-[#0a3845] transition-all shadow-sm"
+          className="flex items-center gap-2 px-5 py-2.5 rounded-xl font-semibold text-sm text-white bg-[#1E3A8A] hover:bg-[#172554] transition-all shadow-sm"
         >
           <Plus className="w-4 h-4" /> Add Destination
         </button>
@@ -135,7 +145,7 @@ const ManageDestinations = () => {
           <input
             type="text"
             placeholder="Search by title or location..."
-            className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#FF7F50]/20 focus:border-[#FF7F50]/40 transition-all"
+            className="w-full pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 focus:border-[#10B981]/40 transition-all"
             value={searchQuery}
             onChange={e => setSearchQuery(e.target.value)}
           />
@@ -147,8 +157,8 @@ const ManageDestinations = () => {
               onClick={() => setActiveTab(tab)}
               className={`px-4 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-all ${
                 activeTab === tab
-                  ? 'bg-[#FF7F50] text-white shadow-sm'
-                  : 'bg-gray-50 text-gray-500 hover:text-[#0F4C5C] border border-gray-100'
+                  ? 'bg-[#10B981] text-white shadow-sm'
+                  : 'bg-gray-50 text-gray-500 hover:text-[#1E3A8A] border border-gray-100'
               }`}
             >
               {tab}
@@ -167,7 +177,7 @@ const ManageDestinations = () => {
       ) : filteredPlaces.length === 0 ? (
         <div className="py-24 text-center bg-white rounded-2xl border border-gray-100">
           <Search className="w-12 h-12 text-gray-200 mx-auto mb-3" />
-          <h3 className="text-lg font-semibold text-[#0F4C5C] mb-1">No destinations found</h3>
+          <h3 className="text-lg font-semibold text-[#1E3A8A] mb-1">No destinations found</h3>
           <p className="text-gray-400 text-sm">Try adjusting your search or filters.</p>
         </div>
       ) : (
@@ -180,7 +190,7 @@ const ManageDestinations = () => {
                 initial={{ opacity: 0, y: 16 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="bg-white rounded-[22px] border border-[#0F4C5C]/[0.06] shadow-[0_2px_12px_rgba(15,76,92,0.06)] overflow-hidden hover:shadow-[0_16px_40px_rgba(15,76,92,0.18)] hover:-translate-y-1 transition-all duration-400 group flex flex-col"
+                className="bg-white rounded-[22px] border border-[#1E3A8A]/[0.06] shadow-[0_2px_12px_rgba(30,58,138,0.06)] overflow-hidden hover:shadow-[0_16px_40px_rgba(30,58,138,0.18)] hover:-translate-y-1 transition-all duration-400 group flex flex-col"
               >
                 <div className="relative h-44 overflow-hidden">
                   <img
@@ -189,10 +199,10 @@ const ManageDestinations = () => {
                     alt={place.title}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-transparent" />
-                  <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-black text-[#FF7F50] shadow-sm flex items-center gap-0.5">
+                  <div className="absolute top-3 left-3 bg-white/95 backdrop-blur-md px-2.5 py-1 rounded-full text-xs font-black text-[#10B981] shadow-sm flex items-center gap-0.5">
                     <DollarSign className="w-3 h-3" />{place.price}
                   </div>
-                  <div className="absolute top-3 right-3 text-[9px] font-bold text-white bg-[#0F4C5C]/80 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-1">
+                  <div className="absolute top-3 right-3 text-[9px] font-bold text-white bg-[#1E3A8A]/80 backdrop-blur-md px-2.5 py-1 rounded-full flex items-center gap-1">
                     <Globe className="w-2.5 h-2.5" />
                     {place.destination_type || 'Intl'}
                   </div>
@@ -203,7 +213,7 @@ const ManageDestinations = () => {
                 </div>
 
                 <div className="p-4 flex-1 flex flex-col">
-                  <h3 className="font-bold text-[#0F4C5C] text-sm leading-snug line-clamp-2 mb-2 group-hover:text-[#FF7F50] transition-colors">
+                  <h3 className="font-bold text-[#1E3A8A] text-sm leading-snug line-clamp-2 mb-2 group-hover:text-[#10B981] transition-colors">
                     {place.title}
                   </h3>
                   <div className="flex items-center gap-1 text-xs text-gray-400 mb-1">
@@ -217,7 +227,7 @@ const ManageDestinations = () => {
                   <div className="mt-auto flex gap-2 pt-3 border-t border-dashed border-gray-100">
                     <button
                       onClick={() => openModal(place)}
-                      className="flex-1 text-xs font-semibold text-[#0F4C5C] bg-[#0F4C5C]/5 py-2 rounded-xl hover:bg-[#0F4C5C] hover:text-white transition-colors flex items-center justify-center gap-1.5"
+                      className="flex-1 text-xs font-semibold text-[#1E3A8A] bg-[#1E3A8A]/5 py-2 rounded-xl hover:bg-[#1E3A8A] hover:text-white transition-colors flex items-center justify-center gap-1.5"
                     >
                       <Edit2 className="w-3.5 h-3.5" /> Edit
                     </button>
@@ -251,7 +261,7 @@ const ManageDestinations = () => {
               <div className="w-14 h-14 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Trash2 className="w-6 h-6 text-red-500" />
               </div>
-              <h3 className="text-lg font-bold text-[#0F4C5C] mb-1">Delete Destination?</h3>
+              <h3 className="text-lg font-bold text-[#1E3A8A] mb-1">Delete Destination?</h3>
               <p className="text-sm text-gray-500 mb-6">This action cannot be undone. All associated data will be permanently removed.</p>
               <div className="flex gap-3">
                 <button
@@ -291,7 +301,7 @@ const ManageDestinations = () => {
               {/* Modal Header */}
               <div className="flex items-center justify-between p-5 border-b border-gray-100 bg-gray-50/50">
                 <div>
-                  <h3 className="text-lg font-bold text-[#0F4C5C]">
+                  <h3 className="text-lg font-bold text-[#1E3A8A]">
                     {editingId ? 'Edit Destination' : 'Add New Destination'}
                   </h3>
                   <p className="text-xs text-gray-400 mt-0.5">Fill in the details below</p>
@@ -308,10 +318,10 @@ const ManageDestinations = () => {
               <form onSubmit={handleSubmit} className="p-5 max-h-[75vh] overflow-y-auto space-y-4">
                 {/* Title */}
                 <div>
-                  <label className="text-xs font-semibold text-[#0F4C5C] block mb-1.5">Package Title *</label>
+                  <label className="text-xs font-semibold text-[#1E3A8A] block mb-1.5">Package Title *</label>
                   <input
                     type="text"
-                    className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#FF7F50]/20 focus:border-[#FF7F50]/50 transition-all"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 focus:border-[#10B981]/50 transition-all"
                     placeholder="e.g. Everest Base Camp Trek"
                     value={form.title}
                     onChange={e => setForm({ ...form, title: e.target.value })}
@@ -322,10 +332,10 @@ const ManageDestinations = () => {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {/* Category */}
                   <div>
-                    <label className="text-xs font-semibold text-[#0F4C5C] block mb-1.5">Category *</label>
+                    <label className="text-xs font-semibold text-[#1E3A8A] block mb-1.5">Category *</label>
                     <div className="relative">
                       <select
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#FF7F50]/20 appearance-none cursor-pointer"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 appearance-none cursor-pointer"
                         value={form.category_id}
                         onChange={e => setForm({ ...form, category_id: e.target.value })}
                         required
@@ -341,10 +351,10 @@ const ManageDestinations = () => {
 
                   {/* Type */}
                   <div>
-                    <label className="text-xs font-semibold text-[#0F4C5C] block mb-1.5">Destination Type</label>
+                    <label className="text-xs font-semibold text-[#1E3A8A] block mb-1.5">Destination Type</label>
                     <div className="relative">
                       <select
-                        className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#FF7F50]/20 appearance-none cursor-pointer"
+                        className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 appearance-none cursor-pointer"
                         value={form.destination_type}
                         onChange={e => setForm({ ...form, destination_type: e.target.value })}
                       >
@@ -357,12 +367,12 @@ const ManageDestinations = () => {
 
                   {/* Price */}
                   <div>
-                    <label className="text-xs font-semibold text-[#0F4C5C] block mb-1.5">Price (USD)</label>
+                    <label className="text-xs font-semibold text-[#1E3A8A] block mb-1.5">Price (USD)</label>
                     <div className="relative">
                       <DollarSign className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                       <input
                         type="text"
-                        className="w-full pl-9 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#FF7F50]/20 transition-all"
+                        className="w-full pl-9 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 transition-all"
                         placeholder="e.g. 1200"
                         value={form.price}
                         onChange={e => setForm({ ...form, price: e.target.value })}
@@ -372,12 +382,12 @@ const ManageDestinations = () => {
 
                   {/* Duration */}
                   <div>
-                    <label className="text-xs font-semibold text-[#0F4C5C] block mb-1.5">Duration</label>
+                    <label className="text-xs font-semibold text-[#1E3A8A] block mb-1.5">Duration</label>
                     <div className="relative">
                       <Clock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                       <input
                         type="text"
-                        className="w-full pl-9 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#FF7F50]/20 transition-all"
+                        className="w-full pl-9 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 transition-all"
                         placeholder="e.g. 14 Days / 13 Nights"
                         value={form.duration}
                         onChange={e => setForm({ ...form, duration: e.target.value })}
@@ -388,12 +398,12 @@ const ManageDestinations = () => {
 
                 {/* Location */}
                 <div>
-                  <label className="text-xs font-semibold text-[#0F4C5C] block mb-1.5">Location</label>
+                  <label className="text-xs font-semibold text-[#1E3A8A] block mb-1.5">Location</label>
                   <div className="relative">
                     <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
                     <input
                       type="text"
-                      className="w-full pl-9 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#FF7F50]/20 transition-all"
+                      className="w-full pl-9 pr-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 transition-all"
                       placeholder="e.g. Solukhumbu, Nepal"
                       value={form.location}
                       onChange={e => setForm({ ...form, location: e.target.value })}
@@ -403,10 +413,10 @@ const ManageDestinations = () => {
 
                 {/* Description */}
                 <div>
-                  <label className="text-xs font-semibold text-[#0F4C5C] block mb-1.5">Description</label>
+                  <label className="text-xs font-semibold text-[#1E3A8A] block mb-1.5">Description</label>
                   <textarea
                     rows="4"
-                    className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#FF7F50]/20 transition-all resize-none"
+                    className="w-full px-4 py-3 bg-gray-50 border border-gray-100 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 transition-all resize-none"
                     placeholder="Describe the tour experience..."
                     value={form.description}
                     onChange={e => setForm({ ...form, description: e.target.value })}
@@ -415,10 +425,10 @@ const ManageDestinations = () => {
 
                 {/* Image Upload */}
                 <div>
-                  <label className="text-xs font-semibold text-[#0F4C5C] block mb-1.5">Cover Image</label>
+                  <label className="text-xs font-semibold text-[#1E3A8A] block mb-1.5">Cover Image</label>
                   <div className="flex gap-3 items-start">
-                    <label className="flex-1 flex flex-col items-center justify-center py-6 border-2 border-dashed border-gray-200 hover:border-[#FF7F50]/40 rounded-xl bg-gray-50 hover:bg-white transition-all cursor-pointer group">
-                      <Upload className="w-6 h-6 text-gray-300 group-hover:text-[#FF7F50] mb-1.5" />
+                    <label className="flex-1 flex flex-col items-center justify-center py-6 border-2 border-dashed border-gray-200 hover:border-[#10B981]/40 rounded-xl bg-gray-50 hover:bg-white transition-all cursor-pointer group">
+                      <Upload className="w-6 h-6 text-gray-300 group-hover:text-[#10B981] mb-1.5" />
                       <span className="text-xs text-gray-400 font-medium">Upload image</span>
                       <input type="file" onChange={handleImageChange} className="hidden" accept="image/*" />
                     </label>
@@ -447,9 +457,10 @@ const ManageDestinations = () => {
                 <div className="flex gap-3 pt-2">
                   <button
                     type="submit"
-                    className="flex-1 py-3 bg-[#FF7F50] text-white rounded-xl font-semibold text-sm hover:bg-[#e56a42] transition-all shadow-sm"
+                    disabled={isSaving}
+                    className="flex-1 py-3 bg-[#10B981] text-white rounded-xl font-semibold text-sm hover:bg-[#059669] transition-all shadow-sm disabled:opacity-60 disabled:cursor-not-allowed"
                   >
-                    {editingId ? 'Save Changes' : 'Create Destination'}
+                    {isSaving ? 'Saving...' : editingId ? 'Save Changes' : 'Create Destination'}
                   </button>
                   <button
                     type="button"

@@ -2,11 +2,13 @@
 
 /* ============================================
    GOWIN TRAVELS — UNIFIED DESIGN SYSTEM
-   Primary: #0F4C5C (Deep Teal)
-   Accent:  #FF7F50 (Coral)
-   Gold:    #FFD23F
-   Dark:    #1a1a2e
-   Font:    DM Sans (body) + Playfair Display (headings)
+   Primary:   #1E3A8A (Deep Blue)
+   Secondary: #0EA5E9 (Sky Blue)
+   Accent:    #10B981 (Emerald)
+   Gold:      #FBBF24 (ratings only)
+   Dark:      #0F172A (Slate 900)
+   Font:      DM Sans (body) + Plus Jakarta Sans (headings)
+   Spacing:   8px system · Radius: 12/16/26px · Shadows: brand-tinted
    ============================================ */
 
 @theme {
@@ -14,16 +16,17 @@
 }
 
 :root {
-  --clr-primary:    #0F4C5C;
-  --clr-primary-dk: #0a3845;
-  --clr-accent:     #FF7F50;
-  --clr-accent-dk:  #e56a42;
-  --clr-gold:       #FFD23F;
-  --clr-dark:       #1a1a2e;
-  --clr-gray:       #6b7280;
-  --clr-light:      #F8FAFB;
+  --clr-primary:    #1E3A8A;
+  --clr-primary-dk: #172554;
+  --clr-sky:        #0EA5E9;
+  --clr-accent:     #10B981;
+  --clr-accent-dk:  #059669;
+  --clr-gold:       #FBBF24;
+  --clr-dark:       #0F172A;
+  --clr-gray:       #64748b;
+  --clr-light:      #F8FAFC;
   --clr-white:      #ffffff;
-  --font-heading:   'Playfair Display', Georgia, serif;
+  --font-heading:   'Plus Jakarta Sans', system-ui, sans-serif;
   --font-body:      'DM Sans', system-ui, sans-serif;
 }
 
@@ -50,20 +53,24 @@ body {
    ============================================ */
 .heading-font {
   font-family: var(--font-heading) !important;
-  font-weight: 900;
-  letter-spacing: -0.02em;
+  font-weight: 800;
+  letter-spacing: -0.03em;
   line-height: 1.08;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: var(--font-heading);
-  font-weight: 800;
-  line-height: 1.1;
-  color: var(--clr-dark);
-}
+/* In @layer base so Tailwind utilities (text-white etc.) can override */
+@layer base {
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    line-height: 1.12;
+    color: var(--clr-dark);
+  }
 
-p, span, a, li, button, input, select, label {
-  font-family: var(--font-body);
+  p, span, a, li, button, input, select, label {
+    font-family: var(--font-body);
+  }
 }
 
 /* ============================================
@@ -124,12 +131,12 @@ p, span, a, li, button, input, select, label {
   border: none;
   cursor: pointer;
   transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
-  box-shadow: 0 6px 20px rgba(255, 127, 80, 0.28);
+  box-shadow: 0 6px 20px rgba(16,185,129, 0.28);
   white-space: nowrap;
 }
 .btn-primary:hover {
   background-color: var(--clr-accent-dk);
-  box-shadow: 0 10px 28px rgba(255,127,80,0.38);
+  box-shadow: 0 10px 28px rgba(16,185,129,0.38);
 }
 .btn-primary:active { transform: scale(0.97); }
 
@@ -147,7 +154,7 @@ p, span, a, li, button, input, select, label {
   border: none;
   cursor: pointer;
   transition: background 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
-  box-shadow: 0 6px 20px rgba(15,76,92,0.22);
+  box-shadow: 0 6px 20px rgba(30,58,138,0.22);
 }
 .btn-secondary:hover { background-color: var(--clr-primary-dk); }
 .btn-secondary:active { transform: scale(0.97); }
@@ -195,6 +202,12 @@ img { max-width: 100%; height: auto; display: block; }
   50%       { transform: translateY(-10px); }
 }
 
+@keyframes kenburns {
+  from { transform: scale(1); }
+  to   { transform: scale(1.12); }
+}
+.animate-kenburns { animation: kenburns 8s ease-out forwards; }
+
 .animate-fadeIn  { animation: fadeIn  0.6s ease-out forwards; }
 .animate-slideUp { animation: slideUp 0.8s ease-out forwards; }
 .animate-float   { animation: float   4s ease-in-out infinite; }
@@ -219,9 +232,9 @@ img { max-width: 100%; height: auto; display: block; }
   50%       { transform: translateY(-8px); }
 }
 @keyframes pulse-ring {
-  0%   { box-shadow: 0 0 0 0 rgba(255, 127, 80, 0.4); }
-  70%  { box-shadow: 0 0 0 12px rgba(255, 127, 80, 0); }
-  100% { box-shadow: 0 0 0 0 rgba(255, 127, 80, 0); }
+  0%   { box-shadow: 0 0 0 0 rgba(16,185,129, 0.4); }
+  70%  { box-shadow: 0 0 0 12px rgba(16,185,129, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(16,185,129, 0); }
 }
 @keyframes shimmer {
   0%   { background-position: -200% 0; }
@@ -263,13 +276,13 @@ img { max-width: 100%; height: auto; display: block; }
   border: 1px solid #f3f4f6;
   border-radius: 0.75rem;
   font-size: 0.875rem;
-  color: #1a1a2e;
+  color: #0F172A;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 .form-input:focus {
   outline: none;
-  border-color: rgba(255, 127, 80, 0.5);
-  box-shadow: 0 0 0 3px rgba(255, 127, 80, 0.1);
+  border-color: rgba(16,185,129, 0.5);
+  box-shadow: 0 0 0 3px rgba(16,185,129, 0.1);
 }
 
 /* ============================================
@@ -293,7 +306,7 @@ img { max-width: 100%; height: auto; display: block; }
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  background: rgba(15, 76, 92, 0.06);
+  background: rgba(30,58,138, 0.06);
   color: var(--clr-primary);
-  border: 1px solid rgba(15, 76, 92, 0.1);
+  border: 1px solid rgba(30,58,138, 0.1);
 }

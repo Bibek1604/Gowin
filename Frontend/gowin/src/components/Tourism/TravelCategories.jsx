@@ -22,9 +22,9 @@ const TravelCategories = () => {
   useEffect(() => { fetchCategories(); }, [fetchCategories]);
 
   return (
-    <section className="py-16 sm:py-20 md:py-24 bg-[#F8FAFB] relative overflow-hidden">
-      <div className="absolute -top-20 -right-20 w-80 h-80 bg-[#0F4C5C]/4 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-[#FF7F50]/4 rounded-full blur-3xl pointer-events-none" />
+    <section className="py-16 sm:py-20 md:py-24 bg-[#F8FAFC] relative overflow-hidden">
+      <div className="absolute -top-20 -right-20 w-80 h-80 bg-[#1E3A8A]/4 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-[#10B981]/4 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header */}
@@ -32,8 +32,8 @@ const TravelCategories = () => {
           <div className="flex justify-center mb-3">
             <span className="section-label">Browse by Style</span>
           </div>
-          <h2 className="heading-font text-3xl sm:text-4xl md:text-5xl text-[#1a1a2e]">
-            Choose Your <span className="text-[#0F4C5C]">Adventure</span>
+          <h2 className="heading-font text-3xl sm:text-4xl md:text-5xl text-[#0F172A]">
+            Choose Your <span className="text-[#1E3A8A]">Adventure</span>
           </h2>
           <p className="text-gray-500 text-sm md:text-base mt-2 sm:mt-3 max-w-xl mx-auto leading-relaxed">
             From mountain treks to tropical retreats — find the perfect experience for your travel style.
@@ -72,15 +72,15 @@ const TravelCategories = () => {
                       alt={cat.name}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0a1628]/88 via-[#0a1628]/20 to-transparent" />
-                    <div className="absolute inset-0 bg-[#FF7F50]/0 group-hover:bg-[#FF7F50]/10 transition-colors duration-500" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0B1220]/88 via-[#0B1220]/20 to-transparent" />
+                    <div className="absolute inset-0 bg-[#10B981]/0 group-hover:bg-[#10B981]/10 transition-colors duration-500" />
 
                     <div className="absolute inset-0 flex flex-col items-center justify-end p-3 sm:p-5 text-center">
-                      <div className="bg-white/15 backdrop-blur-md border border-white/20 p-2 sm:p-3 rounded-xl sm:rounded-2xl text-white mb-2 sm:mb-3 group-hover:bg-[#FF7F50] group-hover:border-[#FF7F50] transition-all duration-300 shadow-sm">
+                      <div className="bg-white/15 backdrop-blur-md border border-white/20 p-2 sm:p-3 rounded-xl sm:rounded-2xl text-white mb-2 sm:mb-3 group-hover:bg-[#10B981] group-hover:border-[#10B981] transition-all duration-300 shadow-sm">
                         <IconComponent className="w-5 h-5 sm:w-6 sm:h-6" />
                       </div>
                       <h3 className="text-xs sm:text-sm font-bold text-white mb-0.5 sm:mb-1 line-clamp-1">{cat.name}</h3>
-                      <span className="text-[9px] sm:text-[10px] text-white/50 uppercase tracking-widest group-hover:text-[#FF7F50] transition-colors flex items-center gap-1">
+                      <span className="text-[9px] sm:text-[10px] text-white/50 uppercase tracking-widest group-hover:text-[#10B981] transition-colors flex items-center gap-1">
                         Explore <ArrowRight className="w-2.5 h-2.5" />
                       </span>
                     </div>

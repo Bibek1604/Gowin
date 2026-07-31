@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Tags, Plus, Edit2, Trash2, X, Upload, Image as ImageIcon } from 'lucide-react';
 import useCategoryStore from '../Store/CategoryStore';
@@ -9,6 +9,10 @@ const AddCategory = () => {
   const [imagePreview, setImagePreview] = useState(null);
   const [editId, setEditId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  // Ref, not state: a second click can fire before React re-renders the
+  // disabled button, but a ref mutates synchronously so it blocks instantly.
+  const submittingRef = useRef(false);
 
   const { categories, addCategory, updateCategory, deleteCategory, fetchCategories, isLoading } = useCategoryStore();
 
@@ -43,27 +47,35 @@ const AddCategory = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (submittingRef.current) return;
     if (!form.name.trim()) {
       toast.error('Category name is required');
       return;
     }
 
-    const categoryData = {
-      category: form.name,
-      description: form.description,
-      image: form.image
-    };
+    submittingRef.current = true;
+    setIsSaving(true);
+    try {
+      const categoryData = {
+        category: form.name,
+        description: form.description,
+        image: form.image
+      };
 
-    const res = editId 
-      ? await updateCategory(editId, categoryData)
-      : await addCategory(categoryData);
+      const res = editId
+        ? await updateCategory(editId, categoryData)
+        : await addCategory(categoryData);
 
-    if (res.success) {
-      toast.success(editId ? 'Category updated' : 'Category created');
-      setIsModalOpen(false);
-      fetchCategories();
-    } else {
-      toast.error('Operation failed');
+      if (res.success) {
+        toast.success(editId ? 'Category updated' : 'Category created');
+        setIsModalOpen(false);
+        fetchCategories();
+      } else {
+        toast.error('Operation failed');
+      }
+    } finally {
+      submittingRef.current = false;
+      setIsSaving(false);
     }
   };
 
@@ -83,12 +95,12 @@ const AddCategory = () => {
         {/* Header */}
         <div className="flex justify-between items-end mb-12">
           <div>
-            <h1 className="text-3xl font-bold text-[#0F4C5C] tracking-tight">Trip Categories</h1>
+            <h1 className="text-3xl font-bold text-[#1E3A8A] tracking-tight">Trip Categories</h1>
             <p className="text-gray-500 text-lg mt-1">Organize your tours by types and themes</p>
           </div>
           <button
             onClick={() => openModal()}
-            className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white bg-[#0F4C5C] hover:bg-[#0a3845] transition-all shadow-lg shadow-[#0F4C5C]/10"
+            className="flex items-center gap-2 px-6 py-3 rounded-xl font-bold text-white bg-[#1E3A8A] hover:bg-[#172554] transition-all shadow-lg shadow-[#1E3A8A]/10"
           >
             <Plus className="w-5 h-5" />
             Add Category
@@ -121,7 +133,7 @@ const AddCategory = () => {
                 </div>
                 
                 <div className="p-6">
-                  <h4 className="text-lg font-bold text-[#0F4C5C] mb-2">{cat.name}</h4>
+                  <h4 className="text-lg font-bold text-[#1E3A8A] mb-2">{cat.name}</h4>
                   <p className="text-gray-500 text-sm line-clamp-2 leading-relaxed mb-6">
                     {cat.description || "No description provided."}
                   </p>
@@ -129,7 +141,7 @@ const AddCategory = () => {
                   <div className="flex gap-2 pt-4 border-t border-gray-50">
                     <button
                       onClick={() => openModal(cat)}
-                      className="flex-1 text-xs font-bold text-[#FF7F50] bg-[#FF7F50]/10 py-2.5 rounded-xl hover:bg-[#FF7F50] hover:text-white transition-colors flex items-center justify-center gap-1.5"
+                      className="flex-1 text-xs font-bold text-[#10B981] bg-[#10B981]/10 py-2.5 rounded-xl hover:bg-[#10B981] hover:text-white transition-colors flex items-center justify-center gap-1.5"
                     >
                       <Edit2 className="w-3.5 h-3.5" /> Edit
                     </button>
@@ -154,27 +166,27 @@ const AddCategory = () => {
             <motion.div 
               initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
               onClick={() => setIsModalOpen(false)}
-              className="absolute inset-0 bg-[#0F4C5C]/20 backdrop-blur-sm"
+              className="absolute inset-0 bg-[#1E3A8A]/20 backdrop-blur-sm"
             />
             <motion.div 
               initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.9, opacity: 0 }}
-              className="relative w-full max-w-lg bg-white rounded-[2.5rem] shadow-2xl overflow-hidden"
+              className="relative w-full max-w-sm bg-white rounded-2xl shadow-2xl overflow-hidden"
             >
-              <div className="p-8 border-b border-gray-50 flex justify-between items-center bg-gray-50/50">
-                <h3 className="text-2xl font-bold text-[#0F4C5C]">
+              <div className="px-5 py-4 border-b border-gray-100 flex justify-between items-center">
+                <h3 className="text-base font-bold text-[#1E3A8A]">
                   {editId ? 'Update Category' : 'Create Category'}
                 </h3>
-                <button onClick={() => setIsModalOpen(false)} className="w-10 h-10 rounded-full bg-white flex items-center justify-center text-gray-400 hover:text-red-500 shadow-sm transition-all">
-                  <X className="w-5 h-5" />
+                <button onClick={() => setIsModalOpen(false)} aria-label="Close dialog" className="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 hover:text-red-500 hover:bg-red-50 transition-all">
+                  <X className="w-4 h-4" />
                 </button>
               </div>
 
-              <form onSubmit={handleSubmit} className="p-8 space-y-6">
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-[#0F4C5C]">Category Name</label>
+              <form onSubmit={handleSubmit} className="p-5 space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-[#1E3A8A]">Category Name</label>
                   <input
                     type="text"
-                    className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#FF7F50] transition-all"
+                    className="w-full px-3 py-2.5 text-sm bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#10B981]/40 transition-all"
                     placeholder="e.g. Adventure, Relaxing, City Tours"
                     value={form.name}
                     onChange={e => setForm({...form, name: e.target.value})}
@@ -182,41 +194,41 @@ const AddCategory = () => {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-sm font-bold text-[#0F4C5C]">Description</label>
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-[#1E3A8A]">Description</label>
                   <textarea
-                    rows="3"
-                    className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#FF7F50] transition-all resize-none"
+                    rows="2"
+                    className="w-full px-3 py-2.5 text-sm bg-gray-50 border border-gray-100 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#10B981]/40 transition-all resize-none"
                     placeholder="What kind of tours belong here?"
                     value={form.description}
                     onChange={e => setForm({...form, description: e.target.value})}
                   />
                 </div>
 
-                <div className="space-y-4">
-                  <label className="text-sm font-bold text-[#0F4C5C]">Cover Image</label>
-                  <div className="flex gap-4">
-                    <label className="flex-1 flex flex-col items-center justify-center border-2 border-dashed border-gray-200 rounded-2xl p-6 hover:bg-gray-50 transition-all cursor-pointer group">
-                      <Upload className="w-6 h-6 text-gray-300 group-hover:text-[#FF7F50] mb-1" />
+                <div className="space-y-1.5">
+                  <label className="text-xs font-bold text-[#1E3A8A]">Cover Image</label>
+                  <div className="flex gap-3">
+                    <label className="flex-1 flex items-center justify-center gap-2 border-2 border-dashed border-gray-200 rounded-xl py-3 hover:bg-gray-50 hover:border-[#10B981]/40 transition-all cursor-pointer group">
+                      <Upload className="w-4 h-4 text-gray-300 group-hover:text-[#10B981]" />
                       <span className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Upload</span>
                       <input type="file" onChange={handleImageChange} className="hidden" accept="image/*" />
                     </label>
                     {imagePreview && (
-                      <div className="w-24 h-24 rounded-2xl overflow-hidden border border-gray-100 shadow-sm relative shrink-0">
+                      <div className="w-14 h-14 rounded-xl overflow-hidden border border-gray-100 shadow-sm relative shrink-0">
                         <img src={imagePreview} className="w-full h-full object-cover" alt="Preview" />
-                        <button type="button" onClick={() => setImagePreview(null)} className="absolute top-1 right-1 bg-red-500 text-white p-1 rounded-full">
-                          <X className="w-3 h-3" />
+                        <button type="button" onClick={() => setImagePreview(null)} aria-label="Remove image" className="absolute top-0.5 right-0.5 bg-red-500 text-white p-0.5 rounded-full">
+                          <X className="w-2.5 h-2.5" />
                         </button>
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="flex gap-4 pt-4">
-                  <button type="submit" className="flex-1 py-4 bg-[#FF7F50] text-white rounded-2xl font-bold hover:bg-[#ff6a33] transition-all shadow-lg shadow-[#FF7F50]/20">
-                    {editId ? 'Save Changes' : 'Create Category'}
+                <div className="flex gap-2 pt-2">
+                  <button type="submit" disabled={isSaving} className="flex-1 py-2.5 text-sm bg-[#10B981] text-white rounded-xl font-bold hover:bg-[#059669] transition-all shadow-md shadow-[#10B981]/20 disabled:opacity-60 disabled:cursor-not-allowed">
+                    {isSaving ? 'Saving...' : editId ? 'Save Changes' : 'Create Category'}
                   </button>
-                  <button type="button" onClick={() => setIsModalOpen(false)} className="px-8 py-4 bg-gray-100 text-gray-500 rounded-2xl font-bold hover:bg-gray-200 transition-all">
+                  <button type="button" onClick={() => setIsModalOpen(false)} className="px-5 py-2.5 text-sm bg-gray-100 text-gray-500 rounded-xl font-bold hover:bg-gray-200 transition-all">
                     Cancel
                   </button>
                 </div>

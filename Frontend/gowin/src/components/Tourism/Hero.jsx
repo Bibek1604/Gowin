@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Search, MapPin, ArrowRight, Globe, Users, TrendingUp, ChevronLeft, ChevronRight, Play } from 'lucide-react';
 import { useNavigate, Link } from 'react-router-dom';
 import usePlaceStore from '../Store/PlaceStore';
-import { HERO_SLIDES, STATS } from '../../data/seedData';
+import { HERO_SLIDES } from '../../data/seedData';
 
 const Hero = () => {
   const navigate = useNavigate();
@@ -55,32 +55,37 @@ const Hero = () => {
 
   const slide = HERO_SLIDES[activeSlide];
   const stats = [
-    { value: places.length > 0 ? `${places.length}+` : '50+', label: 'Destinations', icon: <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
-    { value: '100+', label: 'Happy Travelers', icon: <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
-    { value: '5+', label: 'Years Experience', icon: <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
+    { value: places.length > 0 ? `${places.length}+` : '100+', label: 'Destinations', icon: <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
+    { value: '2,500+', label: 'Happy Travelers', icon: <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
+    { value: '98%', label: 'Satisfaction Rate', icon: <TrendingUp className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> },
   ];
 
   return (
     <section className="relative min-h-screen flex flex-col overflow-hidden pt-16">
-      {/* Background slides */}
-      {HERO_SLIDES.map((s, i) => (
-        <div
-          key={i}
-          className={`absolute inset-0 transition-opacity duration-700 ${i === activeSlide ? 'opacity-100' : 'opacity-0'}`}
-        >
-          <img
-            src={s.image}
-            alt={s.badge}
-            className="w-full h-full object-cover"
-          />
-        </div>
-      ))}
+      {/* Background slides — only active + neighbours are mounted, so the browser
+          doesn't decode every full-size image on first paint */}
+      {HERO_SLIDES.map((s, i) => {
+        const n = HERO_SLIDES.length;
+        const isNear = i === activeSlide || i === (activeSlide + 1) % n || i === (activeSlide - 1 + n) % n;
+        if (!isNear) return null;
+        return (
+          <div
+            key={i}
+            className={`absolute inset-0 transition-opacity duration-700 ${i === activeSlide ? 'opacity-100' : 'opacity-0'}`}
+          >
+            <img
+              src={s.image}
+              alt={s.badge}
+              decoding="async"
+              fetchPriority={i === activeSlide ? 'high' : 'low'}
+              className={`w-full h-full object-cover ${i === activeSlide ? 'animate-kenburns' : ''}`}
+            />
+          </div>
+        );
+      })}
 
       {/* Gradient overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0a1f2b]/95 via-[#0F4C5C]/80 to-[#0a1820]/55 z-10" />
-      {/* Ambient glows */}
-      <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-[#FF7F50]/6 rounded-full blur-[140px] pointer-events-none z-10" />
-      <div className="absolute bottom-1/4 left-1/6 w-[350px] h-[350px] bg-[#0F4C5C]/20 rounded-full blur-[100px] pointer-events-none z-10" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0B1220]/95 via-[#1E3A8A]/80 to-[#0a1820]/55 z-10" />
 
       {/* Main content */}
       <div className="relative z-20 flex-1 flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 sm:py-24 lg:py-28">
@@ -91,7 +96,7 @@ const Hero = () => {
             key={activeSlide}
             className="inline-flex items-center justify-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 sm:px-5 py-1.5 sm:py-2 rounded-full mb-6 sm:mb-7 animate-fadeIn"
           >
-            <span className="w-2 h-2 bg-[#FF7F50] rounded-full animate-pulse shadow-[0_0_8px_rgba(255,127,80,0.8)]" />
+            <span className="w-2 h-2 bg-[#10B981] rounded-full animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.8)]" />
             <span className="text-white/90 text-[9px] sm:text-[10px] font-bold uppercase tracking-[0.2em] sm:tracking-[0.25em]">
               {slide.badge}
             </span>
@@ -104,7 +109,7 @@ const Hero = () => {
             style={{ lineHeight: 1.1 }}
           >
             {slide.headline[0]}<br />
-            <span className="text-[#FF7F50]">{slide.headline[1]}</span>
+            <span className="bg-gradient-to-r from-[#34D399] via-[#10B981] to-[#0EA5E9] bg-clip-text text-transparent">{slide.headline[1]}</span>
           </h1>
 
           {/* Subtitle */}
@@ -117,19 +122,25 @@ const Hero = () => {
 
           {/* Search Bar */}
           <div className="relative w-full max-w-xl mx-auto mb-6 sm:mb-8 text-left">
-            <div className="flex items-center bg-white rounded-xl sm:rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.3)] pl-3 sm:pl-4 pr-2 py-1.5 sm:py-2 gap-2 border border-white/10">
-              <MapPin className="text-[#FF7F50] h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+            <div className="flex items-center bg-white rounded-xl sm:rounded-2xl shadow-[0_8px_40px_rgba(0,0,0,0.3)] focus-within:shadow-[0_8px_50px_rgba(16,185,129,0.4)] focus-within:ring-2 focus-within:ring-[#10B981]/50 transition-all pl-3 sm:pl-4 pr-2 py-1.5 sm:py-2 gap-2 border border-white/10">
+              <MapPin className="text-[#10B981] h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={handleSearchChange}
                 onFocus={() => setShowDropdown(true)}
                 onBlur={() => setTimeout(() => setShowDropdown(false), 250)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    if (suggestions.length > 0) selectPlace(suggestions[0].id);
+                    else navigate('/destinations/all');
+                  }
+                }}
                 placeholder="Where do you want to go?"
-                className="flex-1 text-xs sm:text-sm font-medium text-[#1a1a2e] placeholder-gray-400 bg-transparent focus:outline-none py-2 min-w-0"
+                className="flex-1 text-xs sm:text-sm font-medium text-[#0F172A] placeholder-gray-400 bg-transparent focus:outline-none py-2 min-w-0"
               />
               <button
-                onClick={() => navigate('/details/all')}
+                onClick={() => navigate('/destinations/all')}
                 className="btn-primary text-xs sm:text-sm px-3 sm:px-5 py-2 sm:py-2.5 flex-shrink-0 rounded-lg sm:rounded-xl"
               >
                 <Search className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
@@ -147,19 +158,19 @@ const Hero = () => {
                       onClick={() => selectPlace(place.id)}
                       className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-left flex items-center gap-3 hover:bg-gray-50 border-b border-gray-50 last:border-0 transition-colors group"
                     >
-                      <div className="w-8 h-8 bg-[#FF7F50]/10 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <MapPin className="w-3.5 h-3.5 text-[#FF7F50]" />
+                      <div className="w-8 h-8 bg-[#10B981]/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <MapPin className="w-3.5 h-3.5 text-[#10B981]" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-[#1a1a2e] truncate group-hover:text-[#FF7F50] transition-colors">{place.title}</p>
+                        <p className="text-sm font-semibold text-[#0F172A] truncate group-hover:text-[#10B981] transition-colors">{place.title}</p>
                         <p className="text-xs text-gray-400">{place.location}</p>
                       </div>
-                      <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-[#FF7F50] transition-colors flex-shrink-0" />
+                      <ArrowRight className="w-4 h-4 text-gray-300 group-hover:text-[#10B981] transition-colors flex-shrink-0" />
                     </button>
                   ))}
                 </div>
                 <div className="px-4 py-2.5 bg-gray-50 border-t border-gray-100 text-center">
-                  <button onClick={() => navigate('/details/all')} className="text-xs font-semibold text-[#FF7F50] hover:underline">
+                  <button onClick={() => navigate('/destinations/all')} className="text-xs font-semibold text-[#059669] hover:underline">
                     View all destinations →
                   </button>
                 </div>
@@ -171,7 +182,7 @@ const Hero = () => {
           <div className="flex items-center gap-2 sm:gap-3 flex-wrap justify-center">
             <Link
               to={slide.link}
-              className="flex items-center gap-2 px-5 py-2.5 bg-[#FF7F50] text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-[#e56a42] transition-all shadow-lg shadow-[#FF7F50]/30 hover:scale-105"
+              className="flex items-center gap-2 px-5 py-2.5 bg-[#10B981] text-white text-xs sm:text-sm font-bold rounded-xl hover:bg-[#059669] transition-all shadow-lg shadow-[#10B981]/30 hover:scale-105"
             >
               {slide.cta} <ArrowRight className="w-3.5 h-3.5" />
             </Link>
@@ -200,41 +211,55 @@ const Hero = () => {
           )}
         </div>
 
-        {/* Stats */}
-        <div className="mt-12 sm:mt-16 lg:mt-20 w-full max-w-3xl mx-auto border-t border-white/10 pt-8 grid grid-cols-3 gap-4 sm:gap-8 md:gap-16">
+        {/* Stats — glass cards */}
+        <div className="mt-12 sm:mt-16 lg:mt-20 w-full max-w-3xl mx-auto grid grid-cols-3 gap-3 sm:gap-5">
           {stats.map((s, i) => (
-            <div key={i} className="text-center">
-              <div className="flex items-center justify-center gap-1.5 text-[#FF7F50]/60 mb-1">
+            <div
+              key={i}
+              className="text-center bg-white/[0.07] backdrop-blur-md border border-white/15 rounded-2xl py-4 sm:py-6 px-2 hover:bg-white/[0.12] hover:border-[#10B981]/40 hover:-translate-y-1 transition-all duration-300"
+            >
+              <div className="flex items-center justify-center gap-1.5 text-[#10B981] mb-1.5">
                 {s.icon}
               </div>
               <div className="text-2xl sm:text-3xl md:text-4xl font-black text-white">{s.value}</div>
-              <div className="text-[9px] sm:text-[10px] text-white/45 font-bold uppercase tracking-widest mt-1">{s.label}</div>
+              <div className="text-[9px] sm:text-[10px] text-white/60 font-bold uppercase tracking-widest mt-1">{s.label}</div>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Slide controls */}
-      <div className="absolute bottom-20 sm:bottom-24 left-1/2 -translate-x-1/2 z-30 flex items-center gap-3">
+      {/* Slide controls — right edge, clear of content */}
+      <div className="absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 z-30 hidden md:flex flex-col items-center gap-3">
         <button
           onClick={() => goToSlide((activeSlide - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)}
-          className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/25 transition-all"
+          aria-label="Previous slide"
+          className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-[#10B981] hover:border-[#10B981] transition-all"
         >
-          <ChevronLeft className="w-4 h-4" />
+          <ChevronLeft className="w-4 h-4 rotate-90" />
         </button>
         {HERO_SLIDES.map((_, i) => (
           <button
             key={i}
             onClick={() => goToSlide(i)}
-            className={`rounded-full transition-all duration-300 ${i === activeSlide ? 'w-6 h-2 bg-[#FF7F50]' : 'w-2 h-2 bg-white/30 hover:bg-white/60'}`}
+            aria-label={`Go to slide ${i + 1}`}
+            className={`rounded-full transition-all duration-300 ${i === activeSlide ? 'h-6 w-2 bg-[#10B981] shadow-[0_0_10px_rgba(16,185,129,0.7)]' : 'h-2 w-2 bg-white/30 hover:bg-white/60'}`}
           />
         ))}
         <button
           onClick={() => goToSlide((activeSlide + 1) % HERO_SLIDES.length)}
-          className="w-8 h-8 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-white/25 transition-all"
+          aria-label="Next slide"
+          className="w-9 h-9 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-white hover:bg-[#10B981] hover:border-[#10B981] transition-all"
         >
-          <ChevronRight className="w-4 h-4" />
+          <ChevronRight className="w-4 h-4 rotate-90" />
         </button>
+      </div>
+
+      {/* Scroll cue */}
+      <div className="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 hidden sm:flex flex-col items-center gap-1.5 text-white/50 animate-bounce-slow pointer-events-none">
+        <span className="text-[9px] font-bold uppercase tracking-[0.25em]">Scroll</span>
+        <div className="w-5 h-8 rounded-full border-2 border-white/30 flex justify-center pt-1.5">
+          <div className="w-1 h-2 bg-[#10B981] rounded-full" />
+        </div>
       </div>
 
       {/* Wave divider */}

@@ -58,10 +58,10 @@ const Sidebar = ({ isOpen, onClose }) => {
               <img src={gowinLogo} alt="GoWin" className="w-full h-full object-cover" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-[#0F4C5C] leading-none">
-                GoWin<span className="text-[#FF7F50]">.</span>
+              <h2 className="text-base font-bold text-[#1E3A8A] leading-none">
+                GoWin<span className="text-[#10B981]">.</span>
               </h2>
-              <p className="text-[9px] uppercase font-bold text-[#FF7F50] tracking-widest mt-0.5">Admin Panel</p>
+              <p className="text-[9px] uppercase font-bold text-[#10B981] tracking-widest mt-0.5">Admin Panel</p>
             </div>
           </Link>
           {/* Mobile close button */}
@@ -87,8 +87,8 @@ const Sidebar = ({ isOpen, onClose }) => {
                     onClick={onClose}
                     className={`flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
                       active
-                        ? 'bg-[#0F4C5C] text-white shadow-md shadow-[#0F4C5C]/20'
-                        : 'text-gray-500 hover:bg-gray-50 hover:text-[#0F4C5C]'
+                        ? 'bg-[#1E3A8A] text-white shadow-md shadow-[#1E3A8A]/20'
+                        : 'text-gray-500 hover:bg-gray-50 hover:text-[#1E3A8A]'
                     }`}
                   >
                     <Icon className={`w-4 h-4 flex-shrink-0 ${active ? 'text-white' : 'text-gray-400'}`} />
@@ -103,17 +103,17 @@ const Sidebar = ({ isOpen, onClose }) => {
         {/* Footer */}
         <div className="p-4 border-t border-gray-50 space-y-3">
           <div className="flex items-center gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100">
-            <div className="w-9 h-9 bg-white rounded-lg shadow-sm flex items-center justify-center text-[#FF7F50] flex-shrink-0">
+            <div className="w-9 h-9 bg-white rounded-lg shadow-sm flex items-center justify-center text-[#10B981] flex-shrink-0">
               <ShieldCheck className="w-4 h-4" />
             </div>
             <div className="min-w-0">
-              <p className="text-sm font-bold text-[#0F4C5C] truncate">Admin</p>
+              <p className="text-sm font-bold text-[#1E3A8A] truncate">Admin</p>
               <p className="text-xs text-gray-400">System Manager</p>
             </div>
           </div>
           <button
             onClick={handleLogout}
-            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold text-sm text-[#FF7F50] bg-[#FF7F50]/10 hover:bg-[#FF7F50] hover:text-white transition-colors duration-200"
+            className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl font-semibold text-sm text-[#10B981] bg-[#10B981]/10 hover:bg-[#10B981] hover:text-white transition-colors duration-200"
           >
             <LogOut className="w-4 h-4" />
             Sign Out

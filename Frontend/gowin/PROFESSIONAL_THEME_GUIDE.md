@@ -7,7 +7,7 @@ A sophisticated, bright-yet-trustworthy design that evokes adventure and reliabi
 
 ## 📝 Typography System
 
-### **Primary Font: Playfair Display** (Headings)
+### **Primary Font: Plus Jakarta Sans** (Headings)
 - **Usage**: H1-H3, Hero titles, Section headers
 - **Characteristics**: Elegant serif, luxurious feel, high contrast
 - **Sizes**: 
@@ -17,7 +17,7 @@ A sophisticated, bright-yet-trustworthy design that evokes adventure and reliabi
 - **Weight**: 700 (Bold) for impact
 - **Color**: Charcoal (#212529) for authority
 
-### **Secondary Font: Playfair Display Italic/Bold** (Subheadings)
+### **Secondary Font: Plus Jakarta Sans Italic/Bold** (Subheadings)
 - **Usage**: H4-H6, Quotes, Accents
 - **Sizes**: 20-30px
 - **Weight**: 600 (Semi-bold)
@@ -35,10 +35,10 @@ A sophisticated, bright-yet-trustworthy design that evokes adventure and reliabi
 
 ### **Typography Hierarchy**
 ```
-Hero Title:        72px Playfair Display Bold
-Section Heading:   48px Playfair Display Bold
-Card Title:        30px Playfair Display Semi-bold
-Subheading:        20px Playfair Display Italic
+Hero Title:        72px Plus Jakarta Sans Bold
+Section Heading:   48px Plus Jakarta Sans Bold
+Card Title:        30px Plus Jakarta Sans Semi-bold
+Subheading:        20px Plus Jakarta Sans Italic
 Body Text:         16-18px Inter Regular
 Button Text:       16px Inter Semi-bold
 Caption:           14px Inter Regular
@@ -66,7 +66,7 @@ Caption:           14px Inter Regular
   
 - **Orange Dark**: `#E8551E` (Button hover)
 - **Sky Blue**: `#56CFE1` (Backgrounds, secondary elements)
-- **Muted Yellow**: `#FFD23F` (Highlights, badges - use sparingly)
+- **Muted Yellow**: `#FBBF24` (Highlights, badges - use sparingly)
 
 ### **Neutral Colors**
 - **Pure White**: `#FFFFFF` (Main background)
@@ -114,7 +114,7 @@ Caption:           14px Inter Regular
 │                                                               │
 │            Discover Your Next Adventure                      │
 │            ────────────────────────────                      │
-│      (72px Playfair Display Bold, White, -0.02em spacing)   │
+│      (72px Plus Jakarta Sans Bold, White, -0.02em spacing)   │
 │                                                               │
 │    Explore Nepal and beyond with trusted travel experts     │
 │         (18px Inter Regular, rgba(255,255,255,0.9))         │
@@ -132,7 +132,7 @@ Caption:           14px Inter Regular
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                  Popular Destinations                        │
-│           (48px Playfair Display Bold, Charcoal)            │
+│           (48px Plus Jakarta Sans Bold, Charcoal)            │
 │                                                               │
 │    Handpicked adventures for every type of traveler         │
 │           (18px Inter Regular, Gray)                         │
@@ -150,7 +150,7 @@ Caption:           14px Inter Regular
 │  • White cards with subtle shadow (0 2px 8px rgba teal)    │
 │  • Hover: Lift 4px + deeper shadow                          │
 │  • Image: Overlay gradient on hover                         │
-│  • Title: 30px Playfair Display Semi-bold, Charcoal        │
+│  • Title: 30px Plus Jakarta Sans Semi-bold, Charcoal        │
 │  • Price: 24px Inter Bold, Orange                           │
 │  • Button: Teal outline, hover fill                         │
 │  • 24px spacing, 8px border-radius                          │
@@ -164,7 +164,7 @@ Caption:           14px Inter Regular
 │  [Background: Off-white #F8F9FA with subtle gradient]       │
 │                                                               │
 │                    Why Choose Gowin                          │
-│              (48px Playfair Display Bold)                    │
+│              (48px Plus Jakarta Sans Bold)                    │
 │                                                               │
 │     ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
 │     │   [Icon]     │    │   [Icon]     │    │   [Icon]     │
@@ -178,7 +178,7 @@ Caption:           14px Inter Regular
 │     └──────────────┘    └──────────────┘    └──────────────┘
 │                                                               │
 │  • Icons: 48px, Teal color                                   │
-│  • Title: 24px Playfair Display Semi-bold                   │
+│  • Title: 24px Plus Jakarta Sans Semi-bold                   │
 │  • Text: 16px Inter Regular, Gray                           │
 │  • Cards: White background, shadow on hover                 │
 └─────────────────────────────────────────────────────────────┘
@@ -188,7 +188,7 @@ Caption:           14px Inter Regular
 ```
 ┌─────────────────────────────────────────────────────────────┐
 │                   Get In Touch                               │
-│            (48px Playfair Display Bold)                      │
+│            (48px Plus Jakarta Sans Bold)                      │
 │                                                               │
 │    ┌────────────────────────┐  ┌────────────────────────┐  │
 │    │  [Contact Form]        │  │  [Contact Info]        │  │
@@ -279,7 +279,7 @@ Large:      > 1280px
 
 ## ✨ Key Differentiators
 
-1. **Premium Typography**: Playfair Display creates luxurious, trustworthy feel
+1. **Premium Typography**: Plus Jakarta Sans creates luxurious, trustworthy feel
 2. **Strategic Color Use**: Bright teal for trust, orange for action
 3. **Ample Whitespace**: Clean, uncluttered layouts
 4. **Subtle Animations**: Professional fade-ins, smooth transitions
@@ -292,7 +292,7 @@ Large:      > 1280px
 ## 🚀 Implementation Status
 
 ✅ Color system updated with professional palette
-✅ Typography system with Playfair Display + Inter
+✅ Typography system with Plus Jakarta Sans + Inter
 ✅ Professional shadow system
 ✅ Updated UI components (Button, Card, SectionHeader)
 ✅ Navbar with clean, elegant design

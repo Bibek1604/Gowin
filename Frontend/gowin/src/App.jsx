@@ -1,6 +1,5 @@
-import './App.css';
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, useParams } from 'react-router-dom';
 import { useAdminStore } from './components/Store/AdminStore';
 
 import Sidebar from './components/admin/Sidebar';
@@ -37,7 +36,7 @@ function AdminLayout({ children }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="flex min-h-screen bg-[#F8FAFB]">
+    <div className="flex min-h-screen bg-[#F8FAFC]">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
       {/* Main content — on lg+ screens offset by sidebar width */}
       <div className="flex-1 flex flex-col min-w-0 lg:ml-64">
@@ -48,6 +47,11 @@ function AdminLayout({ children }) {
       </div>
     </div>
   );
+}
+
+function DetailsRedirect() {
+  const { placeId } = useParams();
+  return <Navigate to={`/places/${placeId}`} replace />;
 }
 
 function AppContent() {
@@ -76,8 +80,8 @@ function AppContent() {
         <Route path="/" element={<TourismHome />} />
         <Route path="/places/:placeId" element={<DestinationDetails />} />
         <Route path="/destinations/:type" element={<AllDestinations />} />
-        <Route path="/details/all" element={<AllDestinations />} />
-        <Route path="/details/:placeId" element={<DestinationDetails />} />
+        <Route path="/details/all" element={<Navigate to="/destinations/all" replace />} />
+        <Route path="/details/:placeId" element={<DetailsRedirect />} />
         <Route path="/booking" element={<BookingForm />} />
         <Route path="/about" element={<About />} />
         <Route path="/contact" element={<Contact />} />

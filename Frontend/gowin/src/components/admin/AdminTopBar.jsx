@@ -31,20 +31,20 @@ const AdminTopBar = ({ onMenuToggle }) => {
         </button>
 
         <nav className="flex items-center gap-1.5 text-sm min-w-0">
-          <Link to="/admin" className="flex items-center gap-1 text-gray-400 hover:text-[#0F4C5C] transition-colors flex-shrink-0">
+          <Link to="/admin" className="flex items-center gap-1 text-gray-400 hover:text-[#1E3A8A] transition-colors flex-shrink-0">
             <Home className="w-3.5 h-3.5" />
             <span className="hidden sm:inline text-xs font-medium">Admin</span>
           </Link>
           {route.parent && (
             <>
               <ChevronRight className="w-3 h-3 text-gray-300 flex-shrink-0" />
-              <Link to="/admin" className="text-xs text-gray-400 hover:text-[#0F4C5C] transition-colors hidden sm:block font-medium">
+              <Link to="/admin" className="text-xs text-gray-400 hover:text-[#1E3A8A] transition-colors hidden sm:block font-medium">
                 {route.parent}
               </Link>
             </>
           )}
           <ChevronRight className="w-3 h-3 text-gray-300 flex-shrink-0" />
-          <span className="text-xs text-[#0F4C5C] font-semibold truncate">{route.label}</span>
+          <span className="text-xs text-[#1E3A8A] font-semibold truncate">{route.label}</span>
         </nav>
       </div>
 
@@ -53,12 +53,12 @@ const AdminTopBar = ({ onMenuToggle }) => {
         <Link
           to="/"
           target="_blank"
-          className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-[#0F4C5C] bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-lg transition-all"
+          className="hidden sm:flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-[#1E3A8A] bg-gray-50 hover:bg-gray-100 px-3 py-2 rounded-lg transition-all"
         >
           <ExternalLink className="w-3.5 h-3.5" />
           View Site
         </Link>
-        <div className="w-8 h-8 rounded-xl bg-[#0F4C5C] flex items-center justify-center text-white text-xs font-bold shadow-sm">
+        <div className="w-8 h-8 rounded-xl bg-[#1E3A8A] flex items-center justify-center text-white text-xs font-bold shadow-sm">
           A
         </div>
       </div>

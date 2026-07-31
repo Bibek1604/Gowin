@@ -1,7 +1,15 @@
 import { create } from 'zustand';
 import { supabase } from '../../supabaseClient';
 
-// Admin auth store — now connected to Supabase Auth
+// Admin auth store — connected to Supabase Auth.
+// Optional VITE_ADMIN_EMAILS (comma-separated) restricts which accounts count as admin.
+// NOTE: this is a UI gate only — real enforcement must be Supabase RLS policies.
+const ADMIN_EMAILS = (import.meta.env.VITE_ADMIN_EMAILS || '')
+  .split(',').map(e => e.trim().toLowerCase()).filter(Boolean);
+
+const isAllowedAdmin = (email) =>
+  ADMIN_EMAILS.length === 0 || ADMIN_EMAILS.includes((email || '').toLowerCase());
+
 export const useAdminStore = create((set) => ({
   isAdmin: false,
   isLoading: true,
@@ -18,9 +26,14 @@ export const useAdminStore = create((set) => ({
     set({ isLoading: false });
 
     if (error) {
-      console.error('Login failed:', error.message);
       set({ isAdmin: false });
       return { success: false, error: error.message };
+    }
+
+    if (!isAllowedAdmin(data?.user?.email)) {
+      await supabase.auth.signOut();
+      set({ isAdmin: false });
+      return { success: false, error: 'This account is not authorized for admin access.' };
     }
 
     set({ isAdmin: true });
@@ -36,7 +49,7 @@ export const useAdminStore = create((set) => ({
   initialize: async () => {
     set({ isLoading: true });
     const { data: { session } } = await supabase.auth.getSession();
-    set({ isAdmin: !!session, isLoading: false });
+    set({ isAdmin: !!session && isAllowedAdmin(session.user?.email), isLoading: false });
   },
 }));
 

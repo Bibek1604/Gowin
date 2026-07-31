@@ -54,11 +54,11 @@ const Subscribers = () => {
         {/* Header */}
         <div className="flex justify-between items-end mb-12">
           <div>
-            <h1 className="text-3xl font-bold text-[#0F4C5C] tracking-tight">Newsletter Subscribers</h1>
+            <h1 className="text-3xl font-bold text-[#1E3A8A] tracking-tight">Newsletter Subscribers</h1>
             <p className="text-gray-500 text-lg mt-1">Manage your mailing list for promotions</p>
           </div>
           <div className="bg-white rounded-[2rem] border border-gray-100 px-6 py-4 shadow-[0_4px_25px_rgb(0,0,0,0.02)]">
-            <span className="text-3xl font-bold text-[#0F4C5C]">{subscribers.length}</span>
+            <span className="text-3xl font-bold text-[#1E3A8A]">{subscribers.length}</span>
             <span className="text-gray-400 text-sm font-medium ml-2 uppercase tracking-widest">Active</span>
           </div>
         </div>
@@ -69,7 +69,7 @@ const Subscribers = () => {
           <input
             type="text"
             placeholder="Search by email..."
-            className="w-full pl-14 pr-6 py-4 bg-white border border-gray-100 rounded-[1.5rem] focus:outline-none focus:ring-2 focus:ring-[#FF7F50] shadow-[0_4px_20px_rgb(0,0,0,0.02)] transition-all font-medium"
+            className="w-full pl-14 pr-6 py-4 bg-white border border-gray-100 rounded-[1.5rem] focus:outline-none focus:ring-2 focus:ring-[#10B981] shadow-[0_4px_20px_rgb(0,0,0,0.02)] transition-all font-medium"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
           />
@@ -90,11 +90,11 @@ const Subscribers = () => {
             {filteredSubscribers.map((subscriber) => (
               <div key={subscriber.id} className="bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] p-6 hover:shadow-lg transition-all duration-300 flex items-center justify-between group">
                 <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-[#FF7F50]/10 flex items-center justify-center text-[#FF7F50]">
+                  <div className="w-12 h-12 rounded-2xl bg-[#10B981]/10 flex items-center justify-center text-[#10B981]">
                      <Mail className="w-6 h-6" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-[#0F4C5C] leading-none mb-2">{subscriber.email}</h3>
+                    <h3 className="font-bold text-[#1E3A8A] leading-none mb-2">{subscriber.email}</h3>
                     <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
                        <Calendar className="w-3 h-3" />
                        Subscribed {new Date(subscriber.created_at).toLocaleDateString()}

@@ -1,11 +1,14 @@
 import { create } from 'zustand';
 import { supabase } from '../../supabaseClient';
 
-const useCategoryStore = create((set) => ({
+const useCategoryStore = create((set, get) => ({
   categories: [],
   isLoading: false,
 
   fetchCategories: async () => {
+    // Dedupe only concurrent calls — see PlaceStore.fetchPlaces for why a
+    // permanent "fetched" lock is wrong (it hid newly-added admin data).
+    if (get().isLoading) return;
     set({ isLoading: true });
     const { data, error } = await supabase
       .from('categories')
@@ -82,5 +85,14 @@ const useCategoryStore = create((set) => ({
     return { success: true };
   },
 }));
+
+// Live sync — see PlaceStore.jsx for why this refetches on every change
+// instead of requiring a manual page reload.
+supabase
+  .channel('categories_realtime')
+  .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, () => {
+    useCategoryStore.getState().fetchCategories();
+  })
+  .subscribe();
 
 export default useCategoryStore;

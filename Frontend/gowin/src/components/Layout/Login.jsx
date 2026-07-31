@@ -28,12 +28,12 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F8FAFB] p-6 font-sans relative overflow-hidden">
+    <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC] p-6 font-sans relative overflow-hidden">
       <Toaster position="top-right" />
       
       {/* Background accents */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#0F4C5C]/5 rounded-full -mr-32 -mt-32 blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#FF7F50]/5 rounded-full -ml-32 -mb-32 blur-3xl" />
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#1E3A8A]/5 rounded-full -mr-32 -mt-32 blur-3xl" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#10B981]/5 rounded-full -ml-32 -mb-32 blur-3xl" />
 
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
@@ -43,47 +43,49 @@ const Login = () => {
       >
         {/* Logo Section */}
         <div className="text-center mb-10">
-          <div className="w-20 h-20 bg-white rounded-[2rem] shadow-xl shadow-[#0F4C5C]/5 overflow-hidden mx-auto mb-6">
+          <div className="w-20 h-20 bg-white rounded-[2rem] shadow-xl shadow-[#1E3A8A]/5 overflow-hidden mx-auto mb-6">
              <img src={gowinLogo} alt="Gowin" className="w-full h-full object-cover" />
           </div>
-          <h1 className="text-4xl font-extrabold text-[#0F4C5C] tracking-tight">
-            Gowin<span className="text-[#FF7F50]">.</span>
+          <h1 className="text-4xl font-extrabold text-[#1E3A8A] tracking-tight">
+            Gowin<span className="text-[#10B981]">.</span>
           </h1>
           <p className="text-gray-400 font-bold text-xs uppercase tracking-widest mt-2">Administrative Portal</p>
         </div>
 
         <div className="bg-white p-10 md:p-12 rounded-[2.5rem] shadow-[0_10px_40px_rgb(0,0,0,0.03)] border border-gray-100">
-          <div className="flex items-center gap-3 mb-8 bg-[#0F4C5C]/5 p-4 rounded-2xl border border-[#0F4C5C]/10">
-             <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-[#0F4C5C]">
+          <div className="flex items-center gap-3 mb-8 bg-[#1E3A8A]/5 p-4 rounded-2xl border border-[#1E3A8A]/10">
+             <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-[#1E3A8A]">
                 <ShieldCheck className="w-5 h-5" />
              </div>
              <div>
-                <p className="text-sm font-bold text-[#0F4C5C]">Secure Access</p>
+                <p className="text-sm font-bold text-[#1E3A8A]">Secure Access</p>
                 <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">Restricted to Staff</p>
              </div>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-xs font-bold text-[#0F4C5C] uppercase tracking-widest pl-1">Email Address</label>
+              <label className="text-xs font-bold text-[#1E3A8A] uppercase tracking-widest pl-1">Email Address</label>
               <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#0F4C5C]/10 focus:bg-white transition-all font-medium text-[#0F4C5C] placeholder-gray-300"
+                className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]/10 focus:bg-white transition-all font-medium text-[#1E3A8A] placeholder-gray-300"
                 placeholder="admin@travels.com"
+                autoComplete="email"
                 required
               />
             </div>
 
             <div className="space-y-2">
-              <label className="text-xs font-bold text-[#0F4C5C] uppercase tracking-widest pl-1">Password</label>
+              <label className="text-xs font-bold text-[#1E3A8A] uppercase tracking-widest pl-1">Password</label>
               <input
                 type="password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#0F4C5C]/10 focus:bg-white transition-all font-medium text-[#0F4C5C] placeholder-••••••••"
+                className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]/10 focus:bg-white transition-all font-medium text-[#1E3A8A] placeholder-gray-300"
                 placeholder="••••••••"
+                autoComplete="current-password"
                 required
               />
             </div>
@@ -91,7 +93,7 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full bg-[#0F4C5C] text-white py-5 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-[#0a3845] transition-all shadow-xl shadow-[#0F4C5C]/20 mt-4 active:scale-95 disabled:opacity-75`}
+              className={`w-full bg-[#1E3A8A] text-white py-5 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-[#172554] transition-all shadow-xl shadow-[#1E3A8A]/20 mt-4 active:scale-95 disabled:opacity-75`}
             >
               {loading ? (
                 <div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin" />

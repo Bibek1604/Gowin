@@ -56,8 +56,8 @@ function Dashboard() {
       title: 'Total Packages',
       value: stats.totalPlaces,
       icon: Map,
-      color: 'text-[#0F4C5C]',
-      bg: 'bg-[#0F4C5C]/8',
+      color: 'text-[#1E3A8A]',
+      bg: 'bg-[#1E3A8A]/8',
       trend: '+12%',
       link: '/admin/add-place',
     },
@@ -65,8 +65,8 @@ function Dashboard() {
       title: 'Total Bookings',
       value: stats.totalBookings,
       icon: Calendar,
-      color: 'text-[#FF7F50]',
-      bg: 'bg-[#FF7F50]/8',
+      color: 'text-[#10B981]',
+      bg: 'bg-[#10B981]/8',
       trend: '+23%',
       link: '/admin/add-booking',
     },
@@ -101,7 +101,7 @@ function Dashboard() {
     <div className="p-4 sm:p-6 lg:p-8 min-h-screen font-sans">
       {/* Header */}
       <div className="mb-6 lg:mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-[#0F4C5C] tracking-tight">Dashboard</h1>
+        <h1 className="text-2xl sm:text-3xl font-bold text-[#1E3A8A] tracking-tight">Dashboard</h1>
         <p className="text-gray-500 text-sm mt-1">Welcome back — here's what's happening at GoWin Travels.</p>
       </div>
 
@@ -119,12 +119,12 @@ function Dashboard() {
                 <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${card.bg} ${card.color} group-hover:scale-110 transition-transform`}>
                   <Icon className="w-5 h-5" />
                 </div>
-                <span className="text-[10px] font-bold text-[#FF7F50] bg-[#FF7F50]/10 px-2 py-0.5 rounded-full flex items-center gap-0.5">
+                <span className="text-[10px] font-bold text-[#10B981] bg-[#10B981]/10 px-2 py-0.5 rounded-full flex items-center gap-0.5">
                   <TrendingUp className="w-2.5 h-2.5" />
                   {card.trend}
                 </span>
               </div>
-              <p className="text-2xl sm:text-3xl font-bold text-[#0F4C5C] mb-1">{card.value}</p>
+              <p className="text-2xl sm:text-3xl font-bold text-[#1E3A8A] mb-1">{card.value}</p>
               <p className="text-xs text-gray-400 font-medium uppercase tracking-wider">{card.title}</p>
             </Link>
           );
@@ -136,12 +136,12 @@ function Dashboard() {
         <div className="xl:col-span-2 bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
           <div className="flex items-center justify-between p-5 border-b border-gray-50">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-[#FF7F50]/10 flex items-center justify-center">
-                <Activity className="w-4 h-4 text-[#FF7F50]" />
+              <div className="w-8 h-8 rounded-lg bg-[#10B981]/10 flex items-center justify-center">
+                <Activity className="w-4 h-4 text-[#10B981]" />
               </div>
-              <h2 className="text-base font-bold text-[#0F4C5C]">Recent Bookings</h2>
+              <h2 className="text-base font-bold text-[#1E3A8A]">Recent Bookings</h2>
             </div>
-            <Link to="/admin/add-booking" className="text-xs font-semibold text-[#FF7F50] hover:underline flex items-center gap-1">
+            <Link to="/admin/add-booking" className="text-xs font-semibold text-[#10B981] hover:underline flex items-center gap-1">
               View all <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -154,11 +154,11 @@ function Dashboard() {
                 const StatusIcon = statusConfig[status]?.icon || Clock;
                 return (
                   <div key={i} className="flex items-center gap-3 px-5 py-3.5 hover:bg-gray-50/50 transition-colors">
-                    <div className="w-9 h-9 bg-[#0F4C5C]/5 rounded-xl flex items-center justify-center text-[#0F4C5C] font-bold text-sm flex-shrink-0">
+                    <div className="w-9 h-9 bg-[#1E3A8A]/5 rounded-xl flex items-center justify-center text-[#1E3A8A] font-bold text-sm flex-shrink-0">
                       {(booking.user_name?.[0] || booking.name?.[0] || 'T').toUpperCase()}
                     </div>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-[#0F4C5C] truncate">
+                      <p className="text-sm font-semibold text-[#1E3A8A] truncate">
                         {booking.user_name || booking.name || 'Traveler'}
                       </p>
                       <div className="flex items-center gap-1.5 text-xs text-gray-400 mt-0.5">
@@ -191,7 +191,7 @@ function Dashboard() {
         {/* Quick Actions + Summary */}
         <div className="space-y-5">
           {/* Quick Actions */}
-          <div className="bg-[#0F4C5C] rounded-2xl p-5 relative overflow-hidden">
+          <div className="bg-[#1E3A8A] rounded-2xl p-5 relative overflow-hidden">
             <div className="absolute -top-8 -right-8 w-32 h-32 bg-white/5 rounded-full pointer-events-none" />
             <div className="absolute -bottom-6 -left-6 w-20 h-20 bg-white/5 rounded-full pointer-events-none" />
             <h2 className="text-sm font-bold text-white mb-1 relative z-10">Quick Actions</h2>
@@ -205,7 +205,7 @@ function Dashboard() {
                     to={action.to}
                     className="flex items-center gap-3 p-3 rounded-xl bg-white/8 hover:bg-white/15 border border-white/10 transition-all group"
                   >
-                    <div className="w-8 h-8 rounded-lg bg-[#FF7F50] flex items-center justify-center flex-shrink-0">
+                    <div className="w-8 h-8 rounded-lg bg-[#10B981] flex items-center justify-center flex-shrink-0">
                       <Icon className="w-4 h-4 text-white" />
                     </div>
                     <div className="min-w-0">
@@ -220,17 +220,17 @@ function Dashboard() {
 
           {/* Booking summary */}
           <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-            <h3 className="text-sm font-bold text-[#0F4C5C] mb-4">Booking Summary</h3>
+            <h3 className="text-sm font-bold text-[#1E3A8A] mb-4">Booking Summary</h3>
             <div className="space-y-3">
               {[
                 { label: 'Confirmed', value: stats.confirmedBookings, color: 'bg-emerald-500' },
                 { label: 'Pending', value: stats.pendingBookings, color: 'bg-amber-400' },
-                { label: 'Total', value: stats.totalBookings, color: 'bg-[#0F4C5C]' },
+                { label: 'Total', value: stats.totalBookings, color: 'bg-[#1E3A8A]' },
               ].map((item) => (
                 <div key={item.label} className="flex items-center gap-3">
                   <div className={`w-2.5 h-2.5 rounded-full ${item.color} flex-shrink-0`} />
                   <span className="text-xs text-gray-500 flex-1">{item.label}</span>
-                  <span className="text-sm font-bold text-[#0F4C5C]">{item.value}</span>
+                  <span className="text-sm font-bold text-[#1E3A8A]">{item.value}</span>
                 </div>
               ))}
             </div>
