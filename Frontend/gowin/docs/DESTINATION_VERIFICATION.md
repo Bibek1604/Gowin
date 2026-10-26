@@ -169,6 +169,44 @@ Generated 2026-10-26 from `scripts/content-plan.mjs` and `supabase/media/manifes
 | `venice-canal` | Venice canal and Bridge of Sighs | Unsplash | Photo via Unsplash | 1200×1600, 132 KB |
 | `venice-rialto` | Rialto Bridge, Venice | Unsplash | Photo via Unsplash | 1055×1600, 132 KB |
 
+## Home-page hero photographs — 4 files in `public/hero/`
+
+Bundled with the site (not served from the database); built at 1920×1080 from the same verified sources.
+
+| File | Verified as | Credit | Size |
+|---|---|---|---|
+| `hero/sarangkot-annapurna.webp` | Phewa Lake and Annapurna range from Sarangkot | Saroj Pandey, CC BY-SA 3.0, via Wikimedia Commons | 1920×1080, 330 KB |
+| `hero/kathmandu-boudhanath.webp` | Boudhanath Stupa, Kathmandu (aerial) | Photo via Unsplash | 1916×1078, 349 KB |
+| `hero/chitwan-jeep-safari.webp` | Jeep safari, Chitwan grassland | USAID Biodiversity & Forestry, Public domain, via Wikimedia Commons | 1920×1080, 217 KB |
+| `hero/santorini-oia.webp` | Oia, Santorini | Photo via Unsplash | 1920×1080, 174 KB |
+
+## Seeded trip details (home-page top-10 lists)
+
+From `scripts/showcase-content.mjs`: description, duration, best time, highlights, inclusions, exclusions and itinerary. Prices are untouched.
+
+| Order | Package | Duration | Itinerary days | Highlights / inclusions / exclusions |
+|---|---|---|---|---|
+| 1 | `kathmandu-valley-heritage-tour` | 4 Days / 3 Nights | 4 | 6 / 5 / 5 |
+| 2 | `pokhara-sarangkot-escape` | 5 Days / 4 Nights | 5 | 5 / 5 / 5 |
+| 3 | `chitwan-jungle-safari` | 4 Days / 3 Nights | 4 | 5 / 5 / 4 |
+| 4 | `lumbini-buddha-circuit` | 7 Days / 6 Nights | 7 | 6 / 5 / 5 |
+| 5 | `nepal-golden-triangle` | 7 Days / 6 Nights | 7 | 5 / 5 / 6 |
+| 6 | `nagarkot-dhulikhel-sunrise` | 3 Days / 2 Nights | 3 | 4 / 4 / 4 |
+| 7 | `bhaktapur-durbar-square-tour` | 1 Day | 1 | 5 / 3 / 3 |
+| 8 | `muktinath-pilgrimage-tour` | 5 Days / 4 Nights | 5 | 5 / 5 / 5 |
+| 9 | `bandipur-tansen-heritage-trail` | 4 Days / 3 Nights | 4 | 5 / 3 / 4 |
+| 10 | `bardiya-wilderness-safari` | 6 Days / 5 Nights | 6 | 5 / 4 / 4 |
+| 1 | `maldives-overwater-villa` | 7 Days / 6 Nights | 7 | 5 / 4 / 6 |
+| 2 | `bali-island-retreat` | 10 Days / 9 Nights | 10 | 5 / 4 / 6 |
+| 3 | `santorini-luxury-escape` | 8 Days / 7 Nights | 8 | 5 / 5 / 6 |
+| 4 | `dubai-desert-skyline` | 5 Days / 4 Nights | 5 | 5 / 7 / 6 |
+| 5 | `bangkok-temple-city-tour` | 6 Days / 5 Nights | 6 | 5 / 4 / 6 |
+| 6 | `singapore-city-escape` | 5 Days / 4 Nights | 5 | 5 / 6 / 6 |
+| 7 | `paris-romance-getaway` | 6 Days / 5 Nights | 6 | 5 / 5 / 6 |
+| 8 | `swiss-alps-adventure` | 7 Days / 6 Nights | 7 | 5 / 4 / 6 |
+| 9 | `phuket-beach-paradise` | 7 Days / 6 Nights | 7 | 5 / 5 / 6 |
+| 10 | `el-nido-big-lagoon` | 5 Days / 4 Nights | 5 | 5 / 4 / 6 |
+
 ## Needs the owner's confirmation
 
 - **Prices** on every package are the figures that were seeded in July 2026, not confirmed business rates. They are shown as "indicative starting price" with a disclaimer; the six Philippine packages and the two new Nepal packages have no price ("Price on request").

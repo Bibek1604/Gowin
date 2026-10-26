@@ -1,8 +1,8 @@
 # GoWin Travels — audit, repair and verification report
 
-Date: 26 October 2026 · Scope: `Frontend/gowin` (React/Vite site + admin panel) and the linked Supabase project `wbbwibqpdboeqbflqkuj`.
+Date: 26–27 October 2026 · Scope: `Frontend/gowin` (React/Vite site + admin panel) and the linked Supabase project `wbbwibqpdboeqbflqkuj`.
 
-> **Status in one line:** all code, migrations, images and scripts are complete and tested locally; the two database steps that touch production (`npx supabase db push --linked` and `npm run db:migrate-content`) still have to be run by a person — see section 8. Until they run, the live site keeps its current data (and its current time-out problem).
+> **Status in one line:** all code, migrations, images, seed content and scripts are complete and tested locally; the production database rollout is one command (`npm run db:deploy`) that still has to be run by a person because this environment refuses production deploys — see section 8. Until it runs, the live site keeps its current data (and its current time-out problem); the home-page hero already shows real photographs regardless.
 
 ---
 
@@ -143,15 +143,13 @@ Remaining risks / recommendations:
 ## 8. Unresolved issues and exact next steps
 
 ### Blocker: production database changes need a human to run them
-In this environment the production `db push` was refused by the safety classifier, so nothing has been applied to the live project yet. Run, in this order, from `Frontend/gowin`:
+In this environment `supabase db push --linked` is refused by the safety classifier ("Production Deploy") — it was attempted again on 27 October with the same result — so nothing has been applied to the live project yet. A fresh snapshot was taken before the attempt. Run, from `Frontend/gowin`:
 
 ```bash
-npm run db:backup -- backup-before.json          # snapshot (optional, already taken today)
-npx supabase db push --linked                    # applies 20261026000000 (schema + bucket)
-npm run db:migrate-content                       # uploads photos, fixes content (add --dry-run to preview)
-npx supabase db push --linked                    # applies 20261026000001 (RLS + admin-only storage)
-npm run db:verify                                # must print ALL CONTENT CHECKS PASSED
+npm run db:deploy -- --dry-run                   # optional preview
+npm run db:deploy                                # schema → content (photos, top-10 seed) → RLS → verify
 ```
+`db:deploy` (`scripts/db-deploy.mjs`) applies `20261026000000` on its own, waits for the API schema cache, runs the content migration, applies `20261026000001`, then runs the read-only checks, which must end with `ALL CONTENT CHECKS PASSED`.
 Then sign in at `/login` with the existing admin account (every existing Supabase Auth user was allow-listed automatically) and run the end-to-end script: create a test destination with an uploaded photo → confirm it appears in the admin list and, after publishing, on the public site → edit title/photos/description → refresh → unpublish → delete. Delete the `__verify__` booking that `db:verify` creates. If you prefer, add a QA email under Settings → Admin access and invite that user from the Supabase dashboard.
 
 ### Needs the business owner
@@ -164,3 +162,22 @@ Then sign in at `/login` with the existing admin account (every existing Supabas
 ### Minor follow-ups
 * Vercel: confirm Node ≥ 20.6 in project settings (the sitemap step runs on build).
 * After the migration, remove the pre-migration fallbacks in `PlaceStore`/`CategoryStore`/`BookingStore`/`MessageStore` when convenient (they are harmless).
+
+---
+
+## 9. Iteration 2 (27 October) — seeded showcase content, real hero photographs
+
+Requested: seed matching data for the destinations, use three or four real tourism photographs as the home-page background, show ten Nepal and ten international destination cards, keep trekking out.
+
+### What changed
+* **Home hero** (`src/components/Tourism/Hero.jsx`, `src/data/heroSlides.js`, `public/hero/`): four bundled 1920×1080 photographs built from the verified sources — Phewa Lake and the Annapurna range from Sarangkot, Boudhanath Stupa, a jeep safari in Chitwan, Oia on Santorini — each with its caption, link and licence credit. The hero no longer depends on the database, the first image is preloaded, and the credit is shown on screen (Creative Commons attribution).
+* **Top-10 lists** (`src/components/Tourism/DestinationGrid.jsx`, `TourismHome.jsx`): "Top 10 in Nepal" and "Top 10 international" replace the previous carousels and the Nepal spotlight. Cards are numbered, swipe on phones and form a five-column grid on desktop. The `NepalSpotlight` section was removed as redundant.
+* **Display order** (`sort_order` on `tour_packages`, added to the still-pending `20261026000000` migration and re-validated on local PostgreSQL 17): visible in the admin form as "Display order"; `sortPlaces('featured')` now orders by it first, then featured, then newest.
+* **Seed content** (`scripts/showcase-content.mjs`, merged by `content-plan.mjs`): for the 20 showcase packages a factual description, duration, best time, 4–6 highlights, inclusions, exclusions and a day-by-day itinerary. Nepal: Kathmandu Valley, Pokhara & Sarangkot, Chitwan, Lumbini & Buddha circuit, Golden Triangle, Nagarkot & Dhulikhel, Bhaktapur, Muktinath, Bandipur & Tansen, Bardiya. International: Maldives, Bali, Santorini (via Athens), Dubai, Bangkok, Singapore, Paris, Swiss Alps, Phuket, El Nido. Prices were not invented: existing indicative figures stay, new packages show "Price on request". Overstated copy was rewritten (e.g. "tigers on foot" in Chitwan, "ski powder and zip-line over glaciers" in Interlaken, "Everest to Annapurna" from Nagarkot).
+* **Scripts**: `migrate-content.mjs` writes duration/sort order and updates (rather than skips) previously created rows on re-run; `verify-content.mjs` checks that each top-10 list is complete, ordered 1–10 and fully detailed; `db-deploy.mjs` runs the whole rollout in order.
+* No trekking content is published or linked anywhere on the public site (`verify-content` also asserts this).
+
+### Tested
+* `eslint .` and `vite build` pass; migrations re-validated with 36 passing policy and schema assertions on PGlite.
+* Headless Chrome against the post-migration fixture: `/`, `/destinations`, `/destinations/international`, `/places/chitwan-jungle-safari`, `/places/el-nido-big-lagoon`, `/places/maldives-overwater-villa`, `/admin`, `/admin/destinations?new=1` at 1366 px and 390 px — no console errors, no broken images, no horizontal overflow; itinerary, inclusions/exclusions and "Display order" render as intended.
+* Headless Chrome against the live (not yet migrated) database: the hero shows the bundled photographs; the package sections stay empty until `db:deploy` runs (the known statement-timeout).

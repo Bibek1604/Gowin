@@ -1,14 +1,17 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Search, MapPin, ArrowRight, ChevronLeft, ChevronRight, Globe, Map as MapIcon, Tag } from 'lucide-react';
-import usePlaceStore, { selectPublished, sortPlaces } from '../Store/PlaceStore';
-import SmartImage from '../ui/SmartImage';
-import { placePath, coverImage, countryFromLocation, isNepal } from '../../lib/format';
-import { PLACEHOLDER_IMG } from '../../lib/placeholder';
+import { Search, MapPin, ArrowRight, ChevronLeft, ChevronRight, Globe, Map as MapIcon, Tag, Camera } from 'lucide-react';
+import usePlaceStore, { selectPublished } from '../Store/PlaceStore';
+import { HERO_SLIDES } from '../../data/heroSlides';
+import { placePath, countryFromLocation, isNepal } from '../../lib/format';
 
 const AUTO_MS = 7000;
 
-/** Home hero: slides built from featured (real) packages + destination search. */
+/**
+ * Home hero: four bundled, verified destination photographs (src/data/heroSlides.js)
+ * rotate behind the search box. Slides never depend on the database, so the
+ * first paint is always a real photo; the stats below are computed from live data.
+ */
 const Hero = () => {
   const navigate = useNavigate();
   const { places, loaded } = usePlaceStore();
@@ -17,14 +20,10 @@ const Hero = () => {
   const [term, setTerm] = useState('');
   const [open, setOpen] = useState(false);
   const blurTimer = useRef(null);
+  const slides = HERO_SLIDES;
+  const slide = slides[active];
 
   const published = useMemo(() => selectPublished(places), [places]);
-  const slides = useMemo(() => {
-    const featured = sortPlaces(published.filter((p) => p.is_featured && coverImage(p)), 'newest').slice(0, 5);
-    if (featured.length >= 2) return featured;
-    const nepalFirst = [...published.filter((p) => isNepal(p) && coverImage(p)), ...published.filter((p) => !isNepal(p) && coverImage(p))];
-    return nepalFirst.slice(0, 4);
-  }, [published]);
 
   const stats = useMemo(() => {
     const countries = new Set(published.filter((p) => !isNepal(p)).map((p) => countryFromLocation(p.location)).filter(Boolean));
@@ -42,15 +41,12 @@ const Hero = () => {
     return () => clearInterval(t);
   }, [paused, slides.length]);
 
-  useEffect(() => { if (active >= slides.length) setActive(0); }, [slides.length, active]);
-
   const suggestions = useMemo(() => {
     const q = term.trim().toLowerCase();
     if (!q) return published.slice(0, 6);
     return published.filter((p) => p.title?.toLowerCase().includes(q) || p.location?.toLowerCase().includes(q) || p.categories?.name?.toLowerCase().includes(q)).slice(0, 6);
   }, [term, published]);
 
-  const slide = slides[active];
   const go = (p) => { navigate(placePath(p)); setTerm(''); setOpen(false); };
   const submit = (e) => {
     e.preventDefault();
@@ -60,30 +56,30 @@ const Hero = () => {
 
   return (
     <section className="relative min-h-[88vh] sm:min-h-screen flex flex-col overflow-hidden bg-[#0B1220]" onMouseEnter={() => setPaused(true)} onMouseLeave={() => setPaused(false)}>
-      {/* Background slides */}
-      {slides.length === 0 ? (
-        <img src={PLACEHOLDER_IMG} alt="" className="absolute inset-0 w-full h-full object-cover opacity-70" />
-      ) : slides.map((s, i) => (
+      {/* Background photographs */}
+      {slides.map((s, i) => (
         <div key={s.id} className={`absolute inset-0 transition-opacity duration-[900ms] ${i === active ? 'opacity-100' : 'opacity-0'}`} aria-hidden={i !== active}>
-          <SmartImage src={coverImage(s)} alt="" priority={i === 0} className={`w-full h-full object-cover ${i === active ? 'animate-kenburns' : ''}`} />
+          <img
+            src={s.image} alt={i === active ? s.alt : ''} width="1920" height="1080"
+            loading={i === 0 ? 'eager' : 'lazy'} fetchPriority={i === 0 ? 'high' : 'low'} decoding="async"
+            className={`w-full h-full object-cover ${i === active ? 'animate-kenburns' : ''}`}
+          />
         </div>
       ))}
-      <div className="absolute inset-0 bg-gradient-to-br from-[#0B1220]/92 via-[#1E3A8A]/70 to-[#0B1220]/50" />
+      <div className="absolute inset-0 bg-gradient-to-br from-[#0B1220]/90 via-[#1E3A8A]/60 to-[#0B1220]/45" />
 
-      <div className="relative z-10 flex-1 flex flex-col justify-center max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-28 pb-20 sm:pb-28">
+      <div className="relative z-10 flex-1 flex flex-col justify-center max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 pt-28 pb-24 sm:pb-28">
         <div className="max-w-3xl mx-auto text-center flex flex-col items-center">
           <span key={`b-${active}`} className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 px-4 py-1.5 rounded-full mb-6 animate-fadeIn">
             <span className="w-2 h-2 bg-[#10B981] rounded-full animate-pulse" />
-            <span className="text-white/90 text-[10px] font-bold uppercase tracking-[0.25em]">
-              {slide ? `${isNepal(slide) ? 'Nepal' : 'International'}${slide.categories?.name ? ` · ${slide.categories.name}` : ''}` : 'GoWin International Travel & Tourism'}
-            </span>
+            <span className="text-white/90 text-[10px] font-bold uppercase tracking-[0.25em]">{slide.kicker}</span>
           </span>
 
           <h1 key={`h-${active}`} className="heading-font text-4xl sm:text-5xl lg:text-[4.25rem] text-white mb-4 drop-shadow-lg animate-slideUp" style={{ lineHeight: 1.08 }}>
-            {slide ? slide.title : <>Travel Nepal, <span className="bg-gradient-to-r from-[#34D399] via-[#10B981] to-[#0EA5E9] bg-clip-text text-transparent">see the world</span></>}
+            {slide.title}
           </h1>
-          <p key={`p-${active}`} className="text-white/75 text-sm sm:text-base lg:text-lg leading-relaxed max-w-xl mb-8 animate-fadeIn line-clamp-3">
-            {slide?.description || 'Nepal tours, international holidays, flights, hotels and visa assistance — planned by a Kathmandu-based team.'}
+          <p key={`p-${active}`} className="text-white/80 text-sm sm:text-base lg:text-lg leading-relaxed max-w-xl mb-8 animate-fadeIn">
+            {slide.text}
           </p>
 
           {/* Search */}
@@ -127,11 +123,7 @@ const Hero = () => {
           </form>
 
           <div className="flex items-center gap-3 flex-wrap justify-center">
-            {slide ? (
-              <Link to={placePath(slide)} className="btn-primary">View this package <ArrowRight className="w-4 h-4" /></Link>
-            ) : (
-              <Link to="/destinations" className="btn-primary">Explore destinations <ArrowRight className="w-4 h-4" /></Link>
-            )}
+            <Link key={`c-${active}`} to={slide.to} className="btn-primary animate-fadeIn">{slide.cta} <ArrowRight className="w-4 h-4" /></Link>
             <Link to="/booking" className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm border border-white/25 text-white text-sm font-semibold rounded-[0.875rem] hover:bg-white/20 transition-colors">
               Plan a custom trip
             </Link>
@@ -151,18 +143,22 @@ const Hero = () => {
         )}
       </div>
 
-      {slides.length > 1 && (
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
-          <button type="button" onClick={() => setActive((a) => (a - 1 + slides.length) % slides.length)} aria-label="Previous slide" className="w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-[#10B981] hover:border-[#10B981] transition-colors"><ChevronLeft className="w-4 h-4" /></button>
-          <div className="flex items-center gap-1.5">
-            {slides.map((s, i) => (
-              <button key={s.id} type="button" onClick={() => setActive(i)} aria-label={`Show ${s.title}`} aria-current={i === active}
-                className={`h-2 rounded-full transition-all ${i === active ? 'w-7 bg-[#10B981]' : 'w-2 bg-white/40 hover:bg-white/70'}`} />
-            ))}
-          </div>
-          <button type="button" onClick={() => setActive((a) => (a + 1) % slides.length)} aria-label="Next slide" className="w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-[#10B981] hover:border-[#10B981] transition-colors"><ChevronRight className="w-4 h-4" /></button>
+      {/* Slide controls */}
+      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 z-20 flex items-center gap-3">
+        <button type="button" onClick={() => setActive((a) => (a - 1 + slides.length) % slides.length)} aria-label="Previous photo" className="w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-[#10B981] hover:border-[#10B981] transition-colors"><ChevronLeft className="w-4 h-4" /></button>
+        <div className="flex items-center gap-1.5">
+          {slides.map((s, i) => (
+            <button key={s.id} type="button" onClick={() => setActive(i)} aria-label={`Show ${s.title}`} aria-current={i === active}
+              className={`h-2 rounded-full transition-all ${i === active ? 'w-7 bg-[#10B981]' : 'w-2 bg-white/40 hover:bg-white/70'}`} />
+          ))}
         </div>
-      )}
+        <button type="button" onClick={() => setActive((a) => (a + 1) % slides.length)} aria-label="Next photo" className="w-9 h-9 rounded-full bg-white/10 border border-white/20 text-white flex items-center justify-center hover:bg-[#10B981] hover:border-[#10B981] transition-colors"><ChevronRight className="w-4 h-4" /></button>
+      </div>
+
+      {/* Photo credit (required for Creative Commons photographs) */}
+      <p className="absolute bottom-3 right-3 sm:right-5 z-20 hidden sm:flex items-center gap-1 text-[10px] text-white/50">
+        <Camera className="w-3 h-3" /> {slide.credit}
+      </p>
     </section>
   );
 };

@@ -13,7 +13,7 @@ import { friendlyError } from '../../lib/errors';
 
 const EMPTY = {
   title: '', slug: '', destination_type: 'National', category_id: '', location: '', price: '', duration: '',
-  description: '', images: [], image_credit: '', is_published: true, is_featured: false,
+  description: '', images: [], image_credit: '', is_published: true, is_featured: false, sort_order: 100,
   details: { best_time: '', highlights: [], inclusions: [], exclusions: [], itinerary: [] },
 };
 
@@ -21,7 +21,7 @@ const fromPlace = (p) => ({
   ...EMPTY,
   title: p.title || '', slug: p.slug || '', destination_type: p.destination_type || 'International', category_id: p.category_id || '',
   location: p.location || '', price: p.price ?? '', duration: p.duration || '', description: p.description || '',
-  images: p.images || [], image_credit: p.image_credit || '', is_published: p.is_published !== false, is_featured: p.is_featured === true,
+  images: p.images || [], image_credit: p.image_credit || '', is_published: p.is_published !== false, is_featured: p.is_featured === true, sort_order: p.sort_order ?? 100,
   details: { ...EMPTY.details, ...(p.details ? { best_time: p.details.best_time || '', highlights: p.details.highlights || [], inclusions: p.details.inclusions || [], exclusions: p.details.exclusions || [], itinerary: p.details.itinerary || [] } : {}) },
 });
 
@@ -94,7 +94,7 @@ const DestinationForm = ({ open, onClose, place = null, onSaved }) => {
         <div className="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3">
           <div className="flex gap-5">
             <Toggle checked={form.is_published} onChange={(v) => set('is_published', v)} label="Published" hint={form.is_published ? 'Visible on the website' : 'Hidden (draft / archived)'} />
-            <Toggle checked={form.is_featured} onChange={(v) => set('is_featured', v)} label="Featured" hint="Shown in the home hero" />
+            <Toggle checked={form.is_featured} onChange={(v) => set('is_featured', v)} label="Featured" hint="Gets a badge and sorts ahead of other packages" />
           </div>
           <div className="flex gap-2">
             <button type="button" onClick={onClose} disabled={saving} className="px-5 py-2.5 rounded-xl text-sm font-semibold text-gray-600 bg-white border border-gray-200 hover:bg-gray-50">Cancel</button>
@@ -123,6 +123,7 @@ const DestinationForm = ({ open, onClose, place = null, onSaved }) => {
           <Field label="Location" htmlFor="d-location" hint='Use "Place, Country" so country filters work'><Input id="d-location" value={form.location} onChange={(e) => set('location', e.target.value)} placeholder="e.g. Pokhara, Nepal" /></Field>
           <Field label="Starting price (USD per person)" error={errors.price} htmlFor="d-price" hint="Leave empty to show “Price on request”"><Input id="d-price" inputMode="decimal" value={form.price} onChange={(e) => set('price', e.target.value)} error={errors.price} placeholder="e.g. 499" /></Field>
           <Field label="Duration" htmlFor="d-duration"><Input id="d-duration" value={form.duration} onChange={(e) => set('duration', e.target.value)} placeholder="e.g. 5 Days / 4 Nights" /></Field>
+          <Field label="Display order" htmlFor="d-order" hint="Lower numbers show first on the home page and in listings (1–10 fill the home-page top lists; 100 = default)"><Input id="d-order" type="number" min="0" step="1" inputMode="numeric" value={form.sort_order} onChange={(e) => set('sort_order', e.target.value)} placeholder="100" /></Field>
         </div>
         <Field label="Description" required={form.is_published} error={errors.description} htmlFor="d-description" hint="Shown on the detail page and used for search engines.">
           <Textarea id="d-description" rows={5} value={form.description} onChange={(e) => set('description', e.target.value)} error={errors.description} placeholder="What makes this experience special, what travellers see and do…" />

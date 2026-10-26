@@ -137,6 +137,8 @@ for (const [id, spec] of Object.entries(KEEP)) {
   };
   if (spec.title) patch.title = spec.title;
   if (spec.description) patch.description = spec.description;
+  if (spec.duration) patch.duration = spec.duration;
+  if (spec.sort_order) patch.sort_order = spec.sort_order;
   await act(`keep ${row.title} → /places/${spec.slug} [${spec.category}] ${spec.images.length} photo(s)`, () => sb.from('tour_packages').update(patch).eq('id', id));
   await upsertDetails(id, spec.title || row.title, spec.description || row.description, spec.details);
 }
@@ -158,20 +160,27 @@ for (const row of pkgs || []) {
   if (!row.slug) patch.slug = slugify(row.title) || `package-${row.id.slice(0, 6)}`;
   if (Object.keys(patch).length) await act(`tidy ${row.title}`, () => sb.from('tour_packages').update(patch).eq('id', row.id));
 }
-const existingSlugs = new Set((pkgs || []).map((p) => p.slug).filter(Boolean));
+// New packages: created once; on a re-run the existing row is brought back in line with the plan (price is never touched).
+async function createOrUpdate(spec, payload, label) {
+  const existing = (pkgs || []).find((p) => p.slug === spec.slug);
+  if (existing) {
+    await act(`update ${spec.title} (already exists)`, () => sb.from('tour_packages').update(payload).eq('id', existing.id));
+    await upsertDetails(existing.id, spec.title, payload.description, spec.details);
+    return;
+  }
+  const res = await act(label, () => sb.from('tour_packages').insert({ ...payload, price: null }).select('id').single());
+  if (res.data) await upsertDetails(res.data.id, spec.title, payload.description, spec.details);
+}
 for (const spec of PHILIPPINES) {
-  if (existingSlugs.has(spec.slug)) { log(`  exists ${spec.slug}`); continue; }
   const cat = (existingCats || []).find((c) => c.id === spec.catId);
-  const payload = { title: spec.title, slug: spec.slug, description: cat?.description || null, location: spec.location, duration: null, price: null,
-    category_id: catIdBySlug[spec.category], destination_type: 'International', images: spec.images.map((k) => libraryUrl[k]), image_credit: credit(spec.images), is_published: true, is_featured: false };
-  await act(`create ${spec.title} (from category row)`, () => sb.from('tour_packages').insert(payload));
+  await createOrUpdate(spec, { title: spec.title, slug: spec.slug, description: spec.description || cat?.description || null, location: spec.location, duration: spec.duration || null,
+    category_id: catIdBySlug[spec.category], destination_type: 'International', images: spec.images.map((k) => libraryUrl[k]), image_credit: credit(spec.images), is_published: true, is_featured: !!spec.featured, sort_order: spec.sort_order || 100 },
+  `create ${spec.title} (from category row)`);
 }
 for (const spec of NEW_NEPAL) {
-  if (existingSlugs.has(spec.slug)) { log(`  exists ${spec.slug}`); continue; }
-  const payload = { title: spec.title, slug: spec.slug, description: spec.description, location: spec.location, duration: spec.duration, price: null,
-    category_id: catIdBySlug[spec.category], destination_type: 'National', images: spec.images.map((k) => libraryUrl[k]), image_credit: credit(spec.images), is_published: true, is_featured: !!spec.featured };
-  const res = await act(`create ${spec.title}`, () => sb.from('tour_packages').insert(payload).select('id').single());
-  if (res.data) await upsertDetails(res.data.id, spec.title, spec.description, spec.details);
+  await createOrUpdate(spec, { title: spec.title, slug: spec.slug, description: spec.description, location: spec.location, duration: spec.duration || null,
+    category_id: catIdBySlug[spec.category], destination_type: 'National', images: spec.images.map((k) => libraryUrl[k]), image_credit: credit(spec.images), is_published: true, is_featured: !!spec.featured, sort_order: spec.sort_order || 100 },
+  `create ${spec.title}`);
 }
 
 // ---------- 4. reviews, bookings, settings ----------

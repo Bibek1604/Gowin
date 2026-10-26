@@ -7,7 +7,7 @@ let failures = 0;
 const check = (ok, label, detail = '') => { console.log(`${ok ? 'PASS' : 'FAIL'} ${label}${detail ? ` — ${detail}` : ''}`); if (!ok) failures++; };
 
 const { data: cats, error: cErr } = await sb.from('categories').select('*');
-const { data: pkgs, error: pErr } = await sb.from('tour_packages').select('id,title,slug,description,location,category_id,destination_type,is_published,is_featured,images,image_credit,categories(name,slug,is_active),place_details(highlights,itinerary)');
+const { data: pkgs, error: pErr } = await sb.from('tour_packages').select('id,title,slug,description,location,duration,category_id,destination_type,is_published,is_featured,sort_order,images,image_credit,categories(name,slug,is_active),place_details(best_time,highlights,inclusions,exclusions,itinerary)');
 if (cErr || pErr) { console.error(cErr?.message || pErr?.message); process.exit(1); }
 
 // As the anon key, RLS should already hide unpublished rows and inactive categories.
@@ -40,6 +40,14 @@ const featured = published.filter((p) => p.is_featured);
 check(featured.length >= 3 && featured.length <= 8, `featured packages between 3 and 8 (${featured.length})`);
 const intlBadLocation = published.filter((p) => p.destination_type !== 'National' && !/,/.test(p.location || '') && !/^singapore$/i.test(p.location || ''));
 check(intlBadLocation.length === 0, 'international locations are "Place, Country"', intlBadLocation.map((p) => `${p.title}: ${p.location}`).join('; '));
+
+// home page top-10 lists: exactly ten Nepal and ten international packages carry display order 1–10, each fully detailed
+for (const [label, test] of [['Nepal', (p) => p.destination_type === 'National'], ['international', (p) => p.destination_type !== 'National']]) {
+  const top = published.filter((p) => test(p) && p.sort_order >= 1 && p.sort_order <= 10).sort((a, b) => a.sort_order - b.sort_order);
+  check(top.length === 10 && top.every((p, i) => p.sort_order === i + 1), `top-10 ${label} list is complete and ordered 1–10 (${top.length})`, top.map((p) => `${p.sort_order}:${p.slug}`).join(' '));
+  const thin = top.filter((p) => { const d = p.place_details?.[0] || p.place_details; return !d || !d.best_time || (d.highlights || []).length < 3 || (d.inclusions || []).length < 2 || (d.exclusions || []).length < 2 || (d.itinerary || []).length < 1 || !p.duration; });
+  check(thin.length === 0, `top-10 ${label} packages have duration, best time, highlights, inclusions, exclusions and an itinerary`, thin.map((p) => p.slug).join(', '));
+}
 
 // every image URL must actually load
 const urls = [...new Set(published.flatMap((p) => p.images || []))];

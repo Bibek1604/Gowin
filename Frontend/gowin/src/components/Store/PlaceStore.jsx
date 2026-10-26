@@ -7,7 +7,10 @@ import { clean } from '../../lib/format';
 export const PLACE_SELECT = '*, categories(id,name,slug,is_active), place_details(*)';
 // Shape that also works before the 20261026 migrations have been applied.
 const LEGACY_SELECT = '*, categories(id,name), place_details(*)';
-const NEW_COLUMNS = ['slug', 'is_published', 'is_featured', 'image_credit'];
+const NEW_COLUMNS = ['slug', 'is_published', 'is_featured', 'image_credit', 'sort_order'];
+const DEFAULT_ORDER = 100;
+/** Display order: a non-negative integer, lower first; anything else is the default. */
+export const toSortOrder = (v) => { const n = Number.parseInt(v, 10); return Number.isFinite(n) && n >= 0 ? n : DEFAULT_ORDER; };
 const missingColumn = (error) => error && (error.code === '42703' || /column .* does not exist/i.test(error.message || ''));
 /** Run a query builder with the full select, falling back to the legacy shape. */
 async function withFallback(build) {
@@ -38,6 +41,7 @@ export function normalizePlace(row) {
     images: Array.isArray(row.images) ? row.images.filter((u) => typeof u === 'string' && u.trim()) : [],
     is_published: row.is_published !== false,
     is_featured: row.is_featured === true,
+    sort_order: toSortOrder(row.sort_order),
     details,
   };
 }
@@ -53,7 +57,8 @@ export const sortPlaces = (places, sort = 'newest') => {
     case 'price-asc': return list.sort((a, b) => num(a) - num(b));
     case 'price-desc': return list.sort((a, b) => (num(b) === Infinity ? -1 : num(b)) - (num(a) === Infinity ? -1 : num(a)));
     case 'title': return list.sort((a, b) => a.title.localeCompare(b.title));
-    case 'featured': return list.sort((a, b) => Number(b.is_featured) - Number(a.is_featured) || new Date(b.created_at) - new Date(a.created_at));
+    // curated display order first (home page top-10 lists), then featured, then newest
+    case 'featured': return list.sort((a, b) => toSortOrder(a.sort_order) - toSortOrder(b.sort_order) || Number(b.is_featured) - Number(a.is_featured) || new Date(b.created_at) - new Date(a.created_at));
     default: return list.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
   }
 };
@@ -73,6 +78,7 @@ function packagePayload(form) {
     image_credit: clean(form.image_credit) || null,
     is_published: form.is_published !== false,
     is_featured: form.is_featured === true,
+    sort_order: toSortOrder(form.sort_order),
   };
 }
 

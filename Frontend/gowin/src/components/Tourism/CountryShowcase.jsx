@@ -8,7 +8,7 @@ import SmartImage from '../ui/SmartImage';
 import { countryFromLocation, coverImage, isNepal } from '../../lib/format';
 
 /** International destinations grouped by country — counts and photos come from real packages. */
-const CountryShowcase = ({ limit = 8 }) => {
+const CountryShowcase = ({ limit = 8, bg = 'bg-[#F8FAFC]' }) => {
   const { places, loaded } = usePlaceStore();
   const countries = useMemo(() => {
     const groups = new Map();
@@ -28,7 +28,7 @@ const CountryShowcase = ({ limit = 8 }) => {
   if (!loaded || countries.length === 0) return null;
 
   return (
-    <section className="py-14 sm:py-16 lg:py-20 bg-[#F8FAFC]">
+    <section className={`py-14 sm:py-16 lg:py-20 ${bg}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           label="Browse by country" title="Where in the" accent="world?"

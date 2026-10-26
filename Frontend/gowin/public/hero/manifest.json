@@ -1,0 +1,42 @@
+{
+  "sarangkot-annapurna": {
+    "file": "hero/sarangkot-annapurna.webp",
+    "width": 1920,
+    "height": 1080,
+    "bytes": 338380,
+    "credit": "Saroj Pandey, CC BY-SA 3.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Annapurna_Range_and_the_Phewa_Lake.jpg",
+    "verified": "Phewa Lake and Annapurna range from Sarangkot",
+    "library_key": "pokhara-sarangkot-view"
+  },
+  "kathmandu-boudhanath": {
+    "file": "hero/kathmandu-boudhanath.webp",
+    "width": 1916,
+    "height": 1078,
+    "bytes": 357436,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1605640840605-14ac1855827b",
+    "verified": "Boudhanath Stupa, Kathmandu (aerial)",
+    "library_key": "kathmandu-boudhanath"
+  },
+  "chitwan-jeep-safari": {
+    "file": "hero/chitwan-jeep-safari.webp",
+    "width": 1920,
+    "height": 1080,
+    "bytes": 221924,
+    "credit": "USAID Biodiversity & Forestry, Public domain, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:USAID_Measuring_Impact_Conservation_Enterprise_Retrospective_(Nepal;_National_Trust_for_Nature_Conservation)_(26428919808).jpg",
+    "verified": "Jeep safari, Chitwan grassland",
+    "library_key": "chitwan-jeep-safari"
+  },
+  "santorini-oia": {
+    "file": "hero/santorini-oia.webp",
+    "width": 1920,
+    "height": 1080,
+    "bytes": 178194,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1570077188670-e3a8d69ac5ff",
+    "verified": "Oia, Santorini",
+    "library_key": "santorini"
+  }
+}

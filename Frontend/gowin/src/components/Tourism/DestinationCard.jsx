@@ -7,11 +7,13 @@ import { formatPrice, shortDuration, isNepal, placePath, coverImage } from '../.
 
 const SIZES = {
   carousel: 'min-w-[250px] sm:min-w-[280px] w-[250px] sm:w-[280px] flex-shrink-0 snap-start',
+  // swipeable card on phones, ordinary grid cell from lg
+  responsive: 'min-w-[250px] w-[250px] flex-shrink-0 snap-start lg:min-w-0 lg:w-auto lg:flex-shrink',
   grid: 'w-full',
 };
 
 /** Destination/package card used in carousels and grids. Shows only real data. */
-const DestinationCard = ({ dest, index = 0, variant = 'grid', priority = false }) => {
+const DestinationCard = ({ dest, index = 0, variant = 'grid', priority = false, rank = null }) => {
   const price = formatPrice(dest.price);
   const duration = shortDuration(dest.duration);
   const nepal = isNepal(dest);
@@ -28,7 +30,7 @@ const DestinationCard = ({ dest, index = 0, variant = 'grid', priority = false }
         to={placePath(dest)}
         className="group relative flex flex-col h-full bg-white rounded-[22px] overflow-hidden border border-[#1E3A8A]/[0.07] shadow-[0_2px_14px_rgba(30,58,138,0.07)] hover:shadow-[0_22px_50px_rgba(30,58,138,0.2)] transition-all duration-500 hover:-translate-y-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#10B981]"
       >
-        <div className={`relative overflow-hidden flex-shrink-0 ${variant === 'carousel' ? 'h-[200px] sm:h-[220px]' : 'aspect-[4/3]'}`}>
+        <div className={`relative overflow-hidden flex-shrink-0 ${variant === 'grid' ? 'aspect-[4/3]' : 'h-[200px] sm:h-[220px]'}`}>
           <SmartImage
             src={coverImage(dest)}
             alt={`${dest.title}${dest.location ? ` – ${dest.location}` : ''}`}
@@ -52,6 +54,11 @@ const DestinationCard = ({ dest, index = 0, variant = 'grid', priority = false }
             {nepal ? <MapIcon className="w-2.5 h-2.5 text-[#34D399]" /> : <Globe className="w-2.5 h-2.5 text-[#34D399]" />}
             {nepal ? 'Nepal' : 'International'}
           </span>
+          {rank && (
+            <span aria-label={`Number ${rank}`} className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur border border-white text-[#1E3A8A] text-xs font-black flex items-center justify-center shadow-sm">
+              {String(rank).padStart(2, '0')}
+            </span>
+          )}
         </div>
 
         <div className="p-4 sm:p-5 flex flex-col flex-1">

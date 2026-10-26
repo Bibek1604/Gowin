@@ -1,7 +1,6 @@
 import React, { useMemo } from 'react';
 import Hero from './Hero';
-import NepalSpotlight from './NepalSpotlight';
-import DestinationCarousel from './DestinationCarousel';
+import DestinationGrid from './DestinationGrid';
 import CategoryGrid from './CategoryGrid';
 import CountryShowcase from './CountryShowcase';
 import ServicesGrid from './ServicesGrid';
@@ -27,27 +26,26 @@ const TourismHome = () => {
   const { nepal, world } = useMemo(() => {
     const published = selectPublished(places);
     return {
-      nepal: sortPlaces(published.filter(isNepal), 'featured').slice(0, 12),
-      world: sortPlaces(published.filter((p) => !isNepal(p)), 'featured').slice(0, 12),
+      nepal: sortPlaces(published.filter(isNepal), 'featured').slice(0, 10),
+      world: sortPlaces(published.filter((p) => !isNepal(p)), 'featured').slice(0, 10),
     };
   }, [places]);
 
   return (
     <main className="bg-white text-[#0F172A]">
       <Hero />
-      <NepalSpotlight />
-      <DestinationCarousel
-        id="nepal" label="Nepal collection" title="Explore" accent="Nepal"
-        subtitle="Kathmandu's living heritage, Pokhara's lakes, Chitwan's jungle, Lumbini's sacred garden and more."
+      <DestinationGrid
+        id="nepal" label="Top 10 in Nepal" title="Explore" accent="Nepal"
+        subtitle="Kathmandu's heritage, Pokhara's lakes, Chitwan's jungle, Lumbini's sacred garden and the hill towns in between: our pick of ten Nepal experiences."
         items={nepal} loading={!loaded} linkTo="/destinations/national" linkLabel="All Nepal tours" bg="bg-white"
       />
       <CategoryGrid />
-      <CountryShowcase />
-      <DestinationCarousel
-        id="world" label="International collection" title="World" accent="holidays"
-        subtitle="Beaches, cities, honeymoons and family holidays across Asia, the Middle East, Europe and beyond."
-        items={world} loading={!loaded} linkTo="/destinations/international" linkLabel="All holidays" bg="bg-white"
+      <DestinationGrid
+        id="world" label="Top 10 international" title="World" accent="holidays"
+        subtitle="Ten holidays beyond Nepal: beaches, islands, cities and honeymoons, with flights, hotels and visas arranged from Kathmandu."
+        items={world} loading={!loaded} linkTo="/destinations/international" linkLabel="All holidays" bg="bg-[#F8FAFC]"
       />
+      <CountryShowcase bg="bg-white" />
       <ServicesGrid />
       <WhyChooseUs />
       <HowItWorks />

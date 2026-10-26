@@ -7,6 +7,8 @@
 // verified against the real place before being added.
 // ============================================================
 
+import { SHOWCASE } from './showcase-content.mjs';
+
 export const NEPAL_SEASON = 'October – April';
 
 export const CATEGORIES = [
@@ -152,6 +154,23 @@ export const NEW_NEPAL = [
     description: 'A relaxed lakeside stay for couples: sunrise over the Annapurnas from Sarangkot, private boating on Phewa Lake, the World Peace Pagoda and candle-lit dinners by the water, with hotel upgrades and an optional tandem paragliding flight.',
     details: { best_time: NEPAL_SEASON, highlights: ['Lakeside boutique hotel', 'Sunrise excursion to Sarangkot', 'Private boat ride on Phewa Lake', 'World Peace Pagoda at sunset'] } },
 ];
+
+/** Merge the 20 showcase entries (scripts/showcase-content.mjs) into the plan:
+ *  description, duration, display order and full trip details. */
+const applyShowcase = (spec) => {
+  const s = SHOWCASE[spec.slug];
+  if (!s) return spec;
+  return { ...spec, description: s.description || spec.description, duration: s.duration || spec.duration, sort_order: s.sort_order, details: { ...(spec.details || {}), ...s.details } };
+};
+for (const id of Object.keys(KEEP)) KEEP[id] = applyShowcase(KEEP[id]);
+PHILIPPINES.forEach((p, i) => { PHILIPPINES[i] = applyShowcase(p); });
+NEW_NEPAL.forEach((p, i) => { NEW_NEPAL[i] = applyShowcase(p); });
+{
+  const known = new Set([...Object.values(KEEP), ...PHILIPPINES, ...NEW_NEPAL].map((p) => p.slug));
+  const missing = Object.keys(SHOWCASE).filter((slug) => !known.has(slug));
+  if (missing.length) throw new Error(`showcase-content.mjs refers to unknown package slugs: ${missing.join(', ')}`);
+}
+export { SHOWCASE };
 
 export const DEV_TEST_TESTIMONIAL_ID = '13d1d1c7-f8ce-4763-9e31-95b5aba2b94a';
 

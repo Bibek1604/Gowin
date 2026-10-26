@@ -11,6 +11,8 @@ ALTER TABLE tour_packages ADD COLUMN IF NOT EXISTS slug TEXT;
 ALTER TABLE tour_packages ADD COLUMN IF NOT EXISTS is_published BOOLEAN NOT NULL DEFAULT true;
 ALTER TABLE tour_packages ADD COLUMN IF NOT EXISTS is_featured BOOLEAN NOT NULL DEFAULT false;
 ALTER TABLE tour_packages ADD COLUMN IF NOT EXISTS image_credit TEXT;
+-- Manual display order for the home page and listings (lower first; 100 = default).
+ALTER TABLE tour_packages ADD COLUMN IF NOT EXISTS sort_order INTEGER NOT NULL DEFAULT 100;
 ALTER TABLE tour_packages ADD COLUMN IF NOT EXISTS updated_at TIMESTAMPTZ NOT NULL DEFAULT now();
 CREATE UNIQUE INDEX IF NOT EXISTS tour_packages_slug_key ON tour_packages (slug) WHERE slug IS NOT NULL;
 CREATE INDEX IF NOT EXISTS tour_packages_published_idx ON tour_packages (is_published, destination_type);

@@ -29,28 +29,28 @@ Migrations added in October 2026:
 | `20261026000000_platform_schema.sql` | Adds `slug`, `is_published`, `is_featured`, `image_credit` to packages; `slug`, `is_active`, `sort_order` to categories; booking/inquiry fields; `site_settings` and `admin_users` tables; the public `media` storage bucket. Idempotent, nothing is dropped. |
 | `20261026000001_rls_policies.sql` | Turns on row-level security everywhere: visitors read published content and submit forms; only sign-ins listed in `admin_users` can change anything. Apply **after** the content migration below. |
 
-One-off content correction (photos, categories, trekking removal, duplicates) — see `scripts/content-plan.mjs` for the full plan:
+One-off content correction (photos, categories, trekking removal, duplicates, the two home-page top-10 lists) — the plan is `scripts/content-plan.mjs`, the editorial text for the 20 showcase packages is `scripts/showcase-content.mjs`. Everything runs in the right order with one command:
 
 ```bash
 npm run db:backup -- backup.json      # snapshot first
-npx supabase db push --linked         # schema (part 1)
-npm run db:migrate-content            # add --dry-run to preview
-npx supabase db push --linked         # RLS (part 2)
-npm run db:verify                     # read-only checks
+npm run db:deploy -- --dry-run        # preview
+npm run db:deploy                     # schema → content → RLS → verify
 ```
 
-Other scripts: `npm run db:audit` (read-only overview of every table), `npm run media:build` (rebuilds `supabase/media/*.webp` from `sources.json`; needs Python 3 + Pillow).
+`db:deploy` is idempotent: re-running it re-applies the plan (prices are never touched). The individual steps are still available as `db:push`, `db:migrate-content` and `db:verify`. Other scripts: `npm run db:audit` (read-only overview of every table), `npm run media:build` (rebuilds `supabase/media/*.webp` from `sources.json`; needs Python 3 + Pillow).
 
 ## Admin panel
 
 * URL: `/login` → `/admin`. Accounts are Supabase Auth users whose email is also in the `admin_users` table (managed under **Settings → Admin access**). Create the login itself in the Supabase dashboard (*Authentication → Users → Invite*). Self-service sign-up should stay disabled.
-* **Destinations**: create/edit packages with multiple photos (uploaded to the `media` bucket and resized in the browser), trip details (best time, highlights, inclusions, exclusions, itinerary), publish/unpublish and featured toggles. Unpublish instead of delete to keep history.
+* **Destinations**: create/edit packages with multiple photos (uploaded to the `media` bucket and resized in the browser), trip details (best time, highlights, inclusions, exclusions, itinerary), publish/unpublish and featured toggles, and a **display order** (1–10 fills the home-page "Top 10 in Nepal" / "Top 10 international" lists; 100 is the default). Unpublish instead of delete to keep history.
 * **Categories**: travel styles with cover photo, order and active flag. Hiding a category hides its packages.
 * **Bookings / Messages**: requests from the website with status workflow, notes and reply links. **Testimonials**: only approved reviews are public. **Subscribers**: newsletter list with CSV export. **Settings**: phone, WhatsApp, email, address, hours, social links and SEO defaults used across the site.
 
 ## Images
 
 All destination photos are self-hosted in Supabase Storage (`media/library/*.webp`). The source, licence and verification note for each one is recorded in `supabase/media/sources.json` / `manifest.json`; Wikimedia Commons photos carry a credit that is displayed on the detail page.
+
+The four home-page hero backgrounds are bundled with the site (`public/hero/*.webp`, 1920×1080, built by the same pipeline; see `public/hero/manifest.json` and `src/data/heroSlides.js`), so the first screen always shows a real photograph even if the database is slow.
 
 ## Environment variables
 
@@ -73,6 +73,7 @@ src/
   components/ui/          shared building blocks (modal, forms, uploader, badges…)
   lib/                    helpers: SEO tags, storage upload, formatting, slugs, errors
   data/siteContent.js     static copy (services, FAQs, travel tips, defaults)
+  data/heroSlides.js      the four bundled hero photographs and their captions
 scripts/                  database audit, backup, content migration, verification, sitemap
 supabase/migrations/      schema history;   supabase/media/   verified image library
 docs/                     audit and verification reports
