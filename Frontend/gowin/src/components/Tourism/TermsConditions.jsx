@@ -1,118 +1,30 @@
-"use client"
-
-import React, { useEffect } from "react";
-import { motion } from "framer-motion";
-import { Scale, FileText, CheckCircle, AlertTriangle, ShieldCheck, HelpCircle, ArrowRight } from "lucide-react";
-import Navbar from "./Navbar";
+import React from 'react';
+import { ShieldCheck, CheckCircle, AlertTriangle, FileText, HelpCircle, Scale } from 'lucide-react';
+import PageHero from '../ui/PageHero';
+import { useSEO } from '../../lib/seo';
 
 const TermsConditions = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
+  useSEO({ title: 'Terms & Conditions', description: 'Terms and conditions for using the GoWin Travels website and travel services provided by Go Win International Travel and Tourism Pvt. Ltd.', path: '/terms' });
+  const block = 'bg-white rounded-2xl border border-gray-100 shadow-sm p-6';
+  const h = 'text-base font-bold text-[#0F172A] mb-2 flex items-center gap-2';
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
-      
-      {/* Hero Header */}
-      <section className="relative pt-48 pb-24 overflow-hidden bg-[#F1F3F4]">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-[#1E3A8A]/5 blur-[120px] rounded-full -mr-32 -mt-32" />
-        <div className="max-w-7xl mx-auto px-6 sm:px-12 relative z-10">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#1E3A8A]/5 text-[#1E3A8A] rounded-full text-xs font-black uppercase tracking-[0.3em] mb-8 border border-[#1E3A8A]/10">
-               <Scale className="w-4 h-4 text-[#10B981]" /> Legal Agreement
-            </div>
-            <h1 className="text-6xl md:text-8xl font-black text-[#1E3A8A] tracking-tighter leading-none mb-6">
-              Terms & <span className="text-[#10B981]">Conditions.</span>
-            </h1>
-            <p className="text-gray-400 text-xl font-medium max-w-2xl leading-relaxed">
-              Establishing clear expectations for your global adventures with Go Win International.
-            </p>
-          </motion.div>
+    <div className="bg-white">
+      <PageHero title="Terms & Conditions" label="Legal" subtitle="The agreement between you and Go Win International Travel and Tourism Pvt. Ltd. Last updated 14 March 2026." crumbs={[{ label: 'Terms & Conditions' }]} size="sm" />
+      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16 space-y-5 text-sm text-gray-600 leading-relaxed">
+        <article className={block}><h2 className={h}><ShieldCheck className="w-4 h-4 text-[#10B981]" /> 1. Agreement to terms</h2><p>By using our website or services you agree to these terms and conditions. Go Win International Travel and Tourism Pvt. Ltd. provides travel arrangement services subject to your compliance with the terms, conditions and notices contained here.</p></article>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <article className={block}><h2 className={h}><CheckCircle className="w-4 h-4 text-[#10B981]" /> 2. Bookings and confirmation</h2><p>Requests made through this website are enquiries, not confirmed bookings. All bookings are subject to availability. A booking is confirmed only once you approve our written quotation and the agreed payment or deposit has been received.</p></article>
+          <article className={block}><h2 className={h}><AlertTriangle className="w-4 h-4 text-[#10B981]" /> 3. Liability</h2><p>While we take care to arrange quality services, we are not liable for disruptions caused by third-party providers (airlines, hotels, transport operators), weather, natural events or decisions of government authorities and embassies.</p></article>
         </div>
-      </section>
-
-      {/* Main Content */}
-      <section className="py-24 bg-white">
-        <div className="max-w-4xl mx-auto px-6 sm:px-12">
-          
-          <div className="space-y-16">
-            
-            <section className="bg-gray-50 p-12 rounded-[3.5rem] border border-gray-100">
-               <h2 className="text-3xl font-black text-[#1E3A8A] mb-6 tracking-tight flex items-center gap-4">
-                  <ShieldCheck className="w-8 h-8 text-[#10B981]" /> 1. Agreement to Terms
-               </h2>
-               <p className="text-gray-500 font-medium leading-relaxed">
-                  By using our services or website, you agree to be bound by these Terms and Conditions. Go Win International Travel and Tourism Pvt. Ltd. provides luxury concierge and travel services subject to your compliance with all terms, conditions, and notices contained herein.
-               </p>
-            </section>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-               <div>
-                  <h3 className="text-xl font-black text-[#1E3A8A] mb-4 tracking-tight flex items-center gap-3">
-                     <CheckCircle className="w-5 h-5 text-[#10B981]" /> 2. Booking Verification
-                  </h3>
-                  <p className="text-gray-500 text-sm font-medium leading-relaxed">
-                     All bookings are subject to availability and confirmation. A booking is only finalized once full payment or a specified deposit is received and confirmed by our system.
-                  </p>
-               </div>
-               <div>
-                  <h3 className="text-xl font-black text-[#1E3A8A] mb-4 tracking-tight flex items-center gap-3">
-                     <AlertTriangle className="w-5 h-5 text-[#10B981]" /> 3. Liability Disclaimer
-                  </h3>
-                  <p className="text-gray-500 text-sm font-medium leading-relaxed">
-                     While we curate the highest quality experiences, Go Win is not liable for service disruptions caused by third-party providers (airlines, hotels) or unforeseen natural events.
-                  </p>
-               </div>
-            </div>
-
-            <section className="bg-[#1E3A8A] p-12 rounded-[3.5rem] text-white">
-               <h3 className="text-2xl font-black mb-6 tracking-tight flex items-center gap-4">
-                  <FileText className="w-6 h-6 text-[#10B981]" /> 4. User Responsibilities
-               </h3>
-               <div className="space-y-4">
-                  {[
-                    "Provide accurate personal and financial details",
-                    "Maintain valid travel documentation (Passports, Visas)",
-                    "Adhere to local laws and customs of destination countries",
-                    "Notify us immediately of any booking changes or cancellations"
-                  ].map((resp, i) => (
-                    <div key={i} className="flex gap-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-all">
-                       <ArrowRight className="w-5 h-5 text-[#10B981] shrink-0" />
-                       <p className="text-white/70 font-bold text-sm">{resp}</p>
-                    </div>
-                  ))}
-               </div>
-            </section>
-
-            <section>
-               <h3 className="text-2xl font-black text-[#1E3A8A] mb-6 tracking-tight flex items-center gap-4">
-                  <HelpCircle className="w-6 h-6 text-[#10B981]" /> 5. Intellectual Property
-               </h3>
-               <p className="text-gray-500 font-medium leading-relaxed">
-                  All content, branding, logos, and digital assets on this platform remain the exclusive property of Go Win International Travel and Tourism Pvt. Ltd. Unauthorized reproduction or use is strictly prohibited.
-               </p>
-            </section>
-
-            <section className="bg-gray-50 p-12 rounded-[3.5rem] border border-dashed border-gray-200 text-center">
-               <h3 className="text-xl font-black text-[#1E3A8A] mb-4 tracking-tight uppercase">Governing Law</h3>
-               <p className="text-gray-500 font-medium mb-8">
-                 These terms are governed by the laws of Nepal. Any disputes shall be subject to the exclusive jurisdiction of the courts of Kathmandu.
-               </p>
-               <div className="flex flex-col items-center">
-                  <p className="text-xs font-black text-[#10B981] uppercase tracking-[0.3em] mb-4">Last Updated</p>
-                  <p className="text-[#1E3A8A] font-black uppercase tracking-widest leading-relaxed">
-                    March 14, 2026
-                  </p>
-               </div>
-            </section>
-
-          </div>
-
-        </div>
+        <article className={`${block} !bg-[#1E3A8A] !border-[#1E3A8A] text-white`}>
+          <h2 className="text-base font-bold mb-3 flex items-center gap-2"><FileText className="w-4 h-4 text-[#34D399]" /> 4. Your responsibilities</h2>
+          <ul className="space-y-2">
+            {['Provide accurate personal, contact and payment details.', 'Hold valid travel documents (passport, visas, permits) for your itinerary.', 'Follow the local laws and customs of the places you visit.', 'Tell us promptly about any change or cancellation.'].map((t) => <li key={t} className="flex gap-2 text-white/85"><CheckCircle className="w-4 h-4 text-[#34D399] flex-shrink-0 mt-0.5" />{t}</li>)}
+          </ul>
+        </article>
+        <article className={block}><h2 className={h}><HelpCircle className="w-4 h-4 text-[#10B981]" /> 5. Prices and content</h2><p>Prices shown on this website are indicative starting prices per person and may change with season, availability, group size and exchange rates. The price in your written quotation is the price that applies. We correct errors and update content regularly but cannot guarantee that every detail is complete at all times.</p></article>
+        <article className={block}><h2 className={h}><ShieldCheck className="w-4 h-4 text-[#10B981]" /> 6. Intellectual property</h2><p>Content, branding and logos on this website belong to Go Win International Travel and Tourism Pvt. Ltd. or are used under licence; photographs from third parties are credited where required. Unauthorised reproduction is prohibited.</p></article>
+        <article className={`${block} text-center`}><h2 className="text-base font-bold text-[#0F172A] mb-2 flex items-center justify-center gap-2"><Scale className="w-4 h-4 text-[#10B981]" /> Governing law</h2><p>These terms are governed by the laws of Nepal. Any dispute is subject to the jurisdiction of the courts of Kathmandu.</p></article>
       </section>
     </div>
   );

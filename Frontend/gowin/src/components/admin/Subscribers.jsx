@@ -1,121 +1,66 @@
-import React, { useState, useEffect } from 'react';
-import { Mail, Trash2, Calendar, User, Search, UserCheck } from 'lucide-react';
-import { Toaster, toast } from 'react-hot-toast';
-import { supabase } from '../../supabaseClient';
+import React, { useEffect, useMemo, useState } from 'react';
+import { Mail, Trash2, Download, Users, Calendar } from 'lucide-react';
+import toast from 'react-hot-toast';
+import useSubscriberStore from '../Store/SubscriberStore';
+import AdminPage, { Toolbar, SearchBox, ErrorBanner } from './AdminPage';
+import ConfirmDialog from '../ui/ConfirmDialog';
+import EmptyState from '../ui/EmptyState';
+import { Skeleton } from '../ui/Skeleton';
+import { formatDate } from '../../lib/format';
+import { friendlyError } from '../../lib/errors';
 
 const Subscribers = () => {
-  const [subscribers, setSubscribers] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState('');
+  const { subscribers, fetchSubscribers, deleteSubscriber, isLoading, loaded, error } = useSubscriberStore();
+  const [search, setSearch] = useState('');
+  const [confirm, setConfirm] = useState(null);
+  const [busyId, setBusyId] = useState(null);
 
-  useEffect(() => {
-    fetchSubscribers();
-  }, []);
+  useEffect(() => { if (!loaded) fetchSubscribers(); }, [loaded, fetchSubscribers]);
+  const list = useMemo(() => subscribers.filter((s) => !search.trim() || s.email.toLowerCase().includes(search.trim().toLowerCase())), [subscribers, search]);
 
-  const fetchSubscribers = async () => {
-    setIsLoading(true);
-    const { data, error } = await supabase
-      .from('newsletter_subscribers')
-      .select('*')
-      .order('created_at', { ascending: false });
-
-    if (error) {
-      toast.error('Failed to fetch subscribers');
-    } else {
-      setSubscribers(data || []);
-    }
-    setIsLoading(false);
+  const exportCsv = () => {
+    const rows = [['email', 'subscribed_at'], ...subscribers.map((s) => [s.email, s.created_at])];
+    const csv = rows.map((r) => r.map((v) => `"${String(v ?? '').replace(/"/g, '""')}"`).join(',')).join('\n');
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = `gowin-subscribers-${new Date().toISOString().slice(0, 10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(a.href);
   };
 
-  const handleDelete = async (id) => {
-    if (window.confirm('Remove this subscriber from the mailing list?')) {
-      const { error } = await supabase
-        .from('newsletter_subscribers')
-        .delete()
-        .eq('id', id);
-
-      if (error) toast.error('Delete failed');
-      else {
-        toast.success('Subscriber removed');
-        fetchSubscribers();
-      }
-    }
+  const remove = async () => {
+    if (!confirm) return;
+    setBusyId(confirm.id);
+    const res = await deleteSubscriber(confirm.id);
+    setBusyId(null); setConfirm(null);
+    if (res.success) toast.success('Subscriber removed');
+    else toast.error(friendlyError(res.error));
   };
-
-  const filteredSubscribers = subscribers.filter(s => 
-    s.email?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
-    <div className="p-4 sm:p-6 lg:p-8 font-sans min-h-screen">
-      <Toaster position="top-right" />
-      <div className="max-w-4xl mx-auto">
-        
-        {/* Header */}
-        <div className="flex justify-between items-end mb-12">
-          <div>
-            <h1 className="text-3xl font-bold text-[#1E3A8A] tracking-tight">Newsletter Subscribers</h1>
-            <p className="text-gray-500 text-lg mt-1">Manage your mailing list for promotions</p>
-          </div>
-          <div className="bg-white rounded-[2rem] border border-gray-100 px-6 py-4 shadow-[0_4px_25px_rgb(0,0,0,0.02)]">
-            <span className="text-3xl font-bold text-[#1E3A8A]">{subscribers.length}</span>
-            <span className="text-gray-400 text-sm font-medium ml-2 uppercase tracking-widest">Active</span>
-          </div>
+    <AdminPage title="Newsletter subscribers" subtitle="Email addresses collected from the footer sign-up form."
+      actions={<button type="button" onClick={exportCsv} disabled={subscribers.length === 0} className="inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl border border-gray-200 bg-white text-sm font-semibold text-gray-600 hover:text-[#1E3A8A] disabled:opacity-50"><Download className="w-4 h-4" /> Export CSV</button>}>
+      <ErrorBanner error={error && friendlyError({ message: error })} />
+      <Toolbar><SearchBox value={search} onChange={setSearch} placeholder="Search by email…" /><p className="text-sm text-gray-500 self-center px-2"><strong className="text-[#0F172A]">{subscribers.length}</strong> subscriber{subscribers.length === 1 ? '' : 's'}</p></Toolbar>
+      {isLoading && !loaded ? (
+        <div className="space-y-2">{[1, 2, 3, 4].map((i) => <Skeleton key={i} className="h-14" />)}</div>
+      ) : list.length === 0 ? (
+        <EmptyState icon={Users} title="No subscribers" text="Sign-ups from the website footer will be listed here." />
+      ) : (
+        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm divide-y divide-gray-50">
+          {list.map((s) => (
+            <div key={s.id} className="flex items-center gap-3 px-4 sm:px-5 py-3">
+              <span className="w-9 h-9 rounded-xl bg-[#10B981]/10 text-[#059669] flex items-center justify-center flex-shrink-0"><Mail className="w-4 h-4" /></span>
+              <div className="min-w-0 flex-1"><p className="text-sm font-semibold text-[#0F172A] truncate">{s.email}</p><p className="text-[11px] text-gray-400 flex items-center gap-1"><Calendar className="w-3 h-3" /> Subscribed {formatDate(s.created_at)}</p></div>
+              <a href={`mailto:${s.email}`} className="text-xs font-semibold text-[#1E3A8A] hover:underline hidden sm:inline">Email</a>
+              <button type="button" onClick={() => setConfirm(s)} aria-label="Remove subscriber" className="w-9 h-9 rounded-lg text-red-500 bg-red-50 hover:bg-red-500 hover:text-white flex items-center justify-center"><Trash2 className="w-4 h-4" /></button>
+            </div>
+          ))}
         </div>
-
-        {/* Search */}
-        <div className="relative mb-10">
-          <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5" />
-          <input
-            type="text"
-            placeholder="Search by email..."
-            className="w-full pl-14 pr-6 py-4 bg-white border border-gray-100 rounded-[1.5rem] focus:outline-none focus:ring-2 focus:ring-[#10B981] shadow-[0_4px_20px_rgb(0,0,0,0.02)] transition-all font-medium"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
-
-        {/* Grid */}
-        {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {[1,2,3,4].map(i => <div key={i} className="h-24 bg-white rounded-3xl animate-pulse border border-gray-100" />)}
-          </div>
-        ) : filteredSubscribers.length === 0 ? (
-          <div className="text-center py-20 bg-white rounded-[2.5rem] border border-gray-100 shadow-sm">
-             <Mail className="w-16 h-16 text-gray-100 mx-auto mb-4" />
-             <p className="text-gray-400 font-medium">No active subscribers found.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {filteredSubscribers.map((subscriber) => (
-              <div key={subscriber.id} className="bg-white rounded-3xl border border-gray-100 shadow-[0_4px_20px_rgb(0,0,0,0.02)] p-6 hover:shadow-lg transition-all duration-300 flex items-center justify-between group">
-                <div className="flex items-center gap-4">
-                  <div className="w-12 h-12 rounded-2xl bg-[#10B981]/10 flex items-center justify-center text-[#10B981]">
-                     <Mail className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <h3 className="font-bold text-[#1E3A8A] leading-none mb-2">{subscriber.email}</h3>
-                    <div className="flex items-center gap-2 text-[10px] font-bold text-gray-400 uppercase tracking-widest">
-                       <Calendar className="w-3 h-3" />
-                       Subscribed {new Date(subscriber.created_at).toLocaleDateString()}
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                   <button 
-                     onClick={() => handleDelete(subscriber.id)}
-                     className="p-3 rounded-xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all shadow-sm"
-                   >
-                     <Trash2 className="w-4 h-4" />
-                   </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-    </div>
+      )}
+      <ConfirmDialog open={!!confirm} danger loading={busyId === confirm?.id} title="Remove this subscriber?" confirmLabel="Remove" message={<><strong>{confirm?.email}</strong> will be removed from the mailing list.</>} onConfirm={remove} onCancel={() => setConfirm(null)} />
+    </AdminPage>
   );
 };
 

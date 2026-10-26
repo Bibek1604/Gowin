@@ -1,82 +1,65 @@
 import { create } from 'zustand';
 import { supabase } from '../../supabaseClient';
+import { clean } from '../../lib/format';
 
-const useBookingStore = create((set) => ({
+export const BOOKING_STATUSES = ['Pending', 'Confirmed', 'Completed', 'Cancelled'];
+
+const MISSING_COLUMN = (error) => error && (error.code === '42703' || /column .* does not exist/i.test(error.message || ''));
+
+const useBookingStore = create((set, get) => ({
   bookings: [],
   isLoading: false,
+  error: null,
+  loaded: false,
 
   fetchBookings: async () => {
-    set({ isLoading: true });
-    const { data, error } = await supabase
-      .from('bookings')
-      .select('*, tour_packages(title)')
-      .order('booking_date', { ascending: false });
-
+    if (get().isLoading) return;
+    set({ isLoading: true, error: null });
+    const { data, error } = await supabase.from('bookings').select('*').order('booking_date', { ascending: false });
     if (error) {
-      console.error('Error fetching bookings:', error);
-    } else {
-      set({ bookings: data || [] });
+      console.error('fetchBookings:', error.message);
+      set({ error: error.message, isLoading: false, loaded: true });
+      return;
     }
-    set({ isLoading: false });
+    set({ bookings: data || [], isLoading: false, loaded: true });
   },
 
-  addBooking: async (bookingData) => {
-    const { data, error } = await supabase
-      .from('bookings')
-      .insert([{
-        tour_id: bookingData.tour_id || bookingData.placeId,
-        user_name: bookingData.name || bookingData.user_name,
-        user_email: bookingData.email || bookingData.user_email,
-        num_people: parseInt(bookingData.num_people || bookingData.guests, 10) || 1,
-        travel_date: bookingData.travel_date || bookingData.date,
-        phone: bookingData.phone || null,
-        status: 'Pending'
-      }])
-      .select();
-
-    if (error) {
-      console.error('Error adding booking:', error);
-      return { success: false, error };
+  /** Public booking request. Resolves { success, data, error }. */
+  addBooking: async (form) => {
+    const full = {
+      tour_id: form.tour_id || null,
+      tour_title: clean(form.tour_title) || null,
+      user_name: clean(form.user_name),
+      user_email: clean(form.user_email).toLowerCase(),
+      phone: clean(form.phone) || null,
+      num_people: Math.max(1, parseInt(form.num_people, 10) || 1),
+      travel_date: clean(form.travel_date) || null,
+      address: clean(form.address) || null,
+      message: clean(form.message) || null,
+      status: 'Pending',
+    };
+    let { data, error } = await supabase.from('bookings').insert(full).select('*').single();
+    if (MISSING_COLUMN(error)) {
+      // Database not yet migrated: store the fields the legacy table knows about.
+      const { tour_title, address, message, ...legacy } = full; // eslint-disable-line no-unused-vars
+      ({ data, error } = await supabase.from('bookings').insert(legacy).select('*').single());
     }
-
-    set((state) => ({
-      bookings: [data[0], ...state.bookings],
-    }));
-    return { success: true };
+    if (error) return { success: false, error };
+    set((s) => ({ bookings: [data, ...s.bookings] }));
+    return { success: true, data };
   },
 
-  updateBookingStatus: async (id, status) => {
-    const { data, error } = await supabase
-      .from('bookings')
-      .update({ status })
-      .eq('id', id)
-      .select();
-
-    if (error) {
-      console.error('Error updating booking status:', error);
-      return { success: false, error };
-    }
-
-    set((state) => ({
-      bookings: state.bookings.map((b) => (b.id === id ? data[0] : b)),
-    }));
-    return { success: true };
+  updateBooking: async (id, patch) => {
+    const { data, error } = await supabase.from('bookings').update(patch).eq('id', id).select('*').single();
+    if (error) return { success: false, error };
+    set((s) => ({ bookings: s.bookings.map((b) => (b.id === id ? data : b)) }));
+    return { success: true, data };
   },
 
   deleteBooking: async (id) => {
-    const { error } = await supabase
-      .from('bookings')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      console.error('Error deleting booking:', error);
-      return { success: false, error };
-    }
-
-    set((state) => ({
-      bookings: state.bookings.filter((b) => b.id !== id),
-    }));
+    const { error } = await supabase.from('bookings').delete().eq('id', id);
+    if (error) return { success: false, error };
+    set((s) => ({ bookings: s.bookings.filter((b) => b.id !== id) }));
     return { success: true };
   },
 }));

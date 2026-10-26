@@ -1,238 +1,110 @@
-import React, { useState, useRef } from 'react';
-import { MapPin, Phone, Mail, Clock, Facebook, Send, CheckCircle, ShieldCheck } from 'lucide-react';
-import { supabase } from '../../supabaseClient';
-import toast, { Toaster } from 'react-hot-toast';
-import { motion } from 'framer-motion';
+import React, { useRef, useState } from 'react';
+import { MapPin, Phone, Mail, Clock, Facebook, Instagram, Send, CheckCircle, MessageCircle } from 'lucide-react';
+import toast from 'react-hot-toast';
+import useMessageStore from '../Store/MessageStore';
+import useSettingsStore from '../Store/SettingsStore';
+import useCategoryStore, { selectActive } from '../Store/CategoryStore';
+import PageHero from '../ui/PageHero';
+import { Field, Input, Select, Textarea } from '../ui/FormField';
+import { useSEO, agencyJsonLd } from '../../lib/seo';
+import { useHeroImage } from '../../lib/useHeroImage';
+import { friendlyError } from '../../lib/errors';
+import { whatsappLink } from '../../lib/format';
 
-const contactInfo = [
-  {
-    icon: MapPin,
-    label: 'Our Office',
-    value: 'Shankhamul-31, Kathmandu, Nepal',
-    color: 'bg-[#1E3A8A]/8 text-[#1E3A8A]',
-  },
-  {
-    icon: Phone,
-    label: 'Call Us',
-    value: '+977 9851410966',
-    href: 'tel:+9779851410966',
-    color: 'bg-[#10B981]/8 text-[#10B981]',
-  },
-  {
-    icon: Mail,
-    label: 'Email Us',
-    value: 'Info.gowintravels@gmail.com',
-    href: 'mailto:Info.gowintravels@gmail.com',
-    color: 'bg-[#1E3A8A]/8 text-[#1E3A8A]',
-  },
-  {
-    icon: Clock,
-    label: 'Office Hours',
-    value: 'Sun–Fri, 9am–6pm NPT',
-    color: 'bg-emerald-50 text-emerald-600',
-  },
-];
+const INITIAL = { name: '', email: '', phone: '', destination: '', message: '' };
 
 const Contact = () => {
-  const [formData, setFormData] = useState({ name: '', email: '', destination: '', message: '' });
-  const [isLoading, setIsLoading] = useState(false);
-  const [submitted, setSubmitted] = useState(false);
-  const submittingRef = useRef(false);
+  const { addMessage } = useMessageStore();
+  const { settings } = useSettingsStore();
+  const { categories } = useCategoryStore();
+  const [form, setForm] = useState(INITIAL);
+  const [errors, setErrors] = useState({});
+  const [busy, setBusy] = useState(false);
+  const [sent, setSent] = useState(false);
+  const busyRef = useRef(false);
 
-  const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
+  const heroImage = useHeroImage(/kathmandu|bhaktapur/i, { nepalOnly: true });
+  useSEO({ title: 'Contact Us', description: `Contact GoWin International Travel & Tourism in Kathmandu: ${settings.phone}, ${settings.email}. ${settings.office_hours}.`, path: '/contact', image: heroImage || undefined, jsonLd: agencyJsonLd(settings) });
 
-  const handleSubmit = async (e) => {
+  const update = (key) => (e) => { setForm((f) => ({ ...f, [key]: e.target.value })); setErrors((er) => ({ ...er, [key]: '' })); };
+  const submit = async (e) => {
     e.preventDefault();
-    if (submittingRef.current) return;
-    submittingRef.current = true;
-    setIsLoading(true);
-    try {
-      const { error } = await supabase.from('contact_messages').insert([{
-        name: formData.name,
-        email: formData.email,
-        destination: formData.destination,
-        message: formData.message,
-      }]);
-      if (error) {
-        toast.error('Something went wrong. Please try again.');
-      } else {
-        setSubmitted(true);
-        toast.success('Message sent! We\'ll be in touch shortly.');
-        setFormData({ name: '', email: '', destination: '', message: '' });
-        setTimeout(() => setSubmitted(false), 8000);
-      }
-    } finally {
-      submittingRef.current = false;
-      setIsLoading(false);
-    }
+    if (busyRef.current) return;
+    const er = {};
+    if (form.name.trim().length < 2) er.name = 'Please enter your name.';
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email.trim())) er.email = 'Enter a valid email address.';
+    if (form.message.trim().length < 10) er.message = 'Please write a few words about what you need.';
+    if (Object.keys(er).length) { setErrors(er); return; }
+    busyRef.current = true; setBusy(true);
+    const res = await addMessage(form);
+    busyRef.current = false; setBusy(false);
+    if (res.success) { setSent(true); setForm(INITIAL); toast.success('Message sent — we will reply within one working day.'); }
+    else toast.error(friendlyError(res.error, 'Could not send your message. Please email or call us instead.'));
   };
 
+  const wa = whatsappLink(settings.whatsapp || settings.phone, 'Hello GoWin Travels, I have a question.');
+  const info = [
+    settings.address && { Icon: MapPin, label: 'Office', value: settings.address },
+    settings.phone && { Icon: Phone, label: 'Phone', value: settings.phone, href: `tel:${settings.phone.replace(/\s+/g, '')}` },
+    wa && { Icon: MessageCircle, label: 'WhatsApp', value: settings.whatsapp || settings.phone, href: wa, external: true },
+    settings.email && { Icon: Mail, label: 'Email', value: settings.email, href: `mailto:${settings.email}` },
+    settings.office_hours && { Icon: Clock, label: 'Office hours', value: settings.office_hours },
+  ].filter(Boolean);
+
   return (
-    <div className="bg-[#F8FAFC] font-sans pt-16">
-      <Toaster position="top-right" />
+    <div className="bg-[#F8FAFC] min-h-screen">
+      <PageHero title="Get in touch" label="Contact" subtitle="Questions about a package, a visa, flights or a custom trip? Message us and a member of the Kathmandu team will reply." image={heroImage} crumbs={[{ label: 'Contact' }]} size="sm" />
 
-      {/* Hero */}
-      <section className="relative h-48 sm:h-64 overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1605640840605-14ac1855827b?auto=format&fit=crop&w=1600&q=80"
-          alt="Contact GoWin Travels"
-          className="w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0B1220]/92 via-[#1E3A8A]/80 to-transparent" />
-        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
-          <h1 className="heading-font text-2xl sm:text-3xl md:text-4xl text-white mb-2">Contact Us</h1>
-          <p className="text-white/65 text-sm sm:text-base max-w-md">We'd love to hear from you — let's plan your next adventure together.</p>
-        </div>
-      </section>
-
-      <section className="py-12 sm:py-16 md:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col lg:flex-row gap-8 lg:gap-12">
-
-            {/* Left: Contact Info */}
-            <div className="lg:w-5/12 space-y-4">
-              <div>
-                <span className="section-label mb-3 block">Get In Touch</span>
-                <h2 className="heading-font text-2xl sm:text-3xl text-[#1E3A8A] mb-3">We're Here to Help</h2>
-                <p className="text-gray-500 text-sm leading-relaxed">
-                  Whether you're planning a Himalayan trek or a beach holiday in the Maldives, our team is ready to craft the perfect itinerary for you.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
-                {contactInfo.map((item, idx) => {
-                  const Icon = item.icon;
-                  const content = (
-                    <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md hover:-translate-y-0.5 transition-all duration-300">
-                      <div className={`w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0 ${item.color}`}>
-                        <Icon className="w-5 h-5" />
-                      </div>
-                      <div className="min-w-0">
-                        <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-0.5">{item.label}</p>
-                        <p className="text-sm font-bold text-[#1E3A8A] truncate">{item.value}</p>
-                      </div>
-                    </div>
-                  );
-                  return item.href ? (
-                    <a key={idx} href={item.href}>{content}</a>
-                  ) : (
-                    <div key={idx}>{content}</div>
-                  );
-                })}
-              </div>
-
-              {/* Social */}
-              <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Follow Us</p>
-                <a
-                  href="https://www.facebook.com/share/15cfo9obmC3/?mibextid=wwXIfr"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-3 text-sm font-semibold text-[#1877F2] hover:text-[#1E3A8A] transition-colors"
-                >
-                  <Facebook className="w-5 h-5" />
-                  GoWin Travels on Facebook
-                </a>
-              </div>
-
-              {/* Live map — real embed, not a static photo */}
-              <div className="relative rounded-xl overflow-hidden h-40 sm:h-48 border border-gray-100 shadow-sm">
-                <iframe
-                  title="GoWin Travels office — Shankhamul, Kathmandu"
-                  src="https://maps.google.com/maps?q=Shankhamul%2C%20Kathmandu%2C%20Nepal&t=&z=14&ie=UTF8&iwloc=&output=embed"
-                  className="w-full h-full border-0"
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
-              </div>
-            </div>
-
-            {/* Right: Contact Form */}
-            <div className="lg:w-7/12">
-              <div className="bg-white p-6 sm:p-8 md:p-10 rounded-2xl sm:rounded-3xl shadow-sm border border-gray-100 h-full">
-                <div className="flex items-center gap-3 mb-7">
-                  <div className="w-10 h-10 bg-[#1E3A8A]/8 rounded-xl flex items-center justify-center text-[#1E3A8A]">
-                    <ShieldCheck className="w-5 h-5" />
-                  </div>
-                  <div>
-                    <h3 className="text-lg font-bold text-[#1E3A8A]">Send Us a Message</h3>
-                    <p className="text-xs text-gray-400">We reply within 24 hours</p>
-                  </div>
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 grid grid-cols-1 lg:grid-cols-12 gap-8">
+        <div className="lg:col-span-5 space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-3">
+            {info.map(({ Icon, label, value, href, external }) => {
+              const body = (
+                <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md transition-shadow h-full">
+                  <span className="w-11 h-11 rounded-xl bg-[#1E3A8A]/8 text-[#1E3A8A] flex items-center justify-center flex-shrink-0"><Icon className="w-5 h-5" /></span>
+                  <span className="min-w-0"><span className="block text-[10px] font-bold uppercase tracking-widest text-gray-400">{label}</span><span className="block text-sm font-bold text-[#0F172A] break-words">{value}</span></span>
                 </div>
-
-                <form onSubmit={handleSubmit} className="space-y-5">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                    <div>
-                      <label className="text-xs font-semibold text-[#1E3A8A] block mb-1.5">Full Name *</label>
-                      <input
-                        type="text" name="name" value={formData.name} onChange={handleChange} required
-                        className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 focus:border-[#10B981]/50 focus:bg-white transition-all"
-                        placeholder="Your full name"
-                      />
-                    </div>
-                    <div>
-                      <label className="text-xs font-semibold text-[#1E3A8A] block mb-1.5">Email Address *</label>
-                      <input
-                        type="email" name="email" value={formData.email} onChange={handleChange} required
-                        className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 focus:border-[#10B981]/50 focus:bg-white transition-all"
-                        placeholder="your@email.com"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-semibold text-[#1E3A8A] block mb-1.5">Interested In</label>
-                    <select
-                      name="destination" value={formData.destination} onChange={handleChange}
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 focus:bg-white transition-all appearance-none cursor-pointer"
-                    >
-                      <option value="">Select a destination region</option>
-                      <option value="nepal-trekking">Nepal — Trekking & Adventure</option>
-                      <option value="nepal-cultural">Nepal — Cultural & Pilgrimage</option>
-                      <option value="nepal-wildlife">Nepal — Wildlife Safari</option>
-                      <option value="europe">Europe & Mediterranean</option>
-                      <option value="asia-pacific">Asia & Pacific</option>
-                      <option value="maldives">Maldives & Beach Escapes</option>
-                      <option value="africa">African Safaris</option>
-                      <option value="other">Something Else</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="text-xs font-semibold text-[#1E3A8A] block mb-1.5">Your Message *</label>
-                    <textarea
-                      name="message" value={formData.message} onChange={handleChange} rows="5" required
-                      className="w-full bg-gray-50 border border-gray-100 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#10B981]/20 focus:border-[#10B981]/50 focus:bg-white transition-all resize-none"
-                      placeholder="Tell us about your dream trip, travel dates, group size, budget..."
-                    />
-                  </div>
-
-                  {submitted && (
-                    <div className="flex items-center gap-3 text-emerald-600 bg-emerald-50 px-4 py-3 rounded-xl border border-emerald-200 text-sm font-semibold">
-                      <CheckCircle className="w-5 h-5 flex-shrink-0" />
-                      Message received! Our team will respond within 24 hours.
-                    </div>
-                  )}
-
-                  <button
-                    type="submit" disabled={isLoading}
-                    className="w-full flex items-center justify-center gap-2.5 bg-[#1E3A8A] hover:bg-[#172554] text-white py-3.5 rounded-xl font-semibold text-sm transition-all shadow-lg shadow-[#1E3A8A]/20 disabled:opacity-60 disabled:cursor-not-allowed active:scale-[0.98]"
-                  >
-                    {isLoading ? (
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-                    ) : (
-                      <><Send className="w-4 h-4" /> Send Message</>
-                    )}
-                  </button>
-
-                  <p className="text-center text-[11px] text-gray-400">
-                    🔒 Your information is secure and will never be shared.
-                  </p>
-                </form>
-              </div>
-            </div>
+              );
+              return href ? <a key={label} href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>{body}</a> : <div key={label}>{body}</div>;
+            })}
           </div>
+          {(settings.facebook_url || settings.instagram_url) && (
+            <div className="bg-white p-4 rounded-xl border border-gray-100 shadow-sm flex items-center gap-3">
+              <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mr-auto">Follow us</span>
+              {settings.facebook_url && <a href={settings.facebook_url} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-10 h-10 rounded-xl bg-gray-50 text-[#1877F2] flex items-center justify-center hover:bg-[#1877F2] hover:text-white transition-colors"><Facebook className="w-4 h-4" /></a>}
+              {settings.instagram_url && <a href={settings.instagram_url} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-xl bg-gray-50 text-[#E1306C] flex items-center justify-center hover:bg-[#E1306C] hover:text-white transition-colors"><Instagram className="w-4 h-4" /></a>}
+            </div>
+          )}
+          {settings.map_query && (
+            <div className="rounded-2xl overflow-hidden border border-gray-100 shadow-sm h-56 bg-gray-100">
+              <iframe title="Office location map" src={`https://maps.google.com/maps?q=${encodeURIComponent(settings.map_query)}&z=15&output=embed`} className="w-full h-full border-0" loading="lazy" referrerPolicy="no-referrer-when-downgrade" allowFullScreen />
+            </div>
+          )}
         </div>
+
+        <form onSubmit={submit} noValidate className="lg:col-span-7 bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sm:p-8 space-y-5 self-start">
+          <div><h2 className="text-lg font-bold text-[#0F172A]">Send us a message</h2><p className="text-xs text-gray-400 mt-0.5">We reply within one working day.</p></div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Field label="Full name" required error={errors.name} htmlFor="c-name"><Input id="c-name" value={form.name} onChange={update('name')} error={errors.name} autoComplete="name" /></Field>
+            <Field label="Email" required error={errors.email} htmlFor="c-email"><Input id="c-email" type="email" value={form.email} onChange={update('email')} error={errors.email} autoComplete="email" /></Field>
+            <Field label="Phone / WhatsApp" htmlFor="c-phone"><Input id="c-phone" type="tel" value={form.phone} onChange={update('phone')} autoComplete="tel" placeholder="Optional" /></Field>
+            <Field label="I'm interested in" htmlFor="c-dest">
+              <Select id="c-dest" value={form.destination} onChange={update('destination')}>
+                <option value="">Select a topic</option>
+                <option value="Nepal tours">Nepal tours</option>
+                <option value="International holidays">International holidays</option>
+                {selectActive(categories).map((c) => <option key={c.id} value={c.name}>{c.name}</option>)}
+                <option value="Flights & hotels">Flights &amp; hotels</option>
+                <option value="Visa assistance">Visa assistance</option>
+                <option value="Travel insurance">Travel insurance</option>
+                <option value="Other">Something else</option>
+              </Select>
+            </Field>
+          </div>
+          <Field label="Message" required error={errors.message} htmlFor="c-message"><Textarea id="c-message" rows={5} value={form.message} onChange={update('message')} error={errors.message} placeholder="Travel dates, group size, budget, questions…" /></Field>
+          {sent && <p className="flex items-center gap-2 text-sm font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 rounded-xl px-4 py-3"><CheckCircle className="w-4 h-4" /> Message received. We'll get back to you shortly.</p>}
+          <button type="submit" disabled={busy} className="btn-secondary w-full justify-center !py-3.5 disabled:opacity-60">{busy ? <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <><Send className="w-4 h-4" /> Send message</>}</button>
+        </form>
       </section>
     </div>
   );

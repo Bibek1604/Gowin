@@ -1,0 +1,614 @@
+{
+  "amsterdam-canal": {
+    "file": "amsterdam-canal.webp",
+    "width": 1272,
+    "height": 1600,
+    "bytes": 433248,
+    "credit": "GoWin Travels",
+    "source_page": "",
+    "verified": "Amsterdam canal"
+  },
+  "bali-nusa-penida": {
+    "file": "bali-nusa-penida.webp",
+    "width": 1067,
+    "height": 1600,
+    "bytes": 223174,
+    "credit": "GoWin Travels",
+    "source_page": "",
+    "verified": "Nusa Penida coast, Bali"
+  },
+  "bali-ulun-danu": {
+    "file": "bali-ulun-danu.webp",
+    "width": 1206,
+    "height": 1600,
+    "bytes": 115938,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1537996194471-e657df975ab4",
+    "verified": "Ulun Danu Beratan temple, Bali"
+  },
+  "bandipur-bazaar": {
+    "file": "bandipur-bazaar.webp",
+    "width": 1600,
+    "height": 1089,
+    "bytes": 249750,
+    "credit": "Rajesh Dhungana, CC BY-SA 4.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Ganesh_Temple_Bandipur_Bandipur_VDC_Tanahau_Gandak_Pradesh_Nepal_Rajesh_Dhungana.jpg",
+    "verified": "Bindabasini temple square, Bandipur"
+  },
+  "bangkok-wat-arun": {
+    "file": "bangkok-wat-arun.webp",
+    "width": 1067,
+    "height": 1600,
+    "bytes": 135892,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1755251042986-91270ffd76f5",
+    "verified": "Wat Arun, Bangkok"
+  },
+  "barcelona-sagrada": {
+    "file": "barcelona-sagrada.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 161040,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1745091723338-cbe6561908ea",
+    "verified": "Sagrada Familia, Barcelona"
+  },
+  "bardia-tiger": {
+    "file": "bardia-tiger.webp",
+    "width": 1600,
+    "height": 947,
+    "bytes": 244154,
+    "credit": "Robirob4433, CC BY-SA 4.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Bengal_tiger_walking_in_tall_grass_in_Dalla_Community_Forest,_Bardia,_Nepal.png",
+    "verified": "Bengal tiger, Bardia National Park"
+  },
+  "begnas-lake": {
+    "file": "begnas-lake.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 169586,
+    "credit": "Shadow Ayush, CC BY-SA 4.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Begnas_Lake,_Pokhara,_Kaski.jpg",
+    "verified": "Begnas Lake, Kaski"
+  },
+  "bhaktapur-nyatapola": {
+    "file": "bhaktapur-nyatapola.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 159620,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1706188047078-0ba67733fa45",
+    "verified": "Nyatapola temple, Bhaktapur"
+  },
+  "bhotekoshi-bridge": {
+    "file": "bhotekoshi-bridge.webp",
+    "width": 1600,
+    "height": 1062,
+    "bytes": 223396,
+    "credit": "Sudan Shrestha, CC BY-SA 3.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Bhote_Koshi_Bridge.JPG",
+    "verified": "Bungee suspension bridge over the Bhote Koshi gorge"
+  },
+  "cape-town-table-mountain": {
+    "file": "cape-town-table-mountain.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 224836,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1744604030401-b24c5975a574",
+    "verified": "Table Mountain, Cape Town"
+  },
+  "chitwan-jeep-safari": {
+    "file": "chitwan-jeep-safari.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 195368,
+    "credit": "USAID Biodiversity & Forestry, Public domain, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:USAID_Measuring_Impact_Conservation_Enterprise_Retrospective_(Nepal;_National_Trust_for_Nature_Conservation)_(26428919808).jpg",
+    "verified": "Jeep safari, Chitwan grassland"
+  },
+  "chitwan-rhino": {
+    "file": "chitwan-rhino.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 335280,
+    "credit": "Aditya Pal, CC BY-SA 4.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Greater_one-horned_rhinoceros_at_Chitwan.jpg",
+    "verified": "One-horned rhino with calf, Chitwan"
+  },
+  "chitwan-rhino-2": {
+    "file": "chitwan-rhino-2.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 281438,
+    "credit": "Charles J. Sharp, CC BY-SA 4.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Indian_rhinoceros_(Rhinoceros_unicornis)_6.jpg",
+    "verified": "One-horned rhino, Chitwan"
+  },
+  "dubai-burj": {
+    "file": "dubai-burj.webp",
+    "width": 1067,
+    "height": 1600,
+    "bytes": 169212,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1746731341047-76b2652ea843",
+    "verified": "Burj Khalifa, Dubai"
+  },
+  "dubai-skyline": {
+    "file": "dubai-skyline.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 162994,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1512453979798-5ea266f8880c",
+    "verified": "Dubai skyline with Burj Khalifa"
+  },
+  "dubrovnik-old-town": {
+    "file": "dubrovnik-old-town.webp",
+    "width": 1600,
+    "height": 1029,
+    "bytes": 254338,
+    "credit": "Diego Delso, CC BY-SA 3.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Casco_viejo_de_Dubrovnik,_Croacia,_2014-04-14,_DD_07.JPG",
+    "verified": "Dubrovnik old town and walls"
+  },
+  "egypt-giza": {
+    "file": "egypt-giza.webp",
+    "width": 1600,
+    "height": 1072,
+    "bytes": 138810,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1710069441986-82759c8a200c",
+    "verified": "Pyramids of Giza"
+  },
+  "everest-aerial": {
+    "file": "everest-aerial.webp",
+    "width": 1600,
+    "height": 870,
+    "bytes": 184522,
+    "credit": "Mount_Everest_as_seen_from_Drukair2.jpg: shrimpo1967 derivative work: Papa Lima Whiskey 2 (talk), CC BY-SA 2.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Mount_Everest_as_seen_from_Drukair2_PLW_edit.jpg",
+    "verified": "Mount Everest from the air"
+  },
+  "everest-khumbu": {
+    "file": "everest-khumbu.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 284132,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1544735716-392fe2489ffa",
+    "verified": "Khumbu valley with chorten, Everest region"
+  },
+  "great-wall": {
+    "file": "great-wall.webp",
+    "width": 1600,
+    "height": 1200,
+    "bytes": 192748,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1693721783596-afebf1d4354f",
+    "verified": "Great Wall of China"
+  },
+  "iceland-aurora": {
+    "file": "iceland-aurora.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 133334,
+    "credit": "AstroAnthony, CC BY 4.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Church_of_light.jpg",
+    "verified": "Aurora over Vik church, Iceland"
+  },
+  "ilam-tea-garden": {
+    "file": "ilam-tea-garden.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 222600,
+    "credit": "GoWin Travels",
+    "source_page": "",
+    "verified": "Tea garden, Ilam"
+  },
+  "janakpur-janaki-mandir": {
+    "file": "janakpur-janaki-mandir.webp",
+    "width": 1600,
+    "height": 670,
+    "bytes": 194022,
+    "credit": "GoWin Travels",
+    "source_page": "",
+    "verified": "Janaki Mandir, Janakpur"
+  },
+  "japan-fuji": {
+    "file": "japan-fuji.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 124262,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1490806843957-31f4c9a91c65",
+    "verified": "Mount Fuji with cherry blossom"
+  },
+  "kathmandu-boudhanath": {
+    "file": "kathmandu-boudhanath.webp",
+    "width": 1600,
+    "height": 899,
+    "bytes": 291490,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1605640840605-14ac1855827b",
+    "verified": "Boudhanath Stupa, Kathmandu (aerial)"
+  },
+  "kathmandu-pashupatinath": {
+    "file": "kathmandu-pashupatinath.webp",
+    "width": 1600,
+    "height": 792,
+    "bytes": 252986,
+    "credit": "Nabin K. Sapkota, CC BY-SA 4.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:The_Pashupatinath_Temple_27.jpg",
+    "verified": "Pashupatinath temple complex (aerial)"
+  },
+  "kathmandu-swayambhunath": {
+    "file": "kathmandu-swayambhunath.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 153626,
+    "credit": "Nirmal Dulal, CC BY-SA 4.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Swayambhunath_temple_-_an_ancient_religious_architecture_of_Nepal.jpg",
+    "verified": "Swayambhunath stupa with prayer flags"
+  },
+  "kenya-savanna": {
+    "file": "kenya-savanna.webp",
+    "width": 1600,
+    "height": 1066,
+    "bytes": 124548,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1547471080-7cc2caa01a7e",
+    "verified": "Savanna sunset, Kenya"
+  },
+  "kyoto-yasaka": {
+    "file": "kyoto-yasaka.webp",
+    "width": 1600,
+    "height": 1068,
+    "bytes": 221782,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1493976040374-85c8e12f0c0e",
+    "verified": "Yasaka pagoda street, Kyoto"
+  },
+  "lumbini-maya-devi": {
+    "file": "lumbini-maya-devi.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 106240,
+    "credit": "GoWin Travels",
+    "source_page": "",
+    "verified": "Maya Devi Temple, Lumbini"
+  },
+  "machu-picchu": {
+    "file": "machu-picchu.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 186166,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1568805746970-0bbae56ab18b",
+    "verified": "Machu Picchu, Peru"
+  },
+  "maldives-villas": {
+    "file": "maldives-villas.webp",
+    "width": 1280,
+    "height": 1600,
+    "bytes": 201250,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1514282401047-d79a71a590e8",
+    "verified": "Overwater villas, Maldives (aerial)"
+  },
+  "muktinath-temple": {
+    "file": "muktinath-temple.webp",
+    "width": 1600,
+    "height": 1000,
+    "bytes": 399876,
+    "credit": "Faj2323, CC BY-SA 4.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Muktinath_Temple_(1).jpg",
+    "verified": "Muktinath temple and bathing pools"
+  },
+  "muktinath-winter": {
+    "file": "muktinath-winter.webp",
+    "width": 1072,
+    "height": 1600,
+    "bytes": 199716,
+    "credit": "GoWin Travels",
+    "source_page": "",
+    "verified": "Muktinath temple in snow"
+  },
+  "nagarkot-himalaya": {
+    "file": "nagarkot-himalaya.webp",
+    "width": 1600,
+    "height": 1200,
+    "bytes": 262880,
+    "credit": "Bandana kc, CC BY-SA 3.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:The_Nagarkot_Photography_Experiences.JPG",
+    "verified": "Himalayan range from Nagarkot"
+  },
+  "new-york-skyline": {
+    "file": "new-york-skyline.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 186798,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1754766621748-2a96cbf56a1f",
+    "verified": "Manhattan skyline at night"
+  },
+  "paris-eiffel-blossom": {
+    "file": "paris-eiffel-blossom.webp",
+    "width": 1198,
+    "height": 1600,
+    "bytes": 336952,
+    "credit": "GoWin Travels",
+    "source_page": "",
+    "verified": "Eiffel Tower with cherry blossom"
+  },
+  "paris-eiffel-seine": {
+    "file": "paris-eiffel-seine.webp",
+    "width": 1600,
+    "height": 1064,
+    "bytes": 104394,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1502602898657-3e91760cbb34",
+    "verified": "Eiffel Tower and the Seine"
+  },
+  "patan-durbar-square": {
+    "file": "patan-durbar-square.webp",
+    "width": 1600,
+    "height": 900,
+    "bytes": 268126,
+    "credit": "Bijay Chaurasia, CC BY-SA 4.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Patan_Durbar_Square-2644.jpg",
+    "verified": "Patan Durbar Square temples"
+  },
+  "petra-treasury": {
+    "file": "petra-treasury.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 301802,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1551171129-8ce1ebb911b3",
+    "verified": "The Treasury, Petra"
+  },
+  "phewa-lake": {
+    "file": "phewa-lake.webp",
+    "width": 1600,
+    "height": 748,
+    "bytes": 340020,
+    "credit": "Nabin K. Sapkota, CC BY-SA 4.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Phewa_Lake_Pokhara_2023_(5).jpg",
+    "verified": "Boats on Phewa Lake, Pokhara"
+  },
+  "phewa-lake-boats": {
+    "file": "phewa-lake-boats.webp",
+    "width": 1280,
+    "height": 720,
+    "bytes": 79784,
+    "credit": "Anuja Sharma, CC BY-SA 4.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Phewa_Lake_Pokhara_02.jpg",
+    "verified": "Wooden boats, Phewa Lake"
+  },
+  "philippines-banaue": {
+    "file": "philippines-banaue.webp",
+    "width": 1600,
+    "height": 1328,
+    "bytes": 615694,
+    "credit": "GoWin Travels",
+    "source_page": "",
+    "verified": "Banaue Rice Terraces"
+  },
+  "philippines-bohol": {
+    "file": "philippines-bohol.webp",
+    "width": 1600,
+    "height": 900,
+    "bytes": 175190,
+    "credit": "GoWin Travels",
+    "source_page": "",
+    "verified": "Chocolate Hills, Bohol"
+  },
+  "philippines-coron": {
+    "file": "philippines-coron.webp",
+    "width": 1066,
+    "height": 1600,
+    "bytes": 345976,
+    "credit": "GoWin Travels",
+    "source_page": "",
+    "verified": "Kayangan Lake, Coron"
+  },
+  "philippines-el-nido": {
+    "file": "philippines-el-nido.webp",
+    "width": 1600,
+    "height": 900,
+    "bytes": 492140,
+    "credit": "GoWin Travels",
+    "source_page": "",
+    "verified": "Big Lagoon, El Nido"
+  },
+  "philippines-manila": {
+    "file": "philippines-manila.webp",
+    "width": 1064,
+    "height": 1600,
+    "bytes": 288640,
+    "credit": "GoWin Travels",
+    "source_page": "",
+    "verified": "Church interior, Manila"
+  },
+  "philippines-siargao": {
+    "file": "philippines-siargao.webp",
+    "width": 1600,
+    "height": 1198,
+    "bytes": 337566,
+    "credit": "GoWin Travels",
+    "source_page": "",
+    "verified": "Lagoon, Siargao"
+  },
+  "phuket-beach": {
+    "file": "phuket-beach.webp",
+    "width": 1600,
+    "height": 1066,
+    "bytes": 212640,
+    "credit": "GoWin Travels",
+    "source_page": "",
+    "verified": "Beach, Phuket"
+  },
+  "pokhara-machhapuchhre": {
+    "file": "pokhara-machhapuchhre.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 105638,
+    "credit": "Bijay Chaurasia, CC BY-SA 4.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Sarangkot,_Nepal-WLV-1682.jpg",
+    "verified": "Machhapuchhre from Sarangkot"
+  },
+  "pokhara-paragliding": {
+    "file": "pokhara-paragliding.webp",
+    "width": 1600,
+    "height": 900,
+    "bytes": 149650,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1610997686651-98492fd08108",
+    "verified": "Paragliders over Phewa Lake, Pokhara"
+  },
+  "pokhara-sarangkot-view": {
+    "file": "pokhara-sarangkot-view.webp",
+    "width": 1600,
+    "height": 987,
+    "bytes": 288666,
+    "credit": "Saroj Pandey, CC BY-SA 3.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Annapurna_Range_and_the_Phewa_Lake.jpg",
+    "verified": "Phewa Lake and Annapurna range from Sarangkot"
+  },
+  "queenstown-lakefront": {
+    "file": "queenstown-lakefront.webp",
+    "width": 1600,
+    "height": 1022,
+    "bytes": 235396,
+    "credit": "Krzysztof Golik, CC BY-SA 4.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Queenstown_Bay_Lake_Wakatipu_02.jpg",
+    "verified": "Queenstown lakefront, Lake Wakatipu"
+  },
+  "rara-lake": {
+    "file": "rara-lake.webp",
+    "width": 1600,
+    "height": 900,
+    "bytes": 222264,
+    "credit": "Pradishpaudel, CC BY-SA 4.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Lake_Rara,_Mugu_(3).jpg",
+    "verified": "Rara Lake, Mugu"
+  },
+  "rara-lake-peaks": {
+    "file": "rara-lake-peaks.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 216470,
+    "credit": "Pradishpaudel, CC BY-SA 4.0, via Wikimedia Commons",
+    "source_page": "https://commons.wikimedia.org/wiki/File:Lake_Rara,_Mugu_(2).jpg",
+    "verified": "Rara Lake with snow peaks"
+  },
+  "rome-colosseum": {
+    "file": "rome-colosseum.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 124068,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1514896856000-91cb6de818e0",
+    "verified": "Colosseum, Rome"
+  },
+  "santorini": {
+    "file": "santorini.webp",
+    "width": 1600,
+    "height": 1109,
+    "bytes": 158158,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1570077188670-e3a8d69ac5ff",
+    "verified": "Oia, Santorini"
+  },
+  "singapore-aerial": {
+    "file": "singapore-aerial.webp",
+    "width": 1600,
+    "height": 1234,
+    "bytes": 213372,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1525625293386-3f8f99389edd",
+    "verified": "Marina Bay, Singapore (aerial)"
+  },
+  "singapore-marina-bay": {
+    "file": "singapore-marina-bay.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 77766,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1744705221117-9c726f9497b0",
+    "verified": "Marina Bay Sands, Singapore"
+  },
+  "swiss-alps-lake": {
+    "file": "swiss-alps-lake.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 253790,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1527668752968-14dc70a27c95",
+    "verified": "Alpine lake and chapel, Switzerland"
+  },
+  "swiss-alps-sunset": {
+    "file": "swiss-alps-sunset.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 90026,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1506905925346-21bda4d32df4",
+    "verified": "Alpine peaks above clouds"
+  },
+  "sydney-harbour": {
+    "file": "sydney-harbour.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 224244,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1506973035872-a4ec16b8e8d9",
+    "verified": "Sydney Harbour (aerial)"
+  },
+  "sydney-opera": {
+    "file": "sydney-opera.webp",
+    "width": 1600,
+    "height": 1067,
+    "bytes": 125072,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1758907598809-c2d41574478c",
+    "verified": "Sydney Opera House"
+  },
+  "thailand-railay": {
+    "file": "thailand-railay.webp",
+    "width": 1600,
+    "height": 1107,
+    "bytes": 171968,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1552465011-b4e21bf6e79a",
+    "verified": "Longtail boats, Railay, Thailand"
+  },
+  "trishuli-rafting": {
+    "file": "trishuli-rafting.webp",
+    "width": 1600,
+    "height": 1098,
+    "bytes": 298874,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1685550903259-96799741df9e",
+    "verified": "White-water rafting raft in rapids"
+  },
+  "venice-canal": {
+    "file": "venice-canal.webp",
+    "width": 1200,
+    "height": 1600,
+    "bytes": 134698,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1767199289290-010e7caf8240",
+    "verified": "Venice canal and Bridge of Sighs"
+  },
+  "venice-rialto": {
+    "file": "venice-rialto.webp",
+    "width": 1055,
+    "height": 1600,
+    "bytes": 135618,
+    "credit": "Photo via Unsplash",
+    "source_page": "https://unsplash.com/photos/1523906834658-6e24ef2386f9",
+    "verified": "Rialto Bridge, Venice"
+  }
+}

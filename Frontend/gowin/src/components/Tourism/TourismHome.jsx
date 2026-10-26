@@ -1,78 +1,59 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import Hero from './Hero';
-import PopularDestinations from './PopularDestinations';
-import RegionSpotlight from './RegionSpotlight';
+import NepalSpotlight from './NepalSpotlight';
+import DestinationCarousel from './DestinationCarousel';
+import CategoryGrid from './CategoryGrid';
 import CountryShowcase from './CountryShowcase';
-import TravelCategories from './TravelCategories';
-import FeaturedTours from './FeaturedTours';
-import BookingSteps from './BookingSteps';
-import Testimonials from './Testimonials';
+import ServicesGrid from './ServicesGrid';
 import WhyChooseUs from './WhyChooseUs';
+import HowItWorks from './HowItWorks';
+import Testimonials from './Testimonials';
 import CTA from './CTA';
-import { SEED_ADVENTURES, SEED_LAKES } from '../../data/seedData';
+import usePlaceStore, { selectPublished, sortPlaces } from '../Store/PlaceStore';
+import useSettingsStore from '../Store/SettingsStore';
+import { useSEO, agencyJsonLd } from '../../lib/seo';
+import { isNepal } from '../../lib/format';
 
 const TourismHome = () => {
+  const { places, loaded } = usePlaceStore();
+  const { settings } = useSettingsStore();
+  useSEO({
+    title: 'Nepal Tours, Holidays & Travel Services in Kathmandu',
+    description: settings.meta_description || 'GoWin International Travel & Tourism: Nepal heritage tours, pilgrimages, wildlife safaris and lakeside escapes, international holiday packages, flights, hotels and visa assistance from Kathmandu.',
+    path: '/',
+    jsonLd: agencyJsonLd(settings),
+  });
+
+  const { nepal, world } = useMemo(() => {
+    const published = selectPublished(places);
+    return {
+      nepal: sortPlaces(published.filter(isNepal), 'featured').slice(0, 12),
+      world: sortPlaces(published.filter((p) => !isNepal(p)), 'featured').slice(0, 12),
+    };
+  }, [places]);
+
   return (
-    <div className="font-sans bg-white text-dark-gray overflow-hidden">
-      <main>
-        <Hero />
-
-        {/* Expanding-cards trek spotlight */}
-        <RegionSpotlight />
-
-        {/* Explore Nepal */}
-        <PopularDestinations
-          type="National"
-          title="Explore"
-          titleAccent="Nepal"
-          subtitle="From Everest Base Camp to Rara Lake — the breathtaking beauty and living heritage of Nepal."
-          bgColor="bg-white"
-        />
-
-        {/* Adventure Activities */}
-        <PopularDestinations
-          type="National"
-          data={SEED_ADVENTURES}
-          badge="⚡ Adventure Activities"
-          title="Built for"
-          titleAccent="Adrenaline"
-          subtitle="Paragliding, white-water rafting, bungee and the world's greatest treks — pick your pulse rate."
-          bgColor="bg-[#F8FAFC]"
-          linkTo="/destinations/national"
-        />
-
-        {/* Lakes & Nature */}
-        <PopularDestinations
-          type="National"
-          data={SEED_LAKES}
-          badge="🏞️ Lakes & Nature"
-          title="Himalayan"
-          titleAccent="Lakes"
-          subtitle="Phewa, Rara, Tilicho, Gosaikunda — turquoise water at the top of the world."
-          bgColor="bg-white"
-          linkTo="/destinations/national"
-        />
-
-        {/* International by country */}
-        <CountryShowcase />
-
-        {/* International packages */}
-        <PopularDestinations
-          type="International"
-          title="Global"
-          titleAccent="Collection"
-          subtitle="Handpicked world destinations — Santorini, Kyoto, the Swiss Alps, Maldives and beyond."
-          bgColor="bg-white"
-        />
-
-        <TravelCategories />
-        <FeaturedTours />
-        <WhyChooseUs />
-        <BookingSteps />
-        <Testimonials />
-        <CTA />
-      </main>
-    </div>
+    <main className="bg-white text-[#0F172A]">
+      <Hero />
+      <NepalSpotlight />
+      <DestinationCarousel
+        id="nepal" label="Nepal collection" title="Explore" accent="Nepal"
+        subtitle="Kathmandu's living heritage, Pokhara's lakes, Chitwan's jungle, Lumbini's sacred garden and more."
+        items={nepal} loading={!loaded} linkTo="/destinations/national" linkLabel="All Nepal tours" bg="bg-white"
+      />
+      <CategoryGrid />
+      <CountryShowcase />
+      <DestinationCarousel
+        id="world" label="International collection" title="World" accent="holidays"
+        subtitle="Beaches, cities, honeymoons and family holidays across Asia, the Middle East, Europe and beyond."
+        items={world} loading={!loaded} linkTo="/destinations/international" linkLabel="All holidays" bg="bg-white"
+      />
+      <ServicesGrid />
+      <WhyChooseUs />
+      <HowItWorks />
+      <Testimonials />
+      <CTA />
+    </main>
   );
 };
 

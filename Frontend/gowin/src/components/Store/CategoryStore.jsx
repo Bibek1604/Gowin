@@ -1,97 +1,79 @@
 import { create } from 'zustand';
 import { supabase } from '../../supabaseClient';
+import { slugify } from '../../lib/slugify';
+import { clean } from '../../lib/format';
+
+const NEW_COLUMNS = ['slug', 'is_active', 'sort_order'];
+const missingColumn = (error) => error && (error.code === '42703' || /column .* does not exist/i.test(error.message || ''));
+const stripNewColumns = (payload) => Object.fromEntries(Object.entries(payload).filter(([k]) => !NEW_COLUMNS.includes(k)));
+
+const normalize = (c) => ({ ...c, is_active: c.is_active !== false, sort_order: c.sort_order ?? 100 });
+const bySort = (a, b) => a.sort_order - b.sort_order || a.name.localeCompare(b.name);
+
+/** Categories visitors can browse. */
+export const selectActive = (categories) => categories.filter((c) => c.is_active);
 
 const useCategoryStore = create((set, get) => ({
   categories: [],
   isLoading: false,
+  error: null,
+  loaded: false,
 
   fetchCategories: async () => {
-    // Dedupe only concurrent calls — see PlaceStore.fetchPlaces for why a
-    // permanent "fetched" lock is wrong (it hid newly-added admin data).
     if (get().isLoading) return;
-    set({ isLoading: true });
-    const { data, error } = await supabase
-      .from('categories')
-      .select('*')
-      .order('created_at', { ascending: false });
-
+    set({ isLoading: true, error: null });
+    const { data, error } = await supabase.from('categories').select('*');
     if (error) {
-      console.error('Error fetching categories:', error);
-    } else {
-      set({ categories: data || [] });
+      console.error('fetchCategories:', error.message);
+      set({ error: error.message, isLoading: false, loaded: true });
+      return;
     }
-    set({ isLoading: false });
+    set({ categories: (data || []).map(normalize).sort(bySort), isLoading: false, loaded: true });
   },
 
-  addCategory: async (categoryData) => {
-    const { data, error } = await supabase
-      .from('categories')
-      .insert([{
-        name: categoryData.category,
-        description: categoryData.description,
-        image_url: categoryData.image
-      }])
-      .select();
-
-    if (error) {
-      console.error('Error adding category:', error);
-      return { success: false, error };
-    }
-
-    set((state) => ({
-      categories: [data[0], ...state.categories],
-    }));
-    return { success: true };
+  saveCategory: async (form, id = null) => {
+    const payload = {
+      name: clean(form.name),
+      slug: slugify(form.slug || form.name) || null,
+      description: clean(form.description) || null,
+      image_url: clean(form.image_url) || null,
+      is_active: form.is_active !== false,
+      sort_order: Number.isFinite(Number(form.sort_order)) ? Number(form.sort_order) : 100,
+    };
+    if (!payload.name) return { success: false, error: 'Category name is required.' };
+    const run = (body) => (id
+      ? supabase.from('categories').update(body).eq('id', id).select('*').single()
+      : supabase.from('categories').insert(body).select('*').single());
+    let { data, error } = await run(payload);
+    if (missingColumn(error)) ({ data, error } = await run(stripNewColumns(payload))); // pre-migration database
+    if (error) return { success: false, error };
+    const cat = normalize(data);
+    set((s) => ({ categories: (id ? s.categories.map((c) => (c.id === id ? cat : c)) : [...s.categories, cat]).sort(bySort) }));
+    return { success: true, data: cat };
   },
 
-  updateCategory: async (id, updatedData) => {
-    const { data, error } = await supabase
-      .from('categories')
-      .update({
-        name: updatedData.category,
-        description: updatedData.description,
-        image_url: updatedData.image
-      })
-      .eq('id', id)
-      .select();
-
-    if (error) {
-      console.error('Error updating category:', error);
-      return { success: false, error };
-    }
-
-    set((state) => ({
-      categories: state.categories.map((cat) =>
-        cat.id === id ? data[0] : cat
-      ),
-    }));
-    return { success: true };
+  patchCategory: async (id, patch) => {
+    const { data, error } = await supabase.from('categories').update(patch).eq('id', id).select('*').single();
+    if (error) return { success: false, error };
+    const cat = normalize(data);
+    set((s) => ({ categories: s.categories.map((c) => (c.id === id ? cat : c)).sort(bySort) }));
+    return { success: true, data: cat };
   },
 
   deleteCategory: async (id) => {
-    const { error } = await supabase
-      .from('categories')
-      .delete()
-      .eq('id', id);
-
-    if (error) {
-      console.error('Error deleting category:', error);
-      return { success: false, error };
-    }
-
-    set((state) => ({
-      categories: state.categories.filter((cat) => cat.id !== id),
-    }));
+    const { error } = await supabase.from('categories').delete().eq('id', id);
+    if (error) return { success: false, error };
+    set((s) => ({ categories: s.categories.filter((c) => c.id !== id) }));
     return { success: true };
   },
 }));
 
-// Live sync — see PlaceStore.jsx for why this refetches on every change
-// instead of requiring a manual page reload.
+let refetchTimer;
 supabase
   .channel('categories_realtime')
   .on('postgres_changes', { event: '*', schema: 'public', table: 'categories' }, () => {
-    useCategoryStore.getState().fetchCategories();
+    clearTimeout(refetchTimer);
+    refetchTimer = setTimeout(() => useCategoryStore.getState().fetchCategories(), 400);
   })
   .subscribe();
 

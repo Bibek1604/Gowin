@@ -23,9 +23,9 @@ export default [
     rules: {
       ...js.configs.recommended.rules,
       ...reactHooks.configs.recommended.rules,
-      // 'motion' is used via <motion.div> JSX — core no-unused-vars can't see
-      // JSX refs without eslint-plugin-react, so allow it explicitly.
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]|^motion$' }],
+      // Components used only in JSX (<Icon />, <motion.div>) are invisible to the
+      // core rule without eslint-plugin-react, so PascalCase names are ignored.
+      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]|^motion$', argsIgnorePattern: '^[A-Z_]', destructuredArrayIgnorePattern: '^[A-Z_]' }],
       'react-refresh/only-export-components': [
         'warn',
         { allowConstantExport: true },

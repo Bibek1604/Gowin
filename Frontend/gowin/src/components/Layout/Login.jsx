@@ -1,115 +1,57 @@
-import React, { useState } from 'react';
-import { useAdminStore } from '../Store/AdminStore';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { ShieldCheck, ArrowRight } from 'lucide-react';
-import toast, { Toaster } from 'react-hot-toast';
+import { ShieldCheck, ArrowRight, ArrowLeft } from 'lucide-react';
+import { useAdminStore } from '../Store/AdminStore';
+import { Field, Input } from '../ui/FormField';
+import { useSEO } from '../../lib/seo';
 import gowinLogo from '../../assets/gowin.jpg';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loading, setLoading] = useState(false);
-  const { login } = useAdminStore();
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+  const { login, isAdmin, isLoading } = useAdminStore();
   const navigate = useNavigate();
+  const location = useLocation();
+  const redirectTo = location.state?.from?.pathname || '/admin';
 
-  const handleLogin = async (e) => {
+  useSEO({ title: 'Staff sign in', path: '/login', noindex: true });
+  useEffect(() => { if (!isLoading && isAdmin) navigate(redirectTo, { replace: true }); }, [isAdmin, isLoading, navigate, redirectTo]);
+
+  const submit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    const result = await login(email, password);
-    setLoading(false);
-
-    if (result.success) {
-      toast.success('Access Granted!');
-      setTimeout(() => navigate('/admin/dashboard'), 1000);
-    } else {
-      toast.error('Invalid Credentials');
-    }
+    if (busy) return;
+    setError('');
+    setBusy(true);
+    const res = await login(email, password);
+    setBusy(false);
+    if (res.success) navigate(redirectTo, { replace: true });
+    else setError(res.error || 'Sign in failed.');
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC] p-6 font-sans relative overflow-hidden">
-      <Toaster position="top-right" />
-      
-      {/* Background accents */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#1E3A8A]/5 rounded-full -mr-32 -mt-32 blur-3xl" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[#10B981]/5 rounded-full -ml-32 -mb-32 blur-3xl" />
-
-      <motion.div
-        initial={{ opacity: 0, scale: 0.95 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md relative z-10"
-      >
-        {/* Logo Section */}
-        <div className="text-center mb-10">
-          <div className="w-20 h-20 bg-white rounded-[2rem] shadow-xl shadow-[#1E3A8A]/5 overflow-hidden mx-auto mb-6">
-             <img src={gowinLogo} alt="Gowin" className="w-full h-full object-cover" />
-          </div>
-          <h1 className="text-4xl font-extrabold text-[#1E3A8A] tracking-tight">
-            Gowin<span className="text-[#10B981]">.</span>
-          </h1>
-          <p className="text-gray-400 font-bold text-xs uppercase tracking-widest mt-2">Administrative Portal</p>
+    <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC] p-6 relative overflow-hidden">
+      <div className="absolute -top-32 -right-32 w-[420px] h-[420px] bg-[#1E3A8A]/5 rounded-full blur-3xl" aria-hidden="true" />
+      <div className="absolute -bottom-32 -left-32 w-[420px] h-[420px] bg-[#10B981]/5 rounded-full blur-3xl" aria-hidden="true" />
+      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md relative">
+        <div className="text-center mb-8">
+          <img src={gowinLogo} alt="GoWin Travels" width="72" height="72" className="w-18 h-18 rounded-2xl object-cover mx-auto mb-4 shadow-lg" />
+          <h1 className="text-2xl font-black text-[#1E3A8A]">GoWin Travels</h1>
+          <p className="text-gray-400 text-xs font-bold uppercase tracking-widest mt-1">Website administration</p>
         </div>
-
-        <div className="bg-white p-10 md:p-12 rounded-[2.5rem] shadow-[0_10px_40px_rgb(0,0,0,0.03)] border border-gray-100">
-          <div className="flex items-center gap-3 mb-8 bg-[#1E3A8A]/5 p-4 rounded-2xl border border-[#1E3A8A]/10">
-             <div className="w-10 h-10 bg-white rounded-xl shadow-sm flex items-center justify-center text-[#1E3A8A]">
-                <ShieldCheck className="w-5 h-5" />
-             </div>
-             <div>
-                <p className="text-sm font-bold text-[#1E3A8A]">Secure Access</p>
-                <p className="text-[10px] text-gray-400 font-medium uppercase tracking-wider">Restricted to Staff</p>
-             </div>
+        <form onSubmit={submit} className="bg-white rounded-3xl shadow-[0_10px_40px_rgba(15,23,42,0.06)] border border-gray-100 p-8 space-y-5">
+          <div className="flex items-center gap-3 bg-[#1E3A8A]/5 border border-[#1E3A8A]/10 rounded-2xl p-3">
+            <span className="w-9 h-9 rounded-xl bg-white shadow-sm text-[#1E3A8A] flex items-center justify-center"><ShieldCheck className="w-4 h-4" /></span>
+            <p className="text-xs text-gray-500">Staff accounts only. Access is limited to approved email addresses.</p>
           </div>
-
-          <form onSubmit={handleLogin} className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-[#1E3A8A] uppercase tracking-widest pl-1">Email Address</label>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]/10 focus:bg-white transition-all font-medium text-[#1E3A8A] placeholder-gray-300"
-                placeholder="admin@travels.com"
-                autoComplete="email"
-                required
-              />
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-xs font-bold text-[#1E3A8A] uppercase tracking-widest pl-1">Password</label>
-              <input
-                type="password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full p-4 bg-gray-50 border border-gray-100 rounded-2xl focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]/10 focus:bg-white transition-all font-medium text-[#1E3A8A] placeholder-gray-300"
-                placeholder="••••••••"
-                autoComplete="current-password"
-                required
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={loading}
-              className={`w-full bg-[#1E3A8A] text-white py-5 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-[#172554] transition-all shadow-xl shadow-[#1E3A8A]/20 mt-4 active:scale-95 disabled:opacity-75`}
-            >
-              {loading ? (
-                <div className="w-6 h-6 border-3 border-white border-t-transparent rounded-full animate-spin" />
-              ) : (
-                <>
-                  Enter Dashboard
-                  <ArrowRight className="w-5 h-5" />
-                </>
-              )}
-            </button>
-          </form>
-        </div>
-
-        <p className="text-center mt-10 text-gray-400 text-xs font-medium uppercase tracking-widest bg-white/50 py-3 px-6 rounded-full w-fit mx-auto border border-white">
-           System Monitoring Active
-        </p>
+          <Field label="Email" htmlFor="login-email"><Input id="login-email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} autoComplete="email" required placeholder="you@gowintravels.com" /></Field>
+          <Field label="Password" htmlFor="login-password"><Input id="login-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" required placeholder="••••••••" /></Field>
+          {error && <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl px-4 py-3" role="alert">{error}</p>}
+          <button type="submit" disabled={busy} className="btn-secondary w-full justify-center !py-3.5 disabled:opacity-60">{busy ? <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <>Sign in <ArrowRight className="w-4 h-4" /></>}</button>
+        </form>
+        <Link to="/" className="mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-[#1E3A8A]"><ArrowLeft className="w-3.5 h-3.5" /> Back to website</Link>
       </motion.div>
     </div>
   );

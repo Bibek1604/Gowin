@@ -1,163 +1,48 @@
-import React, { useEffect } from "react";
-import { motion } from "framer-motion";
-import { Map, Camera, Luggage, Umbrella, Sun, Plane, Compass, ArrowRight, Heart } from "lucide-react";
-import Navbar from "./Navbar";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { ArrowRight, Check } from 'lucide-react';
+import PageHero from '../ui/PageHero';
+import DestinationCarousel from './DestinationCarousel';
+import usePlaceStore, { selectPublished, sortPlaces } from '../Store/PlaceStore';
+import { NEPAL_TRAVEL_TIPS } from '../../data/siteContent';
+import { iconFor } from '../../lib/icons';
+import { useSEO } from '../../lib/seo';
+import { useHeroImage } from '../../lib/useHeroImage';
+import { isNepal } from '../../lib/format';
 
 const TravelGuides = () => {
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, []);
-
-  const guides = [
-    {
-      title: "Packing Like a Pro",
-      category: "Essentials",
-      icon: <Luggage className="w-6 h-6" />,
-      image: "https://images.unsplash.com/photo-1527631746610-bca00a040d60?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      desc: "Master the art of carrying just enough. Discover our checklist for every climate."
-    },
-    {
-      title: "Photography Secrets",
-      category: "Creative",
-      icon: <Camera className="w-6 h-6" />,
-      image: "https://images.unsplash.com/photo-1542332213-9b5a5a3fad35?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      desc: "Capture the soul of your destination. Pro tips for iPhone and DSLR enthusiasts."
-    },
-    {
-      title: "Visa Navigation",
-      category: "Legal",
-      icon: <Map className="w-6 h-6" />,
-      image: "https://images.unsplash.com/photo-1436491865332-7a61a109c05d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-      desc: "Decoding documentation requirements for global hotspots with ease."
-    }
-  ];
+  const { places, loaded } = usePlaceStore();
+  const heroImage = useHeroImage(/nagarkot|pokhara|sarangkot/i, { nepalOnly: true });
+  useSEO({ title: 'Nepal Travel Tips & Guides', description: 'Practical advice for visiting Nepal: best season, visa on arrival, getting around, packing, money and cultural etiquette, from a Kathmandu travel company.', path: '/guides', image: heroImage || undefined });
+  const nepal = sortPlaces(selectPublished(places).filter(isNepal), 'featured').slice(0, 10);
 
   return (
-    <div className="min-h-screen bg-white">
-      <Navbar />
-
-      {/* Hero Section */}
-      <section className="relative pt-40 pb-24 overflow-hidden bg-[#F8FAFC]">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-[#10B981]/5 blur-[100px] rounded-full -mr-32 -mt-32" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 flex flex-col md:flex-row items-center gap-16">
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            className="md:w-1/2"
-          >
-            <div className="mb-6"><span className="section-label">Expert Insights</span></div>
-            <h1 className="heading-font text-5xl md:text-7xl text-[#0F172A] mb-6">
-              Travel <br />
-              <span className="text-[#1E3A8A]">Guides.</span>
-            </h1>
-            <p className="text-gray-500 text-base md:text-lg max-w-lg mb-10 leading-relaxed">
-              Curated wisdom from our seasoned explorers. Prepare for your next odyssey with confidence and style.
-            </p>
-
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="md:w-1/2 relative"
-          >
-            <div className="relative z-10 rounded-[2.5rem] overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.15)] rotate-2">
-              <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" className="w-full h-[450px] object-cover" alt="Travel Guide" />
-            </div>
-            <div className="absolute -bottom-6 -left-6 bg-white p-6 rounded-3xl shadow-[0_15px_40px_rgba(0,0,0,0.1)] z-20 border border-gray-100 flex items-center gap-4">
-              <div className="w-12 h-12 bg-[#10B981] rounded-2xl flex items-center justify-center text-white shadow-lg">
-                <Sun className="w-6 h-6" />
-              </div>
-              <div>
-                <p className="text-sm font-bold text-[#0F172A]">Local Wisdom</p>
-                <p className="text-[10px] text-gray-400 uppercase tracking-widest mt-0.5">Season 2026 Updated</p>
-              </div>
-            </div>
-          </motion.div>
+    <div className="bg-white">
+      <PageHero title="Nepal travel tips" label="Before you go" subtitle="Practical, up-to-date pointers from our Kathmandu team — seasons, visas, transport, packing and etiquette." image={heroImage} crumbs={[{ label: 'Travel tips' }]} size="sm" />
+      <section className="py-12 sm:py-16">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {NEPAL_TRAVEL_TIPS.map((tip, i) => {
+            const Icon = iconFor(tip.icon);
+            return (
+              <motion.article key={tip.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: (i % 3) * 0.07 }} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 hover:shadow-md transition-shadow">
+                <span className="w-11 h-11 rounded-xl bg-[#1E3A8A]/8 text-[#1E3A8A] flex items-center justify-center mb-4"><Icon className="w-5 h-5" /></span>
+                <h2 className="text-base font-bold text-[#0F172A] mb-3">{tip.title}</h2>
+                <ul className="space-y-2">
+                  {tip.points.map((p) => <li key={p} className="flex items-start gap-2 text-sm text-gray-600 leading-relaxed"><Check className="w-4 h-4 text-[#10B981] flex-shrink-0 mt-0.5" />{p}</li>)}
+                </ul>
+              </motion.article>
+            );
+          })}
         </div>
+        <p className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-8 text-xs text-gray-400">Visa rules, fees and transport schedules change. We confirm the current requirements for your nationality and dates when you book with us.</p>
       </section>
-
-      {/* Featured Guides Grid */}
-      <section className="py-24">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-end mb-16">
-            <div>
-              <span className="section-label mb-3 block">Featured</span>
-              <h2 className="heading-font text-4xl text-[#0F172A]">Popular <span className="text-[#1E3A8A]">Guides</span></h2>
-            </div>
-            <button className="text-sm font-bold text-[#1E3A8A] hover:text-[#10B981] transition-colors flex items-center gap-2 border-b-2 border-transparent hover:border-[#10B981] pb-1">
-              Browse All <ArrowRight className="w-4 h-4" />
-            </button>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {guides.map((guide, i) => (
-              <motion.div
-                key={i}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
-                className="group cursor-pointer card p-4 flex flex-col"
-              >
-                <div className="relative h-64 rounded-[1.25rem] overflow-hidden mb-6">
-                  <img src={guide.image} className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" alt={guide.title} />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0B1220]/80 to-transparent" />
-                  <div className="absolute bottom-4 left-4 p-3 bg-white/20 backdrop-blur-md border border-white/20 rounded-xl text-white">
-                    {guide.icon}
-                  </div>
-                </div>
-                <div className="px-2 pb-4 flex flex-col flex-1">
-                  <p className="text-[10px] font-bold uppercase tracking-widest text-[#10B981] mb-2">{guide.category}</p>
-                  <h3 className="heading-font text-2xl text-[#0F172A] mb-3 group-hover:text-[#1E3A8A] transition-colors">{guide.title}</h3>
-                  <p className="text-gray-500 text-sm leading-relaxed mb-6 flex-1">{guide.desc}</p>
-                  <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-widest text-[#1E3A8A] group-hover:text-[#10B981] transition-colors">
-                    Read More <Heart className="w-3 h-3 text-[#10B981]" />
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Tips Section */}
-      <section className="py-24 bg-[#1E3A8A] overflow-hidden relative">
-        <div className="absolute -right-40 top-0 w-96 h-96 bg-[#10B981]/10 rounded-full blur-[100px]" />
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-            <div>
-              <h2 className="heading-font text-4xl md:text-5xl text-white mb-12">
-                The <span className="text-[#10B981]">GoWin</span> Way.
-              </h2>
-              <div className="space-y-8">
-                {[
-                  { title: "Arrival Protocols", list: ["Luxury pickup integration", "Instant SIM setup", "Currency optimization"] },
-                  { title: "Health & Safety", list: ["Premium insurance validation", "Local clinic networks", "Emergency protocols"] }
-                ].map((item, i) => (
-                  <div key={i} className="border-l-4 border-[#10B981] pl-6 py-1">
-                    <h4 className="text-lg font-bold text-white mb-3">{item.title}</h4>
-                    <div className="flex flex-wrap gap-2">
-                      {item.list.map(li => (
-                        <span key={li} className="px-3 py-1.5 bg-white/10 rounded-lg text-white/80 text-[10px] font-bold uppercase tracking-wider">{li}</span>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-white/5 backdrop-blur-md border border-white/10 p-10 md:p-14 rounded-3xl text-center">
-              <Plane className="w-12 h-12 text-[#10B981] mx-auto mb-6" />
-              <h3 className="heading-font text-3xl text-white mb-4">Ready to start?</h3>
-              <p className="text-white/60 text-sm leading-relaxed mb-8">
-                Your guide is just the beginning. Let us handle the complexity while you enjoy the discovery.
-              </p>
-              <button className="btn-primary">
-                Get Custom Guide
-              </button>
-            </div>
-          </div>
+      <DestinationCarousel label="Put it into practice" title="Popular Nepal" accent="experiences" items={nepal} loading={!loaded} linkTo="/destinations/national" bg="bg-[#F8FAFC]" />
+      <section className="py-14 bg-[#1E3A8A] text-white">
+        <div className="max-w-4xl mx-auto px-4 text-center">
+          <h2 className="heading-font text-2xl sm:text-3xl mb-3">Need help with visas, tickets or planning?</h2>
+          <p className="text-white/70 text-sm sm:text-base mb-6">Our team handles paperwork and logistics for Nepal and for your trips abroad.</p>
+          <Link to="/contact" className="btn-primary">Talk to us <ArrowRight className="w-4 h-4" /></Link>
         </div>
       </section>
     </div>

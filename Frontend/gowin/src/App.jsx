@@ -1,114 +1,122 @@
-import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, useParams } from 'react-router-dom';
+import React, { lazy, Suspense, useEffect } from 'react';
+import { BrowserRouter, Routes, Route, Navigate, useLocation, useParams } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import { useAdminStore } from './components/Store/AdminStore';
+import usePlaceStore from './components/Store/PlaceStore';
+import useCategoryStore from './components/Store/CategoryStore';
+import useSettingsStore from './components/Store/SettingsStore';
 
-import Sidebar from './components/admin/Sidebar';
-import AdminTopBar from './components/admin/AdminTopBar';
-import AddCategory from './components/admin/AddCategory';
-import AddDetail from './components/admin/AddDetail';
-import AddPlace from './components/admin/AddPlace';
-import Dashboard from './components/admin/Dashboard';
-import DestinationDetails from './components/Details/FetchDestinationDetails';
-import NotFound from './components/Layout/Notfound';
-import BookingForm from './components/Layout/Booking';
-import Booking from './components/admin/AddBooking';
-import AddTestimonial from './components/admin/AddTestimonial';
-import Messages from './components/admin/Messages';
-import Subscribers from './components/admin/Subscribers';
-import Footer from './components/Tourism/Footer';
-import Login from './components/Layout/Login';
-import ProtectedRoute from './components/Layout/ProtectedRoute';
 import Navbar from './components/Tourism/Navbar';
+import Footer from './components/Tourism/Footer';
 import TourismHome from './components/Tourism/TourismHome';
-import About from './components/Tourism/About';
-import Contact from './components/Tourism/Contact';
 import AllDestinations from './components/Tourism/AllDestinations';
-import PrivacyPolicy from './components/Tourism/PrivacyPolicy';
-import RefundPolicy from './components/Tourism/RefundPolicy';
-import TravelGuides from './components/Tourism/TravelGuides';
-import ContactSupport from './components/Tourism/ContactSupport';
-import TermsConditions from './components/Tourism/TermsConditions';
+import DestinationDetails from './components/Details/DestinationDetails';
+import Booking from './components/Layout/Booking';
+import Contact from './components/Tourism/Contact';
+import About from './components/Tourism/About';
+import Services from './components/Tourism/Services';
+import NotFound from './components/Layout/Notfound';
 import ScrollToTop from './components/Layout/ScrollToTop';
 import RouteScrollReset from './components/Layout/RouteScrollReset';
+import ProtectedRoute from './components/Layout/ProtectedRoute';
+import { PageSpinner } from './components/ui/Skeleton';
 
-// Responsive Admin layout with sidebar + topbar
-function AdminLayout({ children }) {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
+// Rarely visited pages and the whole admin panel are code-split.
+const TravelGuides = lazy(() => import('./components/Tourism/TravelGuides'));
+const ContactSupport = lazy(() => import('./components/Tourism/ContactSupport'));
+const PrivacyPolicy = lazy(() => import('./components/Tourism/PrivacyPolicy'));
+const RefundPolicy = lazy(() => import('./components/Tourism/RefundPolicy'));
+const TermsConditions = lazy(() => import('./components/Tourism/TermsConditions'));
+const Login = lazy(() => import('./components/Layout/Login'));
+const AdminLayout = lazy(() => import('./components/admin/AdminLayout'));
+const Dashboard = lazy(() => import('./components/admin/Dashboard'));
+const Destinations = lazy(() => import('./components/admin/Destinations'));
+const Categories = lazy(() => import('./components/admin/Categories'));
+const Bookings = lazy(() => import('./components/admin/Bookings'));
+const Messages = lazy(() => import('./components/admin/Messages'));
+const TestimonialsAdmin = lazy(() => import('./components/admin/Testimonials'));
+const Subscribers = lazy(() => import('./components/admin/Subscribers'));
+const Settings = lazy(() => import('./components/admin/Settings'));
 
-  return (
-    <div className="flex min-h-screen bg-[#F8FAFC]">
-      <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      {/* Main content — on lg+ screens offset by sidebar width */}
-      <div className="flex-1 flex flex-col min-w-0 lg:ml-64">
-        <AdminTopBar onMenuToggle={() => setSidebarOpen(true)} />
-        <main className="flex-1 overflow-auto">
-          {children}
-        </main>
-      </div>
-    </div>
-  );
-}
+const LegacyDetails = () => { const { placeId } = useParams(); return <Navigate to={`/places/${placeId}`} replace />; };
 
-function DetailsRedirect() {
-  const { placeId } = useParams();
-  return <Navigate to={`/places/${placeId}`} replace />;
-}
+const admin = (page) => (
+  <ProtectedRoute><AdminLayout>{page}</AdminLayout></ProtectedRoute>
+);
 
-function AppContent() {
+function Shell() {
   const location = useLocation();
-  const isAdminRoute = location.pathname.startsWith('/admin');
-  const isLoginRoute = location.pathname === '/login';
+  const isAdmin = location.pathname.startsWith('/admin');
+  const isLogin = location.pathname === '/login';
+  const chromeless = isAdmin || isLogin;
 
   return (
     <div className="flex flex-col min-h-screen">
-      {!isAdminRoute && !isLoginRoute && <Navbar />}
+      {!chromeless && <Navbar />}
+      <div className="flex-1">
+        <Suspense fallback={<PageSpinner />}>
+          <Routes>
+            <Route path="/" element={<TourismHome />} />
+            <Route path="/destinations" element={<AllDestinations />} />
+            <Route path="/destinations/:type" element={<AllDestinations />} />
+            <Route path="/places/:placeId" element={<DestinationDetails />} />
+            <Route path="/details/all" element={<Navigate to="/destinations" replace />} />
+            <Route path="/details/:placeId" element={<LegacyDetails />} />
+            <Route path="/booking" element={<Booking />} />
+            <Route path="/services" element={<Services />} />
+            <Route path="/about" element={<About />} />
+            <Route path="/contact" element={<Contact />} />
+            <Route path="/guides" element={<TravelGuides />} />
+            <Route path="/support" element={<ContactSupport />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/refund" element={<RefundPolicy />} />
+            <Route path="/terms" element={<TermsConditions />} />
+            <Route path="/login" element={<Login />} />
 
-      <Routes>
-        {/* Admin Routes (Protected) */}
-        <Route path="/admin" element={<ProtectedRoute><AdminLayout><Dashboard /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/dashboard" element={<ProtectedRoute><AdminLayout><Dashboard /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/add-category" element={<ProtectedRoute><AdminLayout><AddCategory /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/add-booking" element={<ProtectedRoute><AdminLayout><Booking /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/add-place" element={<ProtectedRoute><AdminLayout><AddPlace /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/add-detail" element={<ProtectedRoute><AdminLayout><AddDetail /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/testimonials" element={<ProtectedRoute><AdminLayout><AddTestimonial /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/messages" element={<ProtectedRoute><AdminLayout><Messages /></AdminLayout></ProtectedRoute>} />
-        <Route path="/admin/subscribers" element={<ProtectedRoute><AdminLayout><Subscribers /></AdminLayout></ProtectedRoute>} />
+            <Route path="/admin" element={admin(<Dashboard />)} />
+            <Route path="/admin/destinations" element={admin(<Destinations />)} />
+            <Route path="/admin/categories" element={admin(<Categories />)} />
+            <Route path="/admin/bookings" element={admin(<Bookings />)} />
+            <Route path="/admin/messages" element={admin(<Messages />)} />
+            <Route path="/admin/testimonials" element={admin(<TestimonialsAdmin />)} />
+            <Route path="/admin/subscribers" element={admin(<Subscribers />)} />
+            <Route path="/admin/settings" element={admin(<Settings />)} />
+            {/* Old admin URLs */}
+            <Route path="/admin/dashboard" element={<Navigate to="/admin" replace />} />
+            <Route path="/admin/add-place" element={<Navigate to="/admin/destinations" replace />} />
+            <Route path="/admin/add-detail" element={<Navigate to="/admin/destinations" replace />} />
+            <Route path="/admin/add-category" element={<Navigate to="/admin/categories" replace />} />
+            <Route path="/admin/add-booking" element={<Navigate to="/admin/bookings" replace />} />
 
-        {/* Public Routes */}
-        <Route path="/login" element={<Login />} />
-        <Route path="/" element={<TourismHome />} />
-        <Route path="/places/:placeId" element={<DestinationDetails />} />
-        <Route path="/destinations/:type" element={<AllDestinations />} />
-        <Route path="/details/all" element={<Navigate to="/destinations/all" replace />} />
-        <Route path="/details/:placeId" element={<DetailsRedirect />} />
-        <Route path="/booking" element={<BookingForm />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/contact" element={<Contact />} />
-        <Route path="/privacy" element={<PrivacyPolicy />} />
-        <Route path="/refund" element={<RefundPolicy />} />
-        <Route path="/guides" element={<TravelGuides />} />
-        <Route path="/support" element={<ContactSupport />} />
-        <Route path="/terms" element={<TermsConditions />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-
-      {!isAdminRoute && <Footer />}
-      <ScrollToTop />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+        </Suspense>
+      </div>
+      {!chromeless && <Footer />}
+      {!isAdmin && <ScrollToTop />}
       <RouteScrollReset />
     </div>
   );
 }
 
-function App() {
-  const initializeAuth = useAdminStore((state) => state.initialize);
-  useEffect(() => { initializeAuth(); }, [initializeAuth]);
+export default function App() {
+  const initializeAuth = useAdminStore((s) => s.initialize);
+  const fetchPlaces = usePlaceStore((s) => s.fetchPlaces);
+  const fetchCategories = useCategoryStore((s) => s.fetchCategories);
+  const fetchSettings = useSettingsStore((s) => s.fetchSettings);
+
+  // Shared data is loaded once here; realtime subscriptions keep it fresh.
+  useEffect(() => {
+    initializeAuth();
+    fetchPlaces();
+    fetchCategories();
+    fetchSettings();
+  }, [initializeAuth, fetchPlaces, fetchCategories, fetchSettings]);
 
   return (
-    <Router>
-      <AppContent />
-    </Router>
+    <BrowserRouter>
+      <Toaster position="top-right" toastOptions={{ duration: 3500, style: { fontFamily: 'DM Sans, sans-serif', fontSize: '14px' } }} />
+      <Shell />
+    </BrowserRouter>
   );
 }
-
-export default App;

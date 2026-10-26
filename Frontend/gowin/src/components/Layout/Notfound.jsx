@@ -1,67 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { Compass, ArrowRight, MapPin, Navigation } from 'lucide-react';
+import { Compass, ArrowRight } from 'lucide-react';
+import { useSEO } from '../../lib/seo';
 
 const NotFound = () => {
+  useSEO({ title: 'Page not found', noindex: true });
   return (
-    <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center p-6 relative overflow-hidden font-sans">
-      
-      {/* Background Decor */}
-       <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-[#1E3A8A]/5 rounded-full blur-[120px] -mr-32 -mt-32" />
-       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-[#10B981]/5 rounded-full blur-[120px] -ml-32 -mb-32" />
-       
-       <Navigation className="absolute top-20 right-20 w-32 h-32 text-[#1E3A8A]/5 -rotate-12" />
-       <MapPin className="absolute bottom-20 left-20 w-24 h-24 text-[#10B981]/5 rotate-12" />
-
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="max-w-2xl w-full text-center relative z-10"
-      >
-        <div className="relative mb-12">
-           <div className="w-32 h-32 bg-white rounded-[2.5rem] shadow-2xl shadow-[#1E3A8A]/5 flex items-center justify-center text-[#1E3A8A] mx-auto mb-10 relative z-10">
-              <Compass className="w-16 h-16 animate-spin-slow" />
-           </div>
-           <div className="absolute inset-0 bg-[#10B981]/10 rounded-full blur-3xl scale-110 -z-10 animate-pulse" />
+    <div className="min-h-screen bg-[#F8FAFC] flex items-center justify-center px-6 pt-20">
+      <div className="max-w-md text-center">
+        <span className="w-20 h-20 rounded-3xl bg-white shadow-lg flex items-center justify-center text-[#1E3A8A] mx-auto mb-6"><Compass className="w-9 h-9" /></span>
+        <p className="text-6xl font-black text-[#1E3A8A] tracking-tight">4<span className="text-[#10B981]">0</span>4</p>
+        <h1 className="text-2xl font-bold text-[#0F172A] mt-3 mb-2">That page doesn't exist</h1>
+        <p className="text-gray-500 text-sm leading-relaxed mb-8">The link may be out of date or the page may have moved. Head back home or browse our destinations.</p>
+        <div className="flex flex-col sm:flex-row gap-3 justify-center">
+          <Link to="/" className="btn-primary justify-center">Home <ArrowRight className="w-4 h-4" /></Link>
+          <Link to="/destinations" className="btn-secondary justify-center">Destinations</Link>
         </div>
-
-        <h1 className="text-8xl font-black text-[#1E3A8A] tracking-tighter mb-4 leading-none">
-          4<span className="text-[#10B981]">0</span>4
-        </h1>
-        
-        <div className="inline-flex items-center gap-2 px-6 py-2 bg-[#1E3A8A]/5 text-[#1E3A8A] rounded-full text-[10px] font-bold uppercase tracking-[0.3em] mb-8 border border-[#1E3A8A]/10">
-           Path Not Found
-        </div>
-
-        <h2 className="text-4xl font-extrabold text-[#1E3A8A] mb-6 tracking-tight">
-          Oops! You've Ventured <br /> Into the Unknown.
-        </h2>
-        
-        <p className="text-gray-500 text-lg mb-12 max-w-md mx-auto leading-relaxed font-medium">
-          It seems this destination hasn't been mapped in our premium collection yet. Let's get you back on course.
-        </p>
-
-        <div className="flex flex-col sm:flex-row justify-center gap-6">
-           <Link 
-             to="/" 
-             className="bg-[#1E3A8A] text-white px-10 py-5 rounded-2xl font-bold flex items-center justify-center gap-3 hover:bg-[#172554] transition-all shadow-xl shadow-[#1E3A8A]/20 active:scale-95 group"
-           >
-              Return Home <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-           </Link>
-           <button 
-             onClick={() => window.history.back()}
-             className="bg-white text-[#1E3A8A] border border-gray-100 px-10 py-5 rounded-2xl font-bold hover:bg-gray-50 transition-all shadow-sm active:scale-95"
-           >
-              Previous Page
-           </button>
-        </div>
-
-        <p className="mt-20 text-gray-300 text-[10px] font-bold uppercase tracking-[0.4em]">
-           Lost in Exploration • Gowin Travels 2026
-        </p>
-      </motion.div>
+      </div>
     </div>
   );
 };
