@@ -27,6 +27,7 @@ Migrations added in October 2026:
 | File | What it does |
 |---|---|
 | `20261026000000_platform_schema.sql` | Adds `slug`, `is_published`, `is_featured`, `image_credit`, `sort_order` to packages; the `package_images` table (one row per photo: link, source page, credit, alt text, order, cover — existing links are carried over); `slug`, `is_active`, `sort_order`, `image_credit` to categories; booking/inquiry fields; `site_settings` and `admin_users` tables; the public `media` storage bucket. Idempotent, nothing is dropped. |
+| `20261027000000_price_optional_and_image_cleanup.sql` | Makes `price` optional ("Price on request"), sets realtime replica identity to the key, and drops three embedded base64 photos that were too large to update through the API (copies exist in `supabase/media` and the bucket). |
 | `20261026000001_rls_policies.sql` | Turns on row-level security everywhere: visitors read published content and submit forms; only sign-ins listed in `admin_users` can change anything. Apply **after** the content migration below. |
 
 One-off content correction (photo links, categories, trekking removal, duplicates, the two home-page top-10 lists) — the plan is `scripts/content-plan.mjs`, the editorial text for the 20 showcase packages is `scripts/showcase-content.mjs`, the photo links are `supabase/media/photos.json`. Everything runs in the right order with one command:

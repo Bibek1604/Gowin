@@ -42,9 +42,17 @@ const log = (...a) => console.log(...a);
 const slugify = (t) => String(t).normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 const publicUrl = (p) => sb.storage.from('media').getPublicUrl(p).data.publicUrl;
 
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+// Rows that still embed multi-megabyte base64 photos can push a single update past the
+// API's statement timeout; those are retried a few times before being reported.
 async function act(label, fn) {
   if (DRY) { log(`  [dry-run] ${label}`); return { data: null, error: null }; }
-  const res = await fn();
+  let res = await fn();
+  for (let attempt = 1; res?.error && /statement timeout/i.test(res.error.message) && attempt <= 3; attempt++) {
+    log(`  …  ${label}: timed out, retrying (${attempt}/3)`);
+    await sleep(3000 * attempt);
+    res = await fn();
+  }
   if (res?.error) { console.error(`  FAILED ${label}: ${res.error.message}`); process.exitCode = 1; }
   else log(`  ok  ${label}`);
   return res;
