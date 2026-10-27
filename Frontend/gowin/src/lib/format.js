@@ -32,8 +32,14 @@ export const typeLabel = (place) => (isNepal(place) ? 'Nepal' : 'International')
 /** Route to a destination's detail page (slug when available, id otherwise). */
 export const placePath = (place) => `/places/${place?.slug || place?.id}`;
 
-/** Public, published, with a usable primary image first. */
-export const coverImage = (place) => (Array.isArray(place?.images) && place.images.find((u) => typeof u === 'string' && u.trim())) || null;
+/** The cover photo row ({ url, alt_text, credit, source_url }) — first entry of the gallery. */
+export const primaryImage = (place) => (Array.isArray(place?.gallery) && place.gallery.find((g) => g && typeof g.url === 'string' && g.url.trim())) || null;
+
+/** Cover photo URL: the gallery's first photo, else the first usable entry of the legacy images list. */
+export const coverImage = (place) => primaryImage(place)?.url || (Array.isArray(place?.images) && place.images.find((u) => typeof u === 'string' && u.trim())) || null;
+
+/** Alt text for the cover photo: what the photo shows, else "Title – Location". */
+export const coverAlt = (place) => primaryImage(place)?.alt_text || [place?.title, place?.location].filter(Boolean).join(' – ');
 
 /** Dates coming from Postgres are ISO strings; show them compactly. */
 export function formatDate(value, opts = {}) {

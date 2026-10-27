@@ -7,7 +7,7 @@ import { createClient } from '@supabase/supabase-js';
 import fs from 'node:fs';
 
 const out = process.argv[2] || `backup-${new Date().toISOString().slice(0, 10)}.json`;
-const sb = createClient(process.env.VITE_SUPABASE_URL, process.env.VITE_SUPABASE_ANON_KEY, { auth: { persistSession: false } });
+const sb = createClient(process.env.VITE_SUPABASE_URL, (process.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY), { auth: { persistSession: false } });
 
 const strip = (v) => (typeof v === 'string' && v.startsWith('data:image')) ? `<base64 ${Math.round(v.length / 1024)}KB>` : v;
 const stripRow = (r) => Object.fromEntries(Object.entries(r).map(([k, v]) => [k, Array.isArray(v) ? v.map(strip) : strip(v)]));

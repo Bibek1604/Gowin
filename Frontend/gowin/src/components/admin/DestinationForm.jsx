@@ -3,7 +3,7 @@ import { ChevronDown, ChevronUp, Link2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Modal from '../ui/Modal';
 import { Field, Input, Select, Textarea, Toggle } from '../ui/FormField';
-import ImageUploader from '../ui/ImageUploader';
+import GalleryEditor from '../ui/GalleryEditor';
 import TagListInput from '../ui/TagListInput';
 import ItineraryEditor from '../ui/ItineraryEditor';
 import usePlaceStore from '../Store/PlaceStore';
@@ -13,7 +13,7 @@ import { friendlyError } from '../../lib/errors';
 
 const EMPTY = {
   title: '', slug: '', destination_type: 'National', category_id: '', location: '', price: '', duration: '',
-  description: '', images: [], image_credit: '', is_published: true, is_featured: false, sort_order: 100,
+  description: '', gallery: [], is_published: true, is_featured: false, sort_order: 100,
   details: { best_time: '', highlights: [], inclusions: [], exclusions: [], itinerary: [] },
 };
 
@@ -21,11 +21,12 @@ const fromPlace = (p) => ({
   ...EMPTY,
   title: p.title || '', slug: p.slug || '', destination_type: p.destination_type || 'International', category_id: p.category_id || '',
   location: p.location || '', price: p.price ?? '', duration: p.duration || '', description: p.description || '',
-  images: p.images || [], image_credit: p.image_credit || '', is_published: p.is_published !== false, is_featured: p.is_featured === true, sort_order: p.sort_order ?? 100,
+  gallery: (p.gallery || []).map((g) => ({ url: g.url, alt_text: g.alt_text || '', credit: g.credit || '', source_url: g.source_url || '' })),
+  is_published: p.is_published !== false, is_featured: p.is_featured === true, sort_order: p.sort_order ?? 100,
   details: { ...EMPTY.details, ...(p.details ? { best_time: p.details.best_time || '', highlights: p.details.highlights || [], inclusions: p.details.inclusions || [], exclusions: p.details.exclusions || [], itinerary: p.details.itinerary || [] } : {}) },
 });
 
-/** Create / edit modal for a destination or package, including its trip details. */
+/** Create / edit modal for a destination or package, including its photos and trip details. */
 const DestinationForm = ({ open, onClose, place = null, onSaved }) => {
   const { savePlace, places } = usePlaceStore();
   const { categories } = useCategoryStore();
@@ -68,7 +69,8 @@ const DestinationForm = ({ open, onClose, place = null, onSaved }) => {
     if (form.slug && !/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(form.slug)) e.slug = 'Use lowercase letters, numbers and hyphens only.';
     if (form.slug && places.some((p) => p.slug === form.slug && p.id !== place?.id)) e.slug = 'Another destination already uses this URL.';
     if (form.price && !/^\s*\$?\s*\d[\d,]*(\.\d+)?\s*$/.test(String(form.price))) e.price = 'Enter a number (e.g. 1299) or leave empty for "price on request".';
-    if (form.is_published && form.images.length === 0) e.images = 'Add at least one photo before publishing.';
+    if (form.is_published && form.gallery.length === 0) e.gallery = 'Add at least one photo before publishing.';
+    if (form.is_published && form.gallery.some((g) => !String(g.alt_text || '').trim())) e.gallery = 'Give every photo alt text (what it shows) before publishing.';
     if (form.is_published && form.description.trim().length < 40) e.description = 'Write a short description (40+ characters) before publishing.';
     return e;
   };
@@ -129,10 +131,9 @@ const DestinationForm = ({ open, onClose, place = null, onSaved }) => {
           <Textarea id="d-description" rows={5} value={form.description} onChange={(e) => set('description', e.target.value)} error={errors.description} placeholder="What makes this experience special, what travellers see and do…" />
         </Field>
         <div>
-          <ImageUploader value={form.images} onChange={(imgs) => set('images', imgs)} folder="destinations" />
-          {errors.images && <p className="text-red-500 text-[11px] mt-1" role="alert">{errors.images}</p>}
+          <GalleryEditor value={form.gallery} onChange={(g) => set('gallery', g)} folder="destinations" />
+          {errors.gallery && <p className="text-red-500 text-[11px] mt-1" role="alert">{errors.gallery}</p>}
         </div>
-        <Field label="Photo credit" htmlFor="d-credit" hint="Required for Creative Commons photos, e.g. “Jane Doe, CC BY-SA 4.0, via Wikimedia Commons”."><Input id="d-credit" value={form.image_credit} onChange={(e) => set('image_credit', e.target.value)} placeholder="Optional" /></Field>
 
         <div className="border border-gray-200 rounded-2xl overflow-hidden">
           <button type="button" onClick={() => setShowDetails((v) => !v)} aria-expanded={showDetails} className="w-full flex items-center justify-between px-4 py-3 bg-gray-50 text-sm font-bold text-[#0F172A]">

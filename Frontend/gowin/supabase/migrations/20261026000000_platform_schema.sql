@@ -87,6 +87,31 @@ INSERT INTO admin_users (email)
   SELECT lower(email) FROM auth.users WHERE email IS NOT NULL
   ON CONFLICT (email) DO NOTHING;
 
+-- ---------- package_images (one row per photo: direct link, source page, credit, alt text, order, cover) ----------
+CREATE TABLE IF NOT EXISTS package_images (
+  id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+  package_id UUID NOT NULL REFERENCES tour_packages(id) ON DELETE CASCADE,
+  url TEXT NOT NULL CHECK (url ~* '^https?://'),
+  source_url TEXT,
+  credit TEXT,
+  alt_text TEXT,
+  sort_order INTEGER NOT NULL DEFAULT 0,
+  is_primary BOOLEAN NOT NULL DEFAULT false,
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  updated_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE (package_id, url)
+);
+CREATE INDEX IF NOT EXISTS package_images_package_idx ON package_images (package_id, sort_order);
+-- Carry over the photo links packages already have (embedded base64 blobs are skipped);
+-- the content migration then fills in source pages, credits and alt text.
+INSERT INTO package_images (package_id, url, credit, alt_text, sort_order, is_primary)
+  SELECT p.id, u.url, p.image_credit, p.title, u.ord - 1, u.ord = 1
+  FROM tour_packages p, LATERAL unnest(p.images) WITH ORDINALITY AS u(url, ord)
+  WHERE u.url ~* '^https?://'
+  ON CONFLICT (package_id, url) DO NOTHING;
+-- Credit for the category cover photo (shown on the category card).
+ALTER TABLE categories ADD COLUMN IF NOT EXISTS image_credit TEXT;
+
 -- ---------- updated_at maintenance ----------
 CREATE OR REPLACE FUNCTION public.set_updated_at() RETURNS TRIGGER
 LANGUAGE plpgsql AS $$
@@ -100,6 +125,9 @@ CREATE TRIGGER tour_packages_set_updated_at BEFORE UPDATE ON tour_packages
   FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 DROP TRIGGER IF EXISTS place_details_set_updated_at ON place_details;
 CREATE TRIGGER place_details_set_updated_at BEFORE UPDATE ON place_details
+  FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
+DROP TRIGGER IF EXISTS package_images_set_updated_at ON package_images;
+CREATE TRIGGER package_images_set_updated_at BEFORE UPDATE ON package_images
   FOR EACH ROW EXECUTE FUNCTION public.set_updated_at();
 DROP TRIGGER IF EXISTS site_settings_set_updated_at ON site_settings;
 CREATE TRIGGER site_settings_set_updated_at BEFORE UPDATE ON site_settings

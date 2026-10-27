@@ -41,8 +41,9 @@ const CategoryGrid = ({ limit = 8, title = 'Browse by', accent = 'experience', c
             return (
               <motion.div key={c.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: (i % 4) * 0.06 }}>
                 <Link to={`/destinations?category=${encodeURIComponent(c.slug || c.name)}`} className="group relative block h-40 sm:h-48 rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(15,23,42,0.08)] hover:shadow-[0_18px_40px_rgba(15,23,42,0.18)] hover:-translate-y-1 transition-all duration-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#10B981]">
-                  <SmartImage src={c.image} alt="" className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
+                  <SmartImage src={c.image} alt="" title={c.image_credit ? `Photo: ${c.image_credit}` : undefined} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0B1220]/90 via-[#0B1220]/25 to-transparent" />
+                  {c.image_credit && <span className="absolute top-2 right-2 max-w-[70%] truncate text-[9px] text-white/75 bg-black/30 backdrop-blur px-1.5 py-0.5 rounded-md">{c.image_credit}</span>}
                   <div className="absolute inset-0 p-4 flex flex-col justify-end">
                     <span className="w-9 h-9 rounded-xl bg-white/15 backdrop-blur border border-white/20 text-white flex items-center justify-center mb-2 group-hover:bg-[#10B981] group-hover:border-[#10B981] transition-colors"><Icon className="w-4 h-4" /></span>
                     <h3 className="text-white font-bold text-sm sm:text-base leading-tight">{c.name}</h3>

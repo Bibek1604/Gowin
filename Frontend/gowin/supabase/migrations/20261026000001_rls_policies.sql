@@ -27,6 +27,7 @@ GRANT EXECUTE ON FUNCTION public.is_admin() TO anon, authenticated;
 ALTER TABLE categories             ENABLE ROW LEVEL SECURITY;
 ALTER TABLE tour_packages          ENABLE ROW LEVEL SECURITY;
 ALTER TABLE place_details          ENABLE ROW LEVEL SECURITY;
+ALTER TABLE package_images         ENABLE ROW LEVEL SECURITY;
 ALTER TABLE bookings               ENABLE ROW LEVEL SECURITY;
 ALTER TABLE testimonials           ENABLE ROW LEVEL SECURITY;
 ALTER TABLE contact_messages       ENABLE ROW LEVEL SECURITY;
@@ -58,6 +59,16 @@ CREATE POLICY "details public read" ON place_details
     public.is_admin() OR EXISTS (
       SELECT 1 FROM tour_packages p WHERE p.id = place_details.place_id AND p.is_published));
 CREATE POLICY "details admin all" ON place_details
+  FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
+
+-- ---------- package_images ----------
+DROP POLICY IF EXISTS "images public read" ON package_images;
+DROP POLICY IF EXISTS "images admin all"   ON package_images;
+CREATE POLICY "images public read" ON package_images
+  FOR SELECT USING (
+    public.is_admin() OR EXISTS (
+      SELECT 1 FROM tour_packages p WHERE p.id = package_images.package_id AND p.is_published));
+CREATE POLICY "images admin all" ON package_images
   FOR ALL USING (public.is_admin()) WITH CHECK (public.is_admin());
 
 -- ---------- testimonials ----------

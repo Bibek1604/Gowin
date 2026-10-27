@@ -11,7 +11,7 @@
 // back (always, even on failure) before the second push.
 //
 //   1. supabase db push        → 20261026000000_platform_schema.sql
-//   2. scripts/migrate-content → photos, categories, trekking removal, top-10 content
+//   2. scripts/migrate-content → photo links, categories, trekking removal, top-10 content
 //   3. supabase db push        → 20261026000001_rls_policies.sql
 //   4. scripts/verify-content  → read-only checks (exit code 1 on failure)
 // ============================================================
@@ -30,14 +30,14 @@ const npx = process.platform === 'win32' ? 'npx.cmd' : 'npx';
 
 // .env is read here so the schema-cache wait below can query the project.
 const envFile = path.join(root, '.env');
-if (!fs.existsSync(envFile)) throw new Error('.env is missing (VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY)');
+if (!fs.existsSync(envFile)) throw new Error('.env is missing (VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY)');
 for (const line of fs.readFileSync(envFile, 'utf8').split(/\r?\n/)) {
   const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*?)\s*$/);
   if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
 }
 const url = process.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-const key = process.env.VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-if (!url || !key) throw new Error('.env must define VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY');
+const key = (process.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+if (!url || !key) throw new Error('.env must define VITE_SUPABASE_URL and VITE_SUPABASE_PUBLISHABLE_KEY (or the legacy VITE_SUPABASE_ANON_KEY)');
 
 function run(label, cmd, args, { tolerate = false } = {}) {
   console.log(`\n▶ ${label}\n  ${cmd} ${args.join(' ')}`);
@@ -54,7 +54,8 @@ async function waitForSchema() {
   const sb = createClient(url, key, { auth: { persistSession: false } });
   for (let i = 0; i < 20; i++) {
     const { error } = await sb.from('tour_packages').select('id,slug,is_published,sort_order').limit(1);
-    if (!error) return;
+    const { error: iErr } = error ? { error } : await sb.from('package_images').select('id').limit(1);
+    if (!error && !iErr) return;
     await new Promise((r) => setTimeout(r, 3000));
   }
   throw new Error('The new columns are still not visible through the API after 60 s. Re-run `npm run db:deploy` in a minute.');

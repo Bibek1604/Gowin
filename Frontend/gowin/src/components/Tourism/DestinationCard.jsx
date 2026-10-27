@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { MapPin, ArrowUpRight, Globe, Map as MapIcon, Clock, Tag, Star } from 'lucide-react';
 import SmartImage from '../ui/SmartImage';
-import { formatPrice, shortDuration, isNepal, placePath, coverImage } from '../../lib/format';
+import { formatPrice, shortDuration, isNepal, placePath, coverImage, coverAlt } from '../../lib/format';
 
 const SIZES = {
   carousel: 'min-w-[250px] sm:min-w-[280px] w-[250px] sm:w-[280px] flex-shrink-0 snap-start',
@@ -33,7 +33,7 @@ const DestinationCard = ({ dest, index = 0, variant = 'grid', priority = false, 
         <div className={`relative overflow-hidden flex-shrink-0 ${variant === 'grid' ? 'aspect-[4/3]' : 'h-[200px] sm:h-[220px]'}`}>
           <SmartImage
             src={coverImage(dest)}
-            alt={`${dest.title}${dest.location ? ` – ${dest.location}` : ''}`}
+            alt={coverAlt(dest)}
             priority={priority}
             className="w-full h-full object-cover transition-transform duration-[1200ms] ease-out group-hover:scale-[1.08]"
           />

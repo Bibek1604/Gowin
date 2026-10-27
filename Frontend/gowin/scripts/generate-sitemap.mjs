@@ -23,7 +23,7 @@ try {
 
 const SITE = (process.env.VITE_SITE_URL || 'https://gowintravels.com').replace(/\/$/, '');
 const url = process.env.VITE_SUPABASE_URL || process.env.NEXT_PUBLIC_SUPABASE_URL;
-const key = process.env.VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+const key = (process.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
 
 const STATIC = [
   ['/', '1.0', 'weekly'], ['/destinations', '0.9', 'weekly'], ['/destinations/national', '0.9', 'weekly'],

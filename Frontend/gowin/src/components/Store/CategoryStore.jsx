@@ -3,7 +3,7 @@ import { supabase } from '../../supabaseClient';
 import { slugify } from '../../lib/slugify';
 import { clean } from '../../lib/format';
 
-const NEW_COLUMNS = ['slug', 'is_active', 'sort_order'];
+const NEW_COLUMNS = ['slug', 'is_active', 'sort_order', 'image_credit'];
 const missingColumn = (error) => error && (error.code === '42703' || /column .* does not exist/i.test(error.message || ''));
 const stripNewColumns = (payload) => Object.fromEntries(Object.entries(payload).filter(([k]) => !NEW_COLUMNS.includes(k)));
 
@@ -37,6 +37,7 @@ const useCategoryStore = create((set, get) => ({
       slug: slugify(form.slug || form.name) || null,
       description: clean(form.description) || null,
       image_url: clean(form.image_url) || null,
+      image_credit: clean(form.image_credit) || null,
       is_active: form.is_active !== false,
       sort_order: Number.isFinite(Number(form.sort_order)) ? Number(form.sort_order) : 100,
     };

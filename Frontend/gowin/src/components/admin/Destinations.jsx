@@ -77,9 +77,9 @@ const Destinations = () => {
       <Toolbar>
         <SearchBox value={search} onChange={setSearch} placeholder="Search by title, location or category…" />
         <Chips value={status} onChange={setStatus} options={[{ value: 'published', label: 'Published', count: counts.published }, { value: 'unpublished', label: 'Unpublished', count: counts.unpublished }, { value: 'featured', label: 'Featured', count: counts.featured }, { value: 'all', label: 'All', count: counts.all }]} />
-        <div className="flex gap-2">
-          <Select value={region} onChange={(e) => setRegion(e.target.value)} className="!py-2 !w-auto text-xs font-semibold" aria-label="Region"><option value="all">All regions</option><option value="nepal">Nepal</option><option value="international">International</option></Select>
-          <Select value={category} onChange={(e) => setCategory(e.target.value)} className="!py-2 !w-auto text-xs font-semibold" aria-label="Category"><option value="">All categories</option>{categories.map((c) => <option key={c.id} value={c.id}>{c.name}{c.is_active ? '' : ' (inactive)'}</option>)}</Select>
+        <div className="flex flex-wrap gap-2 min-w-0">
+          <Select value={region} onChange={(e) => setRegion(e.target.value)} className="!py-2 !w-auto max-w-full text-xs font-semibold" aria-label="Region"><option value="all">All regions</option><option value="nepal">Nepal</option><option value="international">International</option></Select>
+          <Select value={category} onChange={(e) => setCategory(e.target.value)} className="!py-2 !w-auto max-w-full text-xs font-semibold" aria-label="Category"><option value="">All categories</option>{categories.map((c) => <option key={c.id} value={c.id}>{c.name}{c.is_active ? '' : ' (inactive)'}</option>)}</Select>
         </div>
       </Toolbar>
 

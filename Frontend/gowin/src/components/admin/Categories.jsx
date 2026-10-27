@@ -15,7 +15,7 @@ import { CardSkeleton } from '../ui/Skeleton';
 import { slugify } from '../../lib/slugify';
 import { friendlyError } from '../../lib/errors';
 
-const EMPTY = { name: '', slug: '', description: '', image_url: '', is_active: true, sort_order: 100 };
+const EMPTY = { name: '', slug: '', description: '', image_url: '', image_credit: '', is_active: true, sort_order: 100 };
 
 const Categories = () => {
   const { categories, isLoading, loaded, error, saveCategory, patchCategory, deleteCategory } = useCategoryStore();
@@ -38,7 +38,7 @@ const Categories = () => {
 
   useEffect(() => {
     if (!formOpen) return;
-    setForm(editing ? { name: editing.name, slug: editing.slug || '', description: editing.description || '', image_url: editing.image_url || '', is_active: editing.is_active !== false, sort_order: editing.sort_order ?? 100 } : EMPTY);
+    setForm(editing ? { name: editing.name, slug: editing.slug || '', description: editing.description || '', image_url: editing.image_url || '', image_credit: editing.image_credit || '', is_active: editing.is_active !== false, sort_order: editing.sort_order ?? 100 } : EMPTY);
     setSlugTouched(!!editing?.slug);
   }, [formOpen, editing]);
 
@@ -116,6 +116,7 @@ const Categories = () => {
           <Field label="URL slug" htmlFor="cat-slug" hint="Used in filter links"><Input id="cat-slug" value={form.slug} onChange={(e) => { setSlugTouched(true); setForm((f) => ({ ...f, slug: slugify(e.target.value) })); }} /></Field>
           <Field label="Description" htmlFor="cat-desc"><Textarea id="cat-desc" rows={2} value={form.description} onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} placeholder="One sentence shown on the listing page" /></Field>
           <ImageUploader label="Cover photo" value={form.image_url ? [form.image_url] : []} onChange={(imgs) => setForm((f) => ({ ...f, image_url: imgs[0] || '' }))} folder="categories" max={1} />
+          <Field label="Photo credit" htmlFor="c-credit" hint="Shown on the category card. Required for Creative Commons photos (photographer, licence, source)."><Input id="c-credit" value={form.image_credit} onChange={(e) => setForm((f) => ({ ...f, image_credit: e.target.value }))} placeholder="e.g. Jane Doe, CC BY-SA 4.0, via Wikimedia Commons" /></Field>
           <div className="grid grid-cols-2 gap-4 items-end">
             <Field label="Display order" htmlFor="cat-order" hint="Lower numbers first"><Input id="cat-order" type="number" value={form.sort_order} onChange={(e) => setForm((f) => ({ ...f, sort_order: e.target.value }))} /></Field>
             <Toggle checked={form.is_active} onChange={(v) => setForm((f) => ({ ...f, is_active: v }))} label="Active" hint="Visible to visitors" />

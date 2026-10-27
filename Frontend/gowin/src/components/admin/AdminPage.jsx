@@ -28,7 +28,7 @@ export const SearchBox = ({ value, onChange, placeholder = 'Search…', id = 'ad
 );
 
 export const Chips = ({ options, value, onChange }) => (
-  <div className="flex gap-1.5 overflow-x-auto no-scrollbar">
+  <div className="flex gap-1.5 overflow-x-auto no-scrollbar min-w-0 max-w-full">
     {options.map((o) => (
       <button key={o.value} type="button" onClick={() => onChange(o.value)}
         className={`px-3.5 py-2 rounded-lg text-xs font-semibold whitespace-nowrap transition-colors border ${value === o.value ? 'bg-[#1E3A8A] text-white border-[#1E3A8A]' : 'bg-gray-50 text-gray-600 border-gray-100 hover:text-[#1E3A8A]'}`}>

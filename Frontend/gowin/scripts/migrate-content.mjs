@@ -1,19 +1,24 @@
 // ============================================================
 // GoWin Travels — one-off content migration (idempotent, re-runnable)
 //
-//   1. uploads the verified image library (supabase/media/*.webp) to the
-//      public `media` bucket and moves every base64 image that is still
-//      embedded in a database row into storage;
-//   2. fixes categories (slugs, names, cover photos; hides trekking and the
-//      six Philippine destinations that were mistakenly saved as categories);
-//   3. corrects every destination: title/location/category/photos/slug,
-//      unpublishes trekking packages, duplicates and test rows (nothing is
-//      deleted), and adds the Philippine destinations as real packages;
+//   1. resolves every photo in supabase/media/photos.json to a direct link
+//      (Wikimedia Commons / Unsplash) — only the owner's own photos are
+//      uploaded to the public `media` bucket — and moves every base64 image
+//      that is still embedded in a database row into storage;
+//   2. fixes categories (slugs, names, cover photos + credits; hides trekking
+//      and the six Philippine destinations that were mistakenly saved as
+//      categories);
+//   3. corrects every destination: title/location/category/slug, the photo
+//      rows in package_images (link, source page, credit, alt text, order,
+//      cover), trip details, unpublishes trekking packages, duplicates and
+//      test rows (nothing is deleted), and adds the Philippine destinations
+//      as real packages;
 //   4. hides the developer's test testimonial and fills in site settings.
 //
 // The plan itself lives in scripts/content-plan.mjs.
 //
-// Run order:  npx supabase db push --linked   (applies 20261026000000)
+// Run order (or simply `npm run db:deploy`):
+//             npx supabase db push --linked   (applies 20261026000000)
 //             node --env-file=.env scripts/migrate-content.mjs [--dry-run]
 //             npx supabase db push --linked   (applies 20261026000001 — RLS)
 //             node --env-file=.env scripts/verify-content.mjs
@@ -30,9 +35,9 @@ import {
 const DRY = process.argv.includes('--dry-run');
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const mediaDir = path.join(root, 'supabase', 'media');
-const manifest = JSON.parse(fs.readFileSync(path.join(mediaDir, 'manifest.json'), 'utf8'));
+const photos = JSON.parse(fs.readFileSync(path.join(mediaDir, 'photos.json'), 'utf8'));
 
-const sb = createClient(process.env.VITE_SUPABASE_URL, process.env.VITE_SUPABASE_ANON_KEY, { auth: { persistSession: false } });
+const sb = createClient(process.env.VITE_SUPABASE_URL, (process.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY), { auth: { persistSession: false } });
 const log = (...a) => console.log(...a);
 const slugify = (t) => String(t).normalize('NFKD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/&/g, ' and ').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 const publicUrl = (p) => sb.storage.from('media').getPublicUrl(p).data.publicUrl;
@@ -47,24 +52,47 @@ async function act(label, fn) {
 
 // ---------- 0. preflight ----------
 {
-  const { error } = await sb.from('tour_packages').select('id,slug,is_published,is_featured').limit(1);
+  const { error } = await sb.from('tour_packages').select('id,slug,is_published,is_featured,sort_order').limit(1);
   if (error) { console.error('Preflight failed: new columns are missing. Run `npx supabase db push --linked` first.\n', error.message); process.exit(1); }
+  const { error: iErr } = await sb.from('package_images').select('id').limit(1);
+  if (iErr) { console.error('Preflight failed: the package_images table is missing. Run `npx supabase db push --linked` first.\n', iErr.message); process.exit(1); }
   const { error: bErr } = await sb.storage.from('media').list('', { limit: 1 });
   if (bErr) { console.error('Preflight failed: the `media` bucket is missing. Run the migrations first.\n', bErr.message); process.exit(1); }
   log(`Connected to ${new URL(process.env.VITE_SUPABASE_URL).host}${DRY ? ' (DRY RUN — nothing will be written)' : ''}`);
 }
 
-// ---------- 1a. upload the verified image library ----------
-log('\n1. Media library');
-const libraryUrl = {};
-for (const [key, info] of Object.entries(manifest)) {
-  const storagePath = `library/${info.file}`;
-  libraryUrl[key] = publicUrl(storagePath);
-  const bytes = fs.readFileSync(path.join(mediaDir, info.file));
-  await act(`upload ${storagePath} (${Math.round(bytes.length / 1024)} KB)`, () =>
+// ---------- 1a. photo links; the owner's own photos are uploaded ----------
+log('\n1. Photos');
+const photoUrl = {};
+let linked = 0;
+for (const [key, p] of Object.entries(photos)) {
+  if (p.url) { photoUrl[key] = p.url; linked++; continue; }
+  if (!p.file) throw new Error(`photos.json: "${key}" has neither a url nor a file`);
+  const storagePath = `library/${p.file}`;
+  photoUrl[key] = publicUrl(storagePath);
+  const bytes = fs.readFileSync(path.join(mediaDir, p.file));
+  await act(`upload owner photo ${storagePath} (${Math.round(bytes.length / 1024)} KB)`, () =>
     sb.storage.from('media').upload(storagePath, bytes, { contentType: 'image/webp', cacheControl: '31536000', upsert: true }));
 }
-const credit = (keys) => [...new Set(keys.map((k) => manifest[k]?.credit).filter(Boolean))].join('; ') || null;
+log(`  ${linked} direct links, ${Object.keys(photos).length - linked} owner photos in storage`);
+const photo = (k) => { if (!photos[k]) throw new Error(`content-plan refers to an unknown photo "${k}"`); return photos[k]; };
+const credit = (keys) => [...new Set(keys.map((k) => photo(k).credit).filter(Boolean))].join('; ') || null;
+const urls = (keys) => keys.map((k) => { photo(k); return photoUrl[k]; });
+const imageRows = (packageId, keys) => keys.map((k, i) => ({
+  package_id: packageId, url: photoUrl[k], source_url: photo(k).source_url || null, credit: photo(k).credit || null,
+  alt_text: photo(k).alt || photo(k).verified || null, sort_order: i, is_primary: i === 0,
+}));
+/** One row per photo: upsert by (package, url), then drop rows that are no longer in the plan. */
+async function syncImages(packageId, keys, label) {
+  const rows = imageRows(packageId, keys);
+  const res = await act(`  photos ${label}: ${rows.length} link(s)`, () => sb.from('package_images').upsert(rows, { onConflict: 'package_id,url' }).select('id'));
+  if (DRY || res.error) return;
+  const keep = (res.data || []).map((r) => r.id);
+  let q = sb.from('package_images').delete().eq('package_id', packageId);
+  if (keep.length) q = q.not('id', 'in', `(${keep.join(',')})`);
+  const { error } = await q;
+  if (error) { console.error(`  FAILED tidy photos ${label}: ${error.message}`); process.exitCode = 1; }
+}
 
 // ---------- 1b. move embedded base64 images into storage ----------
 async function offloadDataUri(table, id, column, value, index = 0) {
@@ -84,20 +112,19 @@ const { data: existingCats } = await sb.from('categories').select('id,name,slug,
 const catIdBySlug = {};
 for (const c of existingCats || []) if (c.slug) catIdBySlug[c.slug] = c.id;
 
+const categoryPatch = (spec) => ({
+  name: spec.name, slug: spec.slug, description: spec.description, image_url: urls([spec.image])[0], image_credit: credit([spec.image]), is_active: true, sort_order: spec.sort,
+});
 for (const [id, slug] of Object.entries(CATEGORY_RENAMES)) {
   const spec = CATEGORIES.find((c) => c.slug === slug);
   const row = (existingCats || []).find((c) => c.id === id);
   if (!row) { log(`  skip ${slug}: row ${id.slice(0, 8)} not found`); continue; }
   catIdBySlug[slug] = id;
-  await act(`category ${row.name} → ${spec.name} (${slug})`, () => sb.from('categories').update({
-    name: spec.name, slug, description: spec.description, image_url: libraryUrl[spec.image], is_active: true, sort_order: spec.sort,
-  }).eq('id', id));
+  await act(`category ${row.name} → ${spec.name} (${slug})`, () => sb.from('categories').update(categoryPatch(spec)).eq('id', id));
 }
 for (const spec of CATEGORIES) {
   if (catIdBySlug[spec.slug]) continue;
-  const res = await act(`create category ${spec.name}`, () => sb.from('categories').insert({
-    name: spec.name, slug: spec.slug, description: spec.description, image_url: libraryUrl[spec.image], is_active: true, sort_order: spec.sort,
-  }).select('id').single());
+  const res = await act(`create category ${spec.name}`, () => sb.from('categories').insert(categoryPatch(spec)).select('id').single());
   if (res.data) catIdBySlug[spec.slug] = res.data.id;
 }
 for (const id of CATEGORY_HIDE) {
@@ -132,7 +159,7 @@ for (const [id, spec] of Object.entries(KEEP)) {
   const row = (pkgs || []).find((p) => p.id === id);
   if (!row) { log(`  skip ${spec.slug}: row ${id.slice(0, 8)} not found`); continue; }
   const patch = {
-    slug: spec.slug, category_id: catIdBySlug[spec.category], location: spec.location, images: spec.images.map((k) => libraryUrl[k]),
+    slug: spec.slug, category_id: catIdBySlug[spec.category], location: spec.location, images: urls(spec.images),
     image_credit: credit(spec.images), is_published: true, is_featured: !!spec.featured,
   };
   if (spec.title) patch.title = spec.title;
@@ -140,6 +167,7 @@ for (const [id, spec] of Object.entries(KEEP)) {
   if (spec.duration) patch.duration = spec.duration;
   if (spec.sort_order) patch.sort_order = spec.sort_order;
   await act(`keep ${row.title} → /places/${spec.slug} [${spec.category}] ${spec.images.length} photo(s)`, () => sb.from('tour_packages').update(patch).eq('id', id));
+  await syncImages(id, spec.images, spec.slug);
   await upsertDetails(id, spec.title || row.title, spec.description || row.description, spec.details);
 }
 for (const [id, reason] of Object.entries(ARCHIVE)) {
@@ -165,21 +193,25 @@ async function createOrUpdate(spec, payload, label) {
   const existing = (pkgs || []).find((p) => p.slug === spec.slug);
   if (existing) {
     await act(`update ${spec.title} (already exists)`, () => sb.from('tour_packages').update(payload).eq('id', existing.id));
+    await syncImages(existing.id, spec.images, spec.slug);
     await upsertDetails(existing.id, spec.title, payload.description, spec.details);
     return;
   }
   const res = await act(label, () => sb.from('tour_packages').insert({ ...payload, price: null }).select('id').single());
-  if (res.data) await upsertDetails(res.data.id, spec.title, payload.description, spec.details);
+  if (res.data) {
+    await syncImages(res.data.id, spec.images, spec.slug);
+    await upsertDetails(res.data.id, spec.title, payload.description, spec.details);
+  }
 }
 for (const spec of PHILIPPINES) {
   const cat = (existingCats || []).find((c) => c.id === spec.catId);
   await createOrUpdate(spec, { title: spec.title, slug: spec.slug, description: spec.description || cat?.description || null, location: spec.location, duration: spec.duration || null,
-    category_id: catIdBySlug[spec.category], destination_type: 'International', images: spec.images.map((k) => libraryUrl[k]), image_credit: credit(spec.images), is_published: true, is_featured: !!spec.featured, sort_order: spec.sort_order || 100 },
+    category_id: catIdBySlug[spec.category], destination_type: 'International', images: urls(spec.images), image_credit: credit(spec.images), is_published: true, is_featured: !!spec.featured, sort_order: spec.sort_order || 100 },
   `create ${spec.title} (from category row)`);
 }
 for (const spec of NEW_NEPAL) {
   await createOrUpdate(spec, { title: spec.title, slug: spec.slug, description: spec.description, location: spec.location, duration: spec.duration || null,
-    category_id: catIdBySlug[spec.category], destination_type: 'National', images: spec.images.map((k) => libraryUrl[k]), image_credit: credit(spec.images), is_published: true, is_featured: !!spec.featured, sort_order: spec.sort_order || 100 },
+    category_id: catIdBySlug[spec.category], destination_type: 'National', images: urls(spec.images), image_credit: credit(spec.images), is_published: true, is_featured: !!spec.featured, sort_order: spec.sort_order || 100 },
   `create ${spec.title}`);
 }
 

@@ -15,7 +15,7 @@
     "db:verify": "node --env-file=.env scripts/verify-content.mjs",
     "db:push": "supabase db push --linked",
     "db:deploy": "node scripts/db-deploy.mjs",
-    "media:build": "python -I scripts/build-media.py"
+    "media:links": "python -I scripts/build-photo-links.py"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.99.0",

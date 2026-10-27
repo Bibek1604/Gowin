@@ -92,7 +92,10 @@ const DestinationDetails = () => {
     );
   }
 
-  const images = place.images.length ? place.images : [null];
+  const gallery = place.gallery?.length ? place.gallery : [{ url: null, alt_text: '', credit: '', source_url: '' }];
+  const active = gallery[activeImg] || gallery[0];
+  const credits = [...new Set(gallery.map((g) => g.credit).filter(Boolean))];
+  const creditLine = credits.length ? credits.join('; ') : place.image_credit;
   const price = formatPrice(place.price);
   const d = place.details;
   const nepal = isNepal(place);
@@ -104,8 +107,14 @@ const DestinationDetails = () => {
     <article className="bg-[#F8FAFC] min-h-screen">
       {/* Gallery hero */}
       <div className="relative h-[320px] sm:h-[420px] lg:h-[520px] bg-[#0F172A] overflow-hidden">
-        <SmartImage key={images[activeImg] || 'placeholder'} src={images[activeImg]} alt={place.title} priority className="w-full h-full object-cover" />
+        <SmartImage key={active.url || 'placeholder'} src={active.url} alt={active.alt_text || place.title} priority className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#0B1220]/90 via-[#0B1220]/25 to-[#0B1220]/20" />
+        {active.credit && (
+          <span className="absolute bottom-1.5 right-3 sm:right-6 max-w-[55%] inline-flex items-center gap-1 text-[10px] text-white/70">
+            <Camera className="w-3 h-3 flex-shrink-0" />
+            {active.source_url ? <a href={active.source_url} target="_blank" rel="noopener noreferrer" className="truncate hover:text-white">{active.credit}</a> : <span className="truncate">{active.credit}</span>}
+          </span>
+        )}
         <div className="absolute inset-x-0 bottom-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-6 sm:pb-8">
           <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-[11px] text-white/60 mb-3 flex-wrap">
             <Link to="/" className="hover:text-white">Home</Link><ChevronRight className="w-3 h-3 text-white/30" />
@@ -124,12 +133,12 @@ const DestinationDetails = () => {
             {d?.best_time && <span className="inline-flex items-center gap-1.5"><CalendarDays className="w-4 h-4 text-[#34D399]" />Best time: {d.best_time}</span>}
           </div>
         </div>
-        {images.length > 1 && (
+        {gallery.length > 1 && (
           <div className="absolute top-20 sm:top-24 right-4 sm:right-6 flex flex-col gap-2 max-h-[60%] overflow-y-auto no-scrollbar" role="tablist" aria-label="Photos">
-            {images.map((img, i) => (
-              <button key={img} type="button" role="tab" aria-selected={i === activeImg} aria-label={`Photo ${i + 1}`} onClick={() => setActiveImg(i)}
+            {gallery.map((g, i) => (
+              <button key={`${g.url}-${i}`} type="button" role="tab" aria-selected={i === activeImg} aria-label={g.alt_text || `Photo ${i + 1}`} title={g.alt_text || undefined} onClick={() => setActiveImg(i)}
                 className={`w-14 h-11 sm:w-16 sm:h-12 rounded-lg overflow-hidden border-2 transition-all ${i === activeImg ? 'border-[#10B981] opacity-100' : 'border-white/40 opacity-70 hover:opacity-100'}`}>
-                <SmartImage src={img} alt="" className="w-full h-full object-cover" />
+                <SmartImage src={g.url} alt="" className="w-full h-full object-cover" />
               </button>
             ))}
           </div>
@@ -141,7 +150,7 @@ const DestinationDetails = () => {
           <section className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 sm:p-7">
             <h2 className="text-lg font-bold text-[#0F172A] mb-3">About this {nepal ? 'experience' : 'holiday'}</h2>
             {place.description ? <p className="text-gray-600 text-sm sm:text-base leading-relaxed whitespace-pre-line">{place.description}</p> : <p className="text-gray-400 text-sm">Full description coming soon — contact us for details.</p>}
-            {place.image_credit && <p className="mt-4 text-[11px] text-gray-400 flex items-center gap-1"><Camera className="w-3 h-3" /> Photo: {place.image_credit}</p>}
+            {creditLine && <p className="mt-4 text-[11px] text-gray-400 flex items-center gap-1"><Camera className="w-3 h-3" /> Photo{credits.length > 1 ? 's' : ''}: {creditLine}</p>}
           </section>
 
           {d?.highlights?.length > 0 && (

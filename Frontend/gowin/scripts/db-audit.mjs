@@ -4,8 +4,8 @@
 import { createClient } from '@supabase/supabase-js';
 
 const url = process.env.VITE_SUPABASE_URL;
-const key = process.env.VITE_SUPABASE_ANON_KEY;
-if (!url || !key) { console.error('Missing VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY'); process.exit(1); }
+const key = (process.env.VITE_SUPABASE_PUBLISHABLE_KEY || process.env.VITE_SUPABASE_ANON_KEY || process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+if (!url || !key) { console.error('Missing VITE_SUPABASE_URL / VITE_SUPABASE_PUBLISHABLE_KEY (or VITE_SUPABASE_ANON_KEY)'); process.exit(1); }
 const sb = createClient(url, key, { auth: { persistSession: false } });
 
 const tables = ['categories','tour_packages','place_details','bookings','testimonials','contact_messages','newsletter_subscribers'];
