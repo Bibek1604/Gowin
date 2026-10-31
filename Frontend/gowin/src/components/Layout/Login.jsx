@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ShieldCheck, ArrowRight, ArrowLeft } from 'lucide-react';
 import { useAdminStore } from '../Store/AdminStore';
 import { Field, Input } from '../ui/FormField';
@@ -35,7 +34,7 @@ const Login = () => {
     <div className="min-h-screen flex items-center justify-center bg-[#F8FAFC] p-6 relative overflow-hidden">
       <div className="absolute -top-32 -right-32 w-[420px] h-[420px] bg-[#1E3A8A]/5 rounded-full blur-3xl" aria-hidden="true" />
       <div className="absolute -bottom-32 -left-32 w-[420px] h-[420px] bg-[#10B981]/5 rounded-full blur-3xl" aria-hidden="true" />
-      <motion.div initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} className="w-full max-w-md relative">
+      <div className="animate-popIn w-full max-w-md relative">
         <div className="text-center mb-8">
           <img src={gowinLogo} alt="GoWin Travels" width="72" height="72" className="w-18 h-18 rounded-2xl object-cover mx-auto mb-4 shadow-lg" />
           <h1 className="text-2xl font-black text-[#1E3A8A]">GoWin Travels</h1>
@@ -52,7 +51,7 @@ const Login = () => {
           <button type="submit" disabled={busy} className="btn-secondary w-full justify-center !py-3.5 disabled:opacity-60">{busy ? <span className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" /> : <>Sign in <ArrowRight className="w-4 h-4" /></>}</button>
         </form>
         <Link to="/" className="mt-6 inline-flex items-center gap-1.5 text-xs font-semibold text-gray-500 hover:text-[#1E3A8A]"><ArrowLeft className="w-3.5 h-3.5" /> Back to website</Link>
-      </motion.div>
+      </div>
     </div>
   );
 };

@@ -32,7 +32,7 @@ const TourismHome = () => {
   }, [places]);
 
   return (
-    <main className="bg-white text-[#0F172A]">
+    <main className="home-main bg-white text-[#0F172A]">
       <Hero />
       <DestinationGrid
         id="nepal" label="Top 10 in Nepal" title="Explore" accent="Nepal"

@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
+import Reveal from '../ui/Reveal';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ArrowRight, Globe } from 'lucide-react';
 import usePlaceStore, { selectPublished } from '../Store/PlaceStore';
 import SectionHeader from '../ui/SectionHeader';
@@ -38,7 +38,7 @@ const CountryShowcase = ({ limit = 8, bg = 'bg-[#F8FAFC]' }) => {
         />
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-5">
           {countries.map((c, i) => (
-            <motion.div key={c.name} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-40px' }} transition={{ delay: (i % 4) * 0.06 }}>
+            <Reveal delay={(i % 4) * 0.06} key={c.name}>
               <Link to={`/destinations/international?country=${encodeURIComponent(c.name)}`} className="group relative block h-40 sm:h-48 rounded-[22px] overflow-hidden shadow-[0_2px_16px_rgba(30,58,138,0.08)] hover:shadow-[0_20px_44px_rgba(30,58,138,0.2)] hover:-translate-y-1.5 transition-all duration-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#10B981]">
                 <SmartImage src={c.image} alt={c.name} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-[1200ms]" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0B1220]/85 via-[#0B1220]/20 to-transparent" />
@@ -50,7 +50,7 @@ const CountryShowcase = ({ limit = 8, bg = 'bg-[#F8FAFC]' }) => {
                   <span className="flex-shrink-0 bg-white/15 backdrop-blur border border-white/20 text-white text-[10px] font-bold px-2 py-1 rounded-lg flex items-center gap-1">{c.count} <ArrowRight className="w-3 h-3" /></span>
                 </div>
               </Link>
-            </motion.div>
+            </Reveal>
           ))}
         </div>
       </div>

@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react';
-import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
 
 const SIZES = { sm: 'max-w-md', md: 'max-w-2xl', lg: 'max-w-4xl', xl: 'max-w-6xl' };
@@ -16,14 +15,12 @@ const Modal = ({ open, onClose, title, subtitle, size = 'md', children, footer =
   }, [open, onClose]);
 
   return (
-    <AnimatePresence>
+    <>
       {open && (
         <div className="fixed inset-0 z-[120] flex items-end sm:items-center justify-center p-0 sm:p-4" role="dialog" aria-modal="true" aria-label={title}>
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="absolute inset-0 bg-[#0F172A]/55 backdrop-blur-sm" onClick={onClose} />
-          <motion.div
-            initial={{ opacity: 0, y: 24, scale: 0.98 }} animate={{ opacity: 1, y: 0, scale: 1 }} exit={{ opacity: 0, y: 24, scale: 0.98 }}
-            transition={{ duration: 0.2 }}
-            className={`relative w-full ${SIZES[size] || SIZES.md} bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[94vh] sm:max-h-[90vh]`}
+          <div className="animate-fade absolute inset-0 bg-[#0F172A]/55 backdrop-blur-sm" onClick={onClose} />
+          <div
+            className={`animate-popIn relative w-full ${SIZES[size] || SIZES.md} bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[94vh] sm:max-h-[90vh]`}
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-start justify-between gap-4 px-5 sm:px-6 py-4 border-b border-gray-100">
@@ -37,10 +34,10 @@ const Modal = ({ open, onClose, title, subtitle, size = 'md', children, footer =
             </div>
             <div className="flex-1 overflow-y-auto px-5 sm:px-6 py-5">{children}</div>
             {footer && <div className="px-5 sm:px-6 py-4 border-t border-gray-100 bg-gray-50/60 rounded-b-2xl">{footer}</div>}
-          </motion.div>
+          </div>
         </div>
       )}
-    </AnimatePresence>
+    </>
   );
 };
 

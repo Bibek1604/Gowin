@@ -1,7 +1,8 @@
 import { useEffect } from 'react';
+import { DEFAULT_SITE_URL, SITE_NAME, homeGraph, tripGraph, pageGraph } from './schema';
 
-export const SITE_URL = (import.meta.env.VITE_SITE_URL || 'https://gowintravels.com').replace(/\/$/, '');
-export const SITE_NAME = 'GoWin Travels';
+export { SITE_NAME };
+export const SITE_URL = (import.meta.env.VITE_SITE_URL || DEFAULT_SITE_URL).replace(/\/$/, '');
 const DEFAULT_DESCRIPTION =
   'GoWin International Travel & Tourism, Kathmandu: Nepal cultural tours, pilgrimages, wildlife safaris, lakes and scenic escapes, plus curated international holidays, flights, hotels and visa assistance.';
 
@@ -35,7 +36,7 @@ export function useSEO({ title, description, path, image, type = 'website', json
     const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Nepal Tours & World Holidays`;
     const desc = (description || DEFAULT_DESCRIPTION).slice(0, 300);
     const url = `${SITE_URL}${path || window.location.pathname}`;
-    const img = image || `${SITE_URL}/og-cover.jpg`;
+    const img = image ? (image.startsWith('/') ? `${SITE_URL}${image}` : image) : `${SITE_URL}/og-cover.jpg`;
 
     document.title = fullTitle;
     upsertMeta('meta[name="description"]', { name: 'description', content: desc });
@@ -49,6 +50,9 @@ export function useSEO({ title, description, path, image, type = 'website', json
     upsertMeta('meta[name="twitter:description"]', { name: 'twitter:description', content: desc });
     upsertMeta('meta[name="twitter:image"]', { name: 'twitter:image', content: img });
     upsertLink('canonical', url);
+
+    // Structured data written into the static HTML at build time is replaced by the live version.
+    document.head.querySelectorAll('script[data-prerender]').forEach((el) => el.remove());
 
     let script;
     if (jsonLd) {
@@ -64,51 +68,17 @@ export function useSEO({ title, description, path, image, type = 'website', json
   }, [title, description, path, image, type, noindex, JSON.stringify(jsonLd)]); // eslint-disable-line react-hooks/exhaustive-deps
 }
 
-/** schema.org TouristTrip for a destination detail page. */
-export function tripJsonLd(place, settings) {
-  const offers = place.price
-    ? {
-        '@type': 'Offer',
-        price: String(place.price).replace(/[^0-9.]/g, '') || undefined,
-        priceCurrency: 'USD',
-        availability: 'https://schema.org/InStock',
-        url: `${SITE_URL}/places/${place.slug || place.id}`,
-      }
-    : undefined;
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'TouristTrip',
-    name: place.title,
-    description: place.description || undefined,
-    image: Array.isArray(place.images) && place.images.length ? place.images : undefined,
-    touristType: place.categories?.name || undefined,
-    itinerary: place.location
-      ? { '@type': 'Place', name: place.location, address: { '@type': 'PostalAddress', addressCountry: place.destination_type === 'National' ? 'NP' : undefined } }
-      : undefined,
-    offers,
-    provider: {
-      '@type': 'TravelAgency',
-      name: settings?.business_name || 'GoWin International Travel & Tourism',
-      telephone: settings?.phone || undefined,
-      email: settings?.email || undefined,
-      url: SITE_URL,
-    },
-  };
+/** schema.org graph for a destination detail page (TouristTrip + breadcrumbs). */
+export function tripJsonLd(place, settings, crumbs) {
+  return tripGraph(SITE_URL, place, settings, { path: `/places/${place.slug || place.id}`, crumbs });
 }
 
-/** schema.org TravelAgency for the home / about / contact pages. */
+/** schema.org TravelAgency + WebSite for the home page. */
 export function agencyJsonLd(settings) {
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'TravelAgency',
-    name: settings?.business_name || 'GoWin International Travel & Tourism',
-    url: SITE_URL,
-    telephone: settings?.phone || undefined,
-    email: settings?.email || undefined,
-    address: settings?.address
-      ? { '@type': 'PostalAddress', streetAddress: settings.address, addressLocality: 'Kathmandu', addressCountry: 'NP' }
-      : { '@type': 'PostalAddress', addressLocality: 'Kathmandu', addressCountry: 'NP' },
-    areaServed: ['Nepal', 'Worldwide'],
-    sameAs: [settings?.facebook_url, settings?.instagram_url, settings?.tiktok_url, settings?.youtube_url].filter(Boolean),
-  };
+  return homeGraph(SITE_URL, settings);
+}
+
+/** TravelAgency (+ optional breadcrumbs) for about / contact. */
+export function pageJsonLd(settings, crumbs) {
+  return pageGraph(SITE_URL, { agency: true, settings, crumbs });
 }

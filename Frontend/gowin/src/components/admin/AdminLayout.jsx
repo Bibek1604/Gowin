@@ -4,6 +4,7 @@ import { LayoutDashboard, MapPin, Tags, CalendarCheck, Mail, Star, Users, Settin
 import { useAdminStore } from '../Store/AdminStore';
 import useBookingStore from '../Store/BookingStore';
 import useMessageStore from '../Store/MessageStore';
+import usePlaceStore from '../Store/PlaceStore';
 import gowinLogo from '../../assets/gowin.jpg';
 import { useSEO } from '../../lib/seo';
 
@@ -26,6 +27,9 @@ const AdminLayout = ({ children }) => {
   const { messages, fetchMessages, loaded: messagesLoaded } = useMessageStore();
 
   useEffect(() => { if (!bookingsLoaded) fetchBookings(); if (!messagesLoaded) fetchMessages(); }, [bookingsLoaded, messagesLoaded, fetchBookings, fetchMessages]);
+  // The public site only loads published packages; the admin panel needs drafts too.
+  const fetchPlaces = usePlaceStore((s) => s.fetchPlaces);
+  useEffect(() => { fetchPlaces({ all: true }); }, [fetchPlaces]);
   useEffect(() => { setOpen(false); }, [location.pathname]);
 
   const current = NAV.find((n) => (n.end ? location.pathname === n.to : location.pathname.startsWith(n.to))) || NAV[0];

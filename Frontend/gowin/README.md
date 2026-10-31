@@ -12,15 +12,26 @@ npm install
 npm run dev                   # http://localhost:5173
 ```
 
-`npm run build` writes `dist/` (and regenerates `public/sitemap.xml` from the published destinations first). `npm run lint` runs ESLint.
+`npm run build` runs `vite build` and then `scripts/prerender.mjs`, which writes a static HTML page for every public URL (home, listings, all published packages, content pages, a real `404.html`) plus `sitemap.xml` and `robots.txt` — see *SEO and prerendering* below. `npm run lint` runs ESLint. To try the production routing locally: `npx serve dist` (uses `public/serve.json`, which mirrors `vercel.json`).
+
+## SEO and prerendering
+
+The app is client-rendered, so without help every URL would return the same empty page. At build time `scripts/prerender.mjs` reads the published content from Supabase (public key, read-only) and writes `dist/<route>.html` with that page's title, description, canonical URL, Open Graph tags, schema.org JSON-LD (`src/lib/schema.js`, shared with the app) and its real content. React replaces that markup when it starts (`src/main.jsx` waits for the hero photo to paint, then loads `src/boot.jsx`).
+
+* Canonical origin: `https://www.gowintravels.com` (`VITE_SITE_URL` overrides it).
+* A package published **after** a deploy works for visitors at once (the 404 page runs the app) but is only prerendered and in the sitemap after the next build — use a Vercel deploy hook triggered by a Supabase webhook on `tour_packages` (see `docs/WEBSITE_AUDIT_2026-10-31.md`, section 5).
+* `vercel.json` (repo root): clean URLs, real 404s, app-only routes (`/admin`, `/login`, `/details/*`) rewritten to `app.html`, security headers (CSP etc.) and long-term caching for hashed assets. If you add a third-party script, image host or iframe, update the CSP there.
+* Inner-page banners use the bundled hero photos (`src/data/pageBanners.js`); keep the prerender in sync if you change them.
 
 ## Database
 
 Schema lives in `supabase/migrations/` and is applied with the Supabase CLI (the project is already linked):
 
 ```bash
-npx supabase db push --linked
+npx supabase db push --linked --include-all     # same as: npm run db:push
 ```
+
+`--include-all` is needed because the RLS file is dated before migrations that are already applied.
 
 Migrations added in October 2026:
 
@@ -28,7 +39,8 @@ Migrations added in October 2026:
 |---|---|
 | `20261026000000_platform_schema.sql` | Adds `slug`, `is_published`, `is_featured`, `image_credit`, `sort_order` to packages; the `package_images` table (one row per photo: link, source page, credit, alt text, order, cover — existing links are carried over); `slug`, `is_active`, `sort_order`, `image_credit` to categories; booking/inquiry fields; `site_settings` and `admin_users` tables; the public `media` storage bucket. Idempotent, nothing is dropped. |
 | `20261027000000_price_optional_and_image_cleanup.sql` | Makes `price` optional ("Price on request"), sets realtime replica identity to the key, and drops three embedded base64 photos that were too large to update through the API (copies exist in `supabase/media` and the bucket). |
-| `20261026000001_rls_policies.sql` | Turns on row-level security everywhere: visitors read published content and submit forms; only sign-ins listed in `admin_users` can change anything. Apply **after** the content migration below. |
+| `20261026000001_rls_policies.sql` | Turns on row-level security everywhere: visitors read published content and submit forms; only sign-ins listed in `admin_users` can change anything. Apply **after** the content migration below. **Not yet applied to production (31 Oct 2026)** — run `npm run db:push`. |
+| `20261031000000_form_guards.sql` | Server-side limits for the public forms: length / email-shape CHECK constraints (NOT VALID, so old rows are untouched) and a trigger allowing at most 5 bookings or messages per email per 10 minutes from anonymous visitors. |
 
 One-off content correction (photo links, categories, trekking removal, duplicates, the two home-page top-10 lists) — the plan is `scripts/content-plan.mjs`, the editorial text for the 20 showcase packages is `scripts/showcase-content.mjs`, the photo links are `supabase/media/photos.json`. Everything runs in the right order with one command:
 
@@ -60,7 +72,7 @@ The four home-page hero backgrounds are bundled with the site (`public/hero/*.we
 | Name | Where | Purpose |
 |---|---|---|
 | `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` | `.env`, Vercel | Public Supabase credentials (the anon key is safe to expose; RLS protects the data). `NEXT_PUBLIC_*` names from the Vercel–Supabase integration are accepted too. |
-| `VITE_SITE_URL` | optional | Canonical site URL for SEO tags and the sitemap (default `https://gowintravels.com`). |
+| `VITE_SITE_URL` | optional | Canonical site URL for SEO tags, the prerendered pages and the sitemap (default `https://www.gowintravels.com` — the apex domain redirects to www). |
 | `VITE_ADMIN_EMAILS` | optional | Extra client-side allowlist for `/admin`. Server-side access is the `admin_users` table. |
 
 ## Project layout
@@ -77,8 +89,13 @@ src/
   lib/                    helpers: SEO tags, storage upload, formatting, slugs, errors
   data/siteContent.js     static copy (services, FAQs, travel tips, defaults)
   data/heroSlides.js      the four bundled hero photographs and their captions
-scripts/                  database audit, backup, content migration, verification, sitemap
+  data/pageBanners.js     which bundled photo each inner page uses as its banner
+  lib/schema.js           schema.org JSON-LD builders (app + prerender)
+  lib/useSpamGuard.jsx    honeypot / minimum-time / cooldown for public forms
+  main.jsx, boot.jsx      start-up: paint the prerendered page first, then mount React
+  routes.js               code-split page loaders
+scripts/                  prerender + sitemap, database audit, backup, content migration, verification
 supabase/migrations/      schema history;   supabase/media/   photo sources + links, owner photos
-docs/                     audit and verification reports
+docs/                     audit and verification reports (latest: WEBSITE_AUDIT_2026-10-31.md)
 .claude/skills/           Supabase agent skills for AI coding tools (npx skills add supabase/agent-skills)
 ```

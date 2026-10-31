@@ -64,21 +64,21 @@ const Footer = () => {
           </div>
 
           <div className="lg:col-span-2">
-            <h4 className={col}>Nepal</h4>
+            <h2 className={col}>Nepal</h2>
             <ul className="space-y-2.5">
               {nepal.map((p) => <li key={p.id}><Link to={placePath(p)} className={item}><ChevronRight className="w-3.5 h-3.5 text-white/25 group-hover:text-[#10B981]" /><span className="truncate">{p.title}</span></Link></li>)}
               <li><Link to="/destinations/national" className="text-[#10B981] text-xs font-bold hover:underline">All Nepal tours</Link></li>
             </ul>
           </div>
           <div className="lg:col-span-2">
-            <h4 className={col}>World</h4>
+            <h2 className={col}>World</h2>
             <ul className="space-y-2.5">
               {world.map((p) => <li key={p.id}><Link to={placePath(p)} className={item}><ChevronRight className="w-3.5 h-3.5 text-white/25 group-hover:text-[#10B981]" /><span className="truncate">{p.title}</span></Link></li>)}
               <li><Link to="/destinations/international" className="text-[#10B981] text-xs font-bold hover:underline">All international holidays</Link></li>
             </ul>
           </div>
           <div className="lg:col-span-2">
-            <h4 className={col}>Company</h4>
+            <h2 className={col}>Company</h2>
             <ul className="space-y-2.5">
               {[['/about', 'About us'], ['/services', 'Our services'], ['/guides', 'Travel tips'], ['/support', 'Help & FAQ'], ['/contact', 'Contact'], ['/booking', 'Plan a trip']].map(([to, label]) => (
                 <li key={to}><Link to={to} className={item}><ChevronRight className="w-3.5 h-3.5 text-white/25 group-hover:text-[#10B981]" />{label}</Link></li>
@@ -87,7 +87,7 @@ const Footer = () => {
           </div>
 
           <div className="sm:col-span-2 lg:col-span-2">
-            <h4 className={col}>Newsletter</h4>
+            <h2 className={col}>Newsletter</h2>
             <p className="text-white/60 text-sm mb-3">Occasional offers and new destinations. No spam.</p>
             {state.done ? (
               <p className="flex items-center gap-2 text-sm text-[#34D399] bg-[#10B981]/10 border border-[#10B981]/20 rounded-xl px-3 py-2.5"><CheckCircle className="w-4 h-4" /> You're subscribed.</p>
@@ -105,7 +105,7 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-white/10 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/40">
+        <div className="border-t border-white/10 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/70">
           <p>© {new Date().getFullYear()} {settings.business_name}. Kathmandu, Nepal.</p>
           <nav className="flex flex-wrap justify-center gap-4" aria-label="Legal">
             <Link to="/terms" className="hover:text-white/80">Terms &amp; Conditions</Link>

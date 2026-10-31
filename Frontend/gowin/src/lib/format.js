@@ -61,3 +61,9 @@ export function whatsappLink(phone, text) {
   if (!digits) return null;
   return `https://wa.me/${digits}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
 }
+
+/** Page title for a package: "Title – Location" when that stays short enough for search results, else just the title. */
+export const packageTitle = (place) => {
+  const withPlace = place?.location ? `${place.title} – ${place.location}` : place?.title || '';
+  return withPlace.length <= 58 ? withPlace : place?.title || '';
+};

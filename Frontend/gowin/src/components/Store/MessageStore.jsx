@@ -33,13 +33,14 @@ const useMessageStore = create((set, get) => ({
       message: clean(form.message),
       status: 'New',
     };
-    let { data, error } = await supabase.from('contact_messages').insert(full).select('*').single();
+    // No read-back (see BookingStore.addBooking): visitors cannot read messages under RLS.
+    let { error } = await supabase.from('contact_messages').insert(full);
     if (MISSING_COLUMN(error)) {
       const { phone, status, ...legacy } = full; // eslint-disable-line no-unused-vars
-      ({ data, error } = await supabase.from('contact_messages').insert(legacy).select('*').single());
+      ({ error } = await supabase.from('contact_messages').insert(legacy));
     }
     if (error) return { success: false, error };
-    return { success: true, data };
+    return { success: true, data: full };
   },
 
   updateMessage: async (id, patch) => {

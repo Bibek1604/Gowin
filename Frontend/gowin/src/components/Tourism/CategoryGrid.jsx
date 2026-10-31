@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
+import Reveal from '../ui/Reveal';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import useCategoryStore, { selectActive } from '../Store/CategoryStore';
 import usePlaceStore, { selectPublished } from '../Store/PlaceStore';
@@ -39,7 +39,7 @@ const CategoryGrid = ({ limit = 8, title = 'Browse by', accent = 'experience', c
           {loading ? <CardSkeleton count={4} className="h-40 sm:h-48" /> : items.map((c, i) => {
             const Icon = categoryIcon(c.name);
             return (
-              <motion.div key={c.id} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: (i % 4) * 0.06 }}>
+              <Reveal delay={(i % 4) * 0.06} key={c.id}>
                 <Link to={`/destinations?category=${encodeURIComponent(c.slug || c.name)}`} className="group relative block h-40 sm:h-48 rounded-2xl overflow-hidden shadow-[0_4px_20px_rgba(15,23,42,0.08)] hover:shadow-[0_18px_40px_rgba(15,23,42,0.18)] hover:-translate-y-1 transition-all duration-400 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#10B981]">
                   <SmartImage src={c.image} alt="" title={c.image_credit ? `Photo: ${c.image_credit}` : undefined} className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
                   <div className="absolute inset-0 bg-gradient-to-t from-[#0B1220]/90 via-[#0B1220]/25 to-transparent" />
@@ -50,7 +50,7 @@ const CategoryGrid = ({ limit = 8, title = 'Browse by', accent = 'experience', c
                     <p className="text-white/60 text-[11px] flex items-center gap-1 mt-0.5">{c.count} package{c.count === 1 ? '' : 's'} <ArrowRight className="w-3 h-3 group-hover:translate-x-0.5 transition-transform" /></p>
                   </div>
                 </Link>
-              </motion.div>
+              </Reveal>
             );
           })}
         </div>

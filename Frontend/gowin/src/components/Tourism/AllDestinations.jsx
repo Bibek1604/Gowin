@@ -8,17 +8,18 @@ import PageHero from '../ui/PageHero';
 import EmptyState from '../ui/EmptyState';
 import { CardSkeleton } from '../ui/Skeleton';
 import { Select } from '../ui/FormField';
-import { useSEO } from '../../lib/seo';
-import { useHeroImage } from '../../lib/useHeroImage';
+import { useSEO, SITE_URL } from '../../lib/seo';
+import { listGraph } from '../../lib/schema';
+import { BANNERS } from '../../data/pageBanners';
 import { countryFromLocation, isNepal } from '../../lib/format';
 
 const PAGE = 12;
 const SORTS = [['featured', 'Featured first'], ['newest', 'Newest'], ['price-asc', 'Price: low to high'], ['price-desc', 'Price: high to low'], ['title', 'A – Z']];
 
 const TYPE_META = {
-  all: { title: 'All destinations', subtitle: 'Every tour and holiday package we currently offer, in Nepal and abroad.', label: 'Destinations' },
-  national: { title: 'Nepal tours & experiences', subtitle: 'Heritage cities, pilgrimages, wildlife safaris, lakes and scenic escapes across Nepal.', label: 'Nepal collection' },
-  international: { title: 'International holidays', subtitle: 'Beaches, cities, honeymoons and family holidays — flights, hotels and visas arranged alongside.', label: 'World collection' },
+  all: { title: 'All destinations', seoTitle: 'Tour & Holiday Packages – Nepal and Worldwide', subtitle: 'Every tour and holiday package we currently offer, in Nepal and abroad.', label: 'Destinations' },
+  national: { title: 'Nepal tours & experiences', seoTitle: 'Nepal Tour Packages – Heritage, Safari, Pilgrimage & Lakes', subtitle: 'Heritage cities, pilgrimages, wildlife safaris, lakes and scenic escapes across Nepal.', label: 'Nepal collection' },
+  international: { title: 'International holidays', seoTitle: 'International Holiday Packages from Nepal', subtitle: 'Beaches, cities, honeymoons and family holidays — flights, hotels and visas arranged alongside.', label: 'World collection' },
 };
 
 const AllDestinations = () => {
@@ -71,12 +72,19 @@ const AllDestinations = () => {
 
   const meta = TYPE_META[type];
   const activeCategory = categoryOptions.find((c) => c.slug === category || c.name === category);
-  const heroImage = useHeroImage(type === 'international' ? /santorini|maldives|bali/i : /pokhara|kathmandu/i);
+  const heroImage = BANNERS[type === 'all' ? 'destinations' : type];
   useSEO({
-    title: activeCategory ? `${activeCategory.name} – ${meta.title}` : country ? `${country} holidays` : meta.title,
+    title: activeCategory ? `${activeCategory.name} – ${meta.title}` : country ? `${country} holidays` : meta.seoTitle,
     description: meta.subtitle,
     path: `/destinations${type === 'all' ? '' : `/${type}`}`,
     image: heroImage || undefined,
+    // Filtered views canonicalise to the unfiltered list, so only that list is described.
+    jsonLd: loaded && scoped.length ? listGraph(SITE_URL, {
+      name: meta.title,
+      path: `/destinations${type === 'all' ? '' : `/${type}`}`,
+      places: sortPlaces(scoped, 'featured'),
+      crumbs: [{ name: 'Home', path: '/' }, { name: meta.title }],
+    }) : undefined,
   });
 
   const activeFilters = [category && { key: 'category', label: activeCategory?.name || category }, country && { key: 'country', label: country }, q && { key: 'q', label: `“${q}”` }].filter(Boolean);
@@ -86,13 +94,13 @@ const AllDestinations = () => {
       <div>
         <label htmlFor="dest-search" className="sr-only">Search</label>
         <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-500" />
           <input id="dest-search" type="search" value={q} onChange={(e) => setParam('q', e.target.value)} placeholder="Search destinations…"
             className="w-full pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm focus:outline-none focus:bg-white focus:ring-2 focus:ring-[#10B981]/25" />
         </div>
       </div>
       <div>
-        <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Region</h4>
+        <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Region</p>
         <div className="space-y-1">
           {[['all', 'All', Compass], ['national', 'Nepal', MapIcon], ['international', 'International', Globe]].map(([t, label, Icon]) => (
             <Link key={t} to={`/destinations${t === 'all' ? '' : `/${t}`}${q ? `?q=${encodeURIComponent(q)}` : ''}`}
@@ -104,13 +112,13 @@ const AllDestinations = () => {
       </div>
       {categoryOptions.length > 0 && (
         <div>
-          <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Experience</h4>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Experience</p>
           <div className="space-y-1">
             <button type="button" onClick={() => setParam('category', '')} className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-semibold text-left ${!category ? 'bg-[#10B981]/10 text-[#047857]' : 'text-gray-600 hover:bg-gray-50'}`}>All experiences</button>
             {categoryOptions.map((c) => (
               <button key={c.id} type="button" onClick={() => setParam('category', c.slug || c.name)}
                 className={`w-full flex items-center justify-between px-3 py-2 rounded-xl text-sm font-semibold text-left ${(category === c.slug || category === c.name) ? 'bg-[#10B981]/10 text-[#047857]' : 'text-gray-600 hover:bg-gray-50'}`}>
-                <span className="truncate">{c.name}</span><span className="text-[11px] text-gray-400 font-medium ml-2">{c.count}</span>
+                <span className="truncate">{c.name}</span><span className="text-[11px] text-gray-500 font-medium ml-2">{c.count}</span>
               </button>
             ))}
           </div>
@@ -118,7 +126,7 @@ const AllDestinations = () => {
       )}
       {countryOptions.length > 0 && (
         <div>
-          <h4 className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Country</h4>
+          <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Country</p>
           <Select value={country} onChange={(e) => setParam('country', e.target.value)} className="!py-2.5">
             <option value="">All countries</option>
             {countryOptions.map(([name, count]) => <option key={name} value={name}>{name} ({count})</option>)}
@@ -141,7 +149,7 @@ const AllDestinations = () => {
         <div className="flex-1 min-w-0">
           <div className="flex flex-wrap items-center justify-between gap-3 mb-6">
             <div className="flex items-center gap-2 flex-wrap">
-              <p className="text-sm text-gray-500"><span className="font-bold text-[#0F172A]">{results.length}</span> package{results.length === 1 ? '' : 's'}</p>
+              <h2 className="text-sm font-normal text-gray-600"><span className="font-bold text-[#0F172A]">{results.length}</span> package{results.length === 1 ? '' : 's'}</h2>
               {activeFilters.map((f) => (
                 <button key={f.key} type="button" onClick={() => setParam(f.key, '')} className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-[#1E3A8A]/8 text-[#1E3A8A] text-xs font-semibold hover:bg-[#1E3A8A]/15">{f.label} <X className="w-3 h-3" /></button>
               ))}

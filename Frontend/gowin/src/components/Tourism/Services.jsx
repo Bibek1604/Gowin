@@ -6,10 +6,10 @@ import ServicesGrid from './ServicesGrid';
 import CTA from './CTA';
 import { FAQS } from '../../data/siteContent';
 import { useSEO } from '../../lib/seo';
-import { useHeroImage } from '../../lib/useHeroImage';
+import { BANNERS } from '../../data/pageBanners';
 
 const Services = () => {
-  const heroImage = useHeroImage(/pokhara|chitwan/i, { nepalOnly: true });
+  const heroImage = BANNERS.services;
   useSEO({ title: 'Our Services', description: 'Nepal tours, international holiday packages, custom itineraries, flight tickets, hotel reservations, visa application assistance and travel insurance from GoWin Travels, Kathmandu.', path: '/services', image: heroImage || undefined });
 
   return (

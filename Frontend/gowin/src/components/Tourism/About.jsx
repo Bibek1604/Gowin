@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { BANNERS } from '../../data/pageBanners';
 import { Link } from 'react-router-dom';
 import { ArrowRight, MapPin, Users, ShieldCheck, Landmark } from 'lucide-react';
 import usePlaceStore, { selectPublished } from '../Store/PlaceStore';
@@ -7,7 +8,7 @@ import PageHero from '../ui/PageHero';
 import SmartImage from '../ui/SmartImage';
 import ServicesGrid from './ServicesGrid';
 import CTA from './CTA';
-import { useSEO, agencyJsonLd } from '../../lib/seo';
+import { useSEO, pageJsonLd } from '../../lib/seo';
 import { useHeroImage } from '../../lib/useHeroImage';
 import { isNepal, countryFromLocation } from '../../lib/format';
 
@@ -21,9 +22,9 @@ const VALUES = [
 const About = () => {
   const { places, loaded } = usePlaceStore();
   const { settings } = useSettingsStore();
-  const heroImage = useHeroImage(/kathmandu|bhaktapur|patan/i, { nepalOnly: true });
+  const heroImage = BANNERS.about;
   const storyImage = useHeroImage(/bhaktapur|pokhara/i, { nepalOnly: true });
-  useSEO({ title: 'About Us', description: `${settings.business_name} is a Kathmandu-based travel company offering Nepal tours, international holidays, flights, hotels and visa assistance.`, path: '/about', image: heroImage || undefined, jsonLd: agencyJsonLd(settings) });
+  useSEO({ title: 'About Us', description: `${settings.business_name} is a Kathmandu-based travel company offering Nepal tours, international holidays, flights, hotels and visa assistance.`, path: '/about', image: heroImage || undefined, jsonLd: pageJsonLd(settings) });
 
   const facts = useMemo(() => {
     const pub = selectPublished(places);
@@ -47,7 +48,7 @@ const About = () => {
             </div>
             {loaded && (
               <div className="absolute -bottom-6 left-4 right-4 sm:left-8 sm:right-8 bg-white rounded-2xl shadow-xl border border-gray-100 grid grid-cols-3 divide-x divide-gray-100">
-                {facts.map((f) => <div key={f.label} className="p-3 sm:p-4 text-center"><p className="text-xl sm:text-2xl font-black text-[#1E3A8A]">{f.value}</p><p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-400">{f.label}</p></div>)}
+                {facts.map((f) => <div key={f.label} className="p-3 sm:p-4 text-center"><p className="text-xl sm:text-2xl font-black text-[#1E3A8A]">{f.value}</p><p className="text-[9px] sm:text-[10px] font-bold uppercase tracking-wider text-gray-500">{f.label}</p></div>)}
               </div>
             )}
           </div>

@@ -56,7 +56,7 @@ Date: 26–27 October 2026 · Scope: `Frontend/gowin` (React/Vite site + admin p
 * `scripts/content-plan.mjs` — the full correction plan (44 corrected packages, 32 unpublished with reasons, 8 new, 12 categories).
 * `scripts/migrate-content.mjs` — applies the plan: uploads the verified image library, moves every embedded base64 image to Storage, fixes categories, re-points packages, unpublishes trekking/duplicates/test rows, recreates the six Philippine destinations as packages, hides the test testimonial, fills site settings. Re-runnable; `--dry-run` supported.
 * `scripts/verify-content.mjs` — 18 read-only checks (no trekking published, slugs unique, every image URL returns 200, RLS blocks anonymous writes, forms still work…).
-* `scripts/backup-content.mjs`, `scripts/db-audit.mjs`, `scripts/generate-sitemap.mjs` (runs on every build), `scripts/build-media.py`.
+* `scripts/backup-content.mjs`, `scripts/db-audit.mjs`, `scripts/prerender.mjs` (runs on every build; replaced generate-sitemap.mjs on 31 Oct), `scripts/build-media.py`.
 * `supabase/media/` — 68 verified WebP photos (≤1600 px, 14 MB) with `sources.json` / `manifest.json` recording source, licence and what each photo shows.
 
 ### Front end (`src/`)

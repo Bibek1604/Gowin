@@ -38,15 +38,16 @@ const useBookingStore = create((set, get) => ({
       message: clean(form.message) || null,
       status: 'Pending',
     };
-    let { data, error } = await supabase.from('bookings').insert(full).select('*').single();
+    // No read-back: visitors may insert but not read bookings (RLS), and asking
+    // PostgREST to return the row would make the whole insert fail for them.
+    let { error } = await supabase.from('bookings').insert(full);
     if (MISSING_COLUMN(error)) {
       // Database not yet migrated: store the fields the legacy table knows about.
       const { tour_title, address, message, ...legacy } = full; // eslint-disable-line no-unused-vars
-      ({ data, error } = await supabase.from('bookings').insert(legacy).select('*').single());
+      ({ error } = await supabase.from('bookings').insert(legacy));
     }
     if (error) return { success: false, error };
-    set((s) => ({ bookings: [data, ...s.bookings] }));
-    return { success: true, data };
+    return { success: true, data: full };
   },
 
   updateBooking: async (id, patch) => {

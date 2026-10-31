@@ -73,7 +73,7 @@ const ImageUploader = ({ value = [], onChange, folder = 'destinations', max = 8,
       <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
         {images.map((url, i) => (
           <div key={`${url}-${i}`} className="relative group aspect-[4/3] rounded-xl overflow-hidden border border-gray-200 bg-gray-50">
-            <SmartImage src={url} alt={`Image ${i + 1}`} className="w-full h-full object-cover" />
+            <SmartImage src={url} sizes="160px" alt={`Image ${i + 1}`} className="w-full h-full object-cover" />
             {i === 0 && (
               <span className="absolute top-1.5 left-1.5 inline-flex items-center gap-1 bg-[#FBBF24] text-[#0F172A] text-[9px] font-bold px-1.5 py-0.5 rounded-md shadow">
                 <Star className="w-2.5 h-2.5 fill-current" /> Cover

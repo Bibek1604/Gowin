@@ -61,7 +61,8 @@ async function waitForSchema() {
   throw new Error('The new columns are still not visible through the API after 60 s. Re-run `npm run db:deploy` in a minute.');
 }
 
-const pushArgs = ['supabase', 'db', 'push', '--linked', '--yes', ...(DRY ? ['--dry-run'] : [])];
+// --include-all: the RLS file is dated before migrations that are already applied.
+const pushArgs = ['supabase', 'db', 'push', '--linked', '--include-all', '--yes', ...(DRY ? ['--dry-run'] : [])];
 const rlsPath = path.join(migrations, RLS_FILE);
 const rlsPresent = fs.existsSync(rlsPath);
 try {

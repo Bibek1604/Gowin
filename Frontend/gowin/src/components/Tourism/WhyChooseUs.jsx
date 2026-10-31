@@ -1,5 +1,5 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import Reveal from '../ui/Reveal';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { WHY_CHOOSE_US } from '../../data/siteContent';
@@ -27,12 +27,12 @@ const WhyChooseUs = () => {
           {WHY_CHOOSE_US.map((item, i) => {
             const Icon = iconFor(item.icon);
             return (
-              <motion.div key={item.title} initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: (i % 3) * 0.07 }}
+              <Reveal delay={(i % 3) * 0.07} key={item.title}
                 className="group p-6 rounded-2xl border border-gray-100 bg-white hover:bg-[#F8FAFC] hover:border-[#1E3A8A]/15 hover:shadow-md transition-all duration-300">
                 <span className="w-10 h-10 rounded-xl bg-[#10B981]/10 text-[#059669] flex items-center justify-center mb-4"><Icon className="w-5 h-5" /></span>
                 <h3 className="text-base font-bold text-[#0F172A] mb-1.5">{item.title}</h3>
                 <p className="text-sm text-gray-500 leading-relaxed">{item.desc}</p>
-              </motion.div>
+              </Reveal>
             );
           })}
         </div>

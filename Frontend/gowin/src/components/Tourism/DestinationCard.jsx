@@ -1,6 +1,6 @@
 import React from 'react';
+import Reveal from '../ui/Reveal';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import { MapPin, ArrowUpRight, Globe, Map as MapIcon, Clock, Tag, Star } from 'lucide-react';
 import SmartImage from '../ui/SmartImage';
 import { formatPrice, shortDuration, isNepal, placePath, coverImage, coverAlt } from '../../lib/format';
@@ -19,11 +19,7 @@ const DestinationCard = ({ dest, index = 0, variant = 'grid', priority = false, 
   const nepal = isNepal(dest);
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ delay: Math.min((index % 6) * 0.05, 0.3), duration: 0.45, ease: 'easeOut' }}
+    <Reveal as="article" delay={Math.min((index % 6) * 0.05, 0.3)}
       className={SIZES[variant] || SIZES.grid}
     >
       <Link
@@ -63,7 +59,7 @@ const DestinationCard = ({ dest, index = 0, variant = 'grid', priority = false, 
 
         <div className="p-4 sm:p-5 flex flex-col flex-1">
           {dest.location && (
-            <p className="flex items-center gap-1 text-[#10B981] text-[10px] font-bold uppercase tracking-widest mb-1.5">
+            <p className="flex items-center gap-1 text-[#047857] text-[10px] font-bold uppercase tracking-widest mb-1.5">
               <MapPin className="w-3 h-3 flex-shrink-0" /><span className="truncate">{dest.location}</span>
             </p>
           )}
@@ -74,9 +70,9 @@ const DestinationCard = ({ dest, index = 0, variant = 'grid', priority = false, 
             <div>
               {price ? (
                 <>
-                  <span className="block text-[9px] font-bold uppercase tracking-widest text-gray-400">From</span>
+                  <span className="block text-[9px] font-bold uppercase tracking-widest text-gray-500">From</span>
                   <span className="text-[#1E3A8A] text-xl font-black leading-none">{price}</span>
-                  <span className="text-gray-400 text-[10px] font-semibold ml-1">/ person</span>
+                  <span className="text-gray-500 text-[10px] font-semibold ml-1">/ person</span>
                 </>
               ) : (
                 <span className="text-sm font-bold text-[#1E3A8A]">Price on request</span>
@@ -91,7 +87,7 @@ const DestinationCard = ({ dest, index = 0, variant = 'grid', priority = false, 
           </div>
         </div>
       </Link>
-    </motion.article>
+    </Reveal>
   );
 };
 

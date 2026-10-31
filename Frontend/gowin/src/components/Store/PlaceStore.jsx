@@ -157,16 +157,44 @@ async function syncGallery(placeId, gallery) {
   return error || null;
 }
 
+/** A package embedded in the prerendered page (scripts/prerender.mjs), so its detail page renders without waiting. */
+function prerenderedPlaces() {
+  try {
+    const el = typeof document !== 'undefined' && document.getElementById('prerender-data');
+    const place = el ? JSON.parse(el.textContent).place : null;
+    return place ? [normalizePlace(place)] : [];
+  } catch { return []; }
+}
+
 const usePlaceStore = create((set, get) => ({
-  places: [],
+  places: prerenderedPlaces(),
   isLoading: false,
   error: null,
   loaded: false,
 
-  fetchPlaces: async () => {
-    if (get().isLoading) return;
-    set({ isLoading: true, error: null });
-    const { data, error } = await withFallback((sel) => supabase.from('tour_packages').select(sel).order('created_at', { ascending: false }));
+  /** 'public' = published packages only (what visitors need); 'all' = every package (admin panel). */
+  scope: 'public',
+
+  /**
+   * Load packages. Visitors only ever receive published rows: unpublished legacy
+   * rows still carry multi-megabyte embedded photos, and loading them made every
+   * page view download ~11 MB of JSON. The admin panel asks for { all: true }.
+   */
+  fetchPlaces: async ({ all } = {}) => {
+    const scope = all === undefined ? get().scope : (all ? 'all' : 'public');
+    if (get().isLoading && get().scope === scope) return;
+    set({ isLoading: true, error: null, scope });
+    const build = (sel) => {
+      let q = supabase.from('tour_packages').select(sel).order('created_at', { ascending: false });
+      if (scope === 'public') q = q.eq('is_published', true);
+      return q;
+    };
+    let { data, error } = await withFallback(build);
+    if (scope === 'public' && missingColumn(error)) {
+      // pre-migration database without is_published
+      ({ data, error } = await withFallback((sel) => supabase.from('tour_packages').select(sel).order('created_at', { ascending: false })));
+    }
+    if (get().scope !== scope) return; // a wider (admin) load started meanwhile; let it win
     if (error) {
       console.error('fetchPlaces:', error.message);
       set({ error: error.message, isLoading: false, loaded: true });

@@ -46,11 +46,11 @@ const Navbar = () => {
           <span className="flex-1 bg-[#3B82F6]" /><span className="flex-1 bg-gray-200" /><span className="flex-1 bg-[#EF4444]" /><span className="flex-1 bg-[#10B981]" /><span className="flex-1 bg-[#F59E0B]" />
         </div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-2.5 flex-shrink-0" aria-label="GoWin Travels home">
+          <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
             <img src={gowinLogo} alt="" width="40" height="40" className="w-10 h-10 rounded-xl object-cover border border-gray-100 shadow-sm" />
             <span className="leading-none">
-              <span className="block text-lg font-black text-[#1E3A8A] tracking-tight">GoWin <span className="font-light text-[#1E3A8A]/70">Travels</span></span>
-              <span className="hidden sm:block text-[9px] font-bold uppercase tracking-[0.2em] text-[#10B981]">Nepal · Worldwide</span>
+              <span className="block text-lg font-black text-[#1E3A8A] tracking-tight">GoWin <span className="font-light text-[#1E3A8A]">Travels</span></span>
+              <span className="hidden sm:block text-[9px] font-bold uppercase tracking-[0.2em] text-[#047857]">Nepal · Worldwide</span>
             </span>
           </Link>
 
@@ -75,11 +75,11 @@ const Navbar = () => {
                                   <MapPin className="w-3.5 h-3.5 text-[#10B981] flex-shrink-0" /><span className="truncate">{p.title}</span>
                                 </Link>
                               </li>
-                            )) : <li className="text-xs text-gray-400 px-2 py-1.5">Coming soon</li>}
+                            )) : <li className="text-xs text-gray-500 px-2 py-1.5">Coming soon</li>}
                           </ul>
                         </div>
                       ))}
-                      <Link to="/destinations" className="col-span-2 text-center text-xs font-bold text-[#10B981] hover:text-[#059669] border-t border-gray-100 pt-3">
+                      <Link to="/destinations" className="col-span-2 text-center text-xs font-bold text-[#047857] hover:text-[#065F46] border-t border-gray-100 pt-3">
                         View all destinations
                       </Link>
                     </div>
@@ -107,7 +107,7 @@ const Navbar = () => {
       </header>
 
       {/* Mobile drawer */}
-      <div className={`fixed inset-0 z-[110] lg:hidden ${open ? '' : 'pointer-events-none'}`} aria-hidden={!open}>
+      <div className={`fixed inset-0 z-[110] lg:hidden ${open ? '' : 'pointer-events-none'}`} aria-hidden={!open} inert={!open}>
         <div className={`absolute inset-0 bg-[#0F172A]/50 backdrop-blur-sm transition-opacity duration-300 ${open ? 'opacity-100' : 'opacity-0'}`} onClick={() => setOpen(false)} />
         <aside className={`absolute top-0 right-0 h-full w-[300px] max-w-[85vw] bg-white shadow-2xl flex flex-col transition-transform duration-300 ${open ? 'translate-x-0' : 'translate-x-full'}`}>
           <div className="flex items-center justify-between p-4 border-b border-gray-100">
@@ -120,7 +120,7 @@ const Navbar = () => {
                 {item.label}
               </NavLink>
             ))}
-            <div className="mt-3 px-4 text-[10px] font-bold uppercase tracking-widest text-gray-400">Browse</div>
+            <div className="mt-3 px-4 text-[10px] font-bold uppercase tracking-widest text-gray-500">Browse</div>
             <NavLink to="/destinations/national" className="block px-4 py-2.5 rounded-xl text-sm text-gray-700 hover:bg-gray-50">Nepal tours</NavLink>
             <NavLink to="/destinations/international" className="block px-4 py-2.5 rounded-xl text-sm text-gray-700 hover:bg-gray-50">International holidays</NavLink>
           </nav>

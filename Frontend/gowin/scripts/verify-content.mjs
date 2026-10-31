@@ -151,9 +151,15 @@ if (!probe) await sb.from('categories').delete().eq('name', '__rls_probe__');
 const { error: imgProbe } = await sb.from('package_images').insert({ package_id: published[0]?.id, url: 'https://example.com/__probe__.jpg' }).select();
 check(!!imgProbe, 'anonymous visitors cannot add photos', imgProbe ? '' : 'INSERT succeeded — RLS is OFF');
 if (!imgProbe) await sb.from('package_images').delete().eq('url', 'https://example.com/__probe__.jpg');
-const { error: bookingProbe } = await sb.from('bookings').insert({ user_name: '__verify__', user_email: 'verify@example.invalid', status: 'Pending', tour_title: 'verify' }).select();
+const { error: bookingProbe } = await sb.from('bookings').insert({ user_name: '__verify__', user_email: 'verify@example.invalid', status: 'Pending', tour_title: 'verify' });
 check(!bookingProbe, 'anonymous visitors can still submit a booking', bookingProbe?.message || '');
 if (!bookingProbe) console.log('     (a test booking "__verify__" was created — delete it from the admin panel)');
+
+// customer data and the admin allowlist must not be readable with the public key
+for (const table of ['bookings', 'contact_messages', 'newsletter_subscribers', 'admin_users']) {
+  const { data: leak } = await sb.from(table).select('*').limit(1);
+  check(!leak || leak.length === 0, `anonymous visitors cannot read ${table}`, leak?.length ? 'rows returned — RLS is OFF' : '');
+}
 
 const summary = {
   checked_at: new Date().toISOString(), failures, published: published.length, nepal: nepal.length, international: international.length,

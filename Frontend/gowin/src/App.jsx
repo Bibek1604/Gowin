@@ -9,24 +9,27 @@ import useSettingsStore from './components/Store/SettingsStore';
 import Navbar from './components/Tourism/Navbar';
 import Footer from './components/Tourism/Footer';
 import TourismHome from './components/Tourism/TourismHome';
-import AllDestinations from './components/Tourism/AllDestinations';
-import DestinationDetails from './components/Details/DestinationDetails';
-import Booking from './components/Layout/Booking';
-import Contact from './components/Tourism/Contact';
-import About from './components/Tourism/About';
-import Services from './components/Tourism/Services';
 import NotFound from './components/Layout/Notfound';
 import ScrollToTop from './components/Layout/ScrollToTop';
 import RouteScrollReset from './components/Layout/RouteScrollReset';
 import ProtectedRoute from './components/Layout/ProtectedRoute';
 import { PageSpinner } from './components/ui/Skeleton';
+import { ROUTE_CHUNKS } from './routes';
 
-// Rarely visited pages and the whole admin panel are code-split.
-const TravelGuides = lazy(() => import('./components/Tourism/TravelGuides'));
-const ContactSupport = lazy(() => import('./components/Tourism/ContactSupport'));
-const PrivacyPolicy = lazy(() => import('./components/Tourism/PrivacyPolicy'));
-const RefundPolicy = lazy(() => import('./components/Tourism/RefundPolicy'));
-const TermsConditions = lazy(() => import('./components/Tourism/TermsConditions'));
+// Every route except the home page is code-split, so the first visit only
+// downloads what the home page needs.
+
+const AllDestinations = lazy(ROUTE_CHUNKS.destinations);
+const DestinationDetails = lazy(ROUTE_CHUNKS.places);
+const Booking = lazy(ROUTE_CHUNKS.booking);
+const Contact = lazy(ROUTE_CHUNKS.contact);
+const About = lazy(ROUTE_CHUNKS.about);
+const Services = lazy(ROUTE_CHUNKS.services);
+const TravelGuides = lazy(ROUTE_CHUNKS.guides);
+const ContactSupport = lazy(ROUTE_CHUNKS.support);
+const PrivacyPolicy = lazy(ROUTE_CHUNKS.privacy);
+const RefundPolicy = lazy(ROUTE_CHUNKS.refund);
+const TermsConditions = lazy(ROUTE_CHUNKS.terms);
 const Login = lazy(() => import('./components/Layout/Login'));
 const AdminLayout = lazy(() => import('./components/admin/AdminLayout'));
 const Dashboard = lazy(() => import('./components/admin/Dashboard'));
@@ -52,9 +55,10 @@ function Shell() {
 
   return (
     <div className="flex flex-col min-h-screen">
+      {!chromeless && <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[200] focus:bg-white focus:text-[#0F172A] focus:px-4 focus:py-2 focus:rounded-lg focus:shadow-lg focus:font-semibold">Skip to main content</a>}
       {!chromeless && <Navbar />}
-      <div className="flex-1">
-        <Suspense fallback={<PageSpinner />}>
+      <div id="main" tabIndex={-1} className="flex-1 focus:outline-none">
+        <Suspense fallback={<PageSpinner full />}>
           <Routes>
             <Route path="/" element={<TourismHome />} />
             <Route path="/destinations" element={<AllDestinations />} />

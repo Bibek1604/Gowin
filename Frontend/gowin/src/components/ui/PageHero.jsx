@@ -11,7 +11,7 @@ const PageHero = ({ title, subtitle, label, image, crumbs = [], size = 'md', chi
   const heights = { sm: 'min-h-[220px] sm:min-h-[260px]', md: 'min-h-[280px] sm:min-h-[340px]', lg: 'min-h-[360px] sm:min-h-[440px]' };
   return (
     <section className={`relative ${heights[size] || heights.md} flex items-end overflow-hidden bg-[#0F172A]`}>
-      {image && <SmartImage src={image} alt="" priority className="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />}
+      {image && <SmartImage src={image} alt="" priority sizes="100vw" className="absolute inset-0 w-full h-full object-cover" aria-hidden="true" />}
       <div className="absolute inset-0 bg-gradient-to-t from-[#0B1220]/95 via-[#1E3A8A]/60 to-[#0B1220]/30" />
       <div className={`relative z-10 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-10 sm:pb-14 ${align === 'center' ? 'text-center' : ''}`}>
         {crumbs.length > 0 && (

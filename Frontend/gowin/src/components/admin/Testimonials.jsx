@@ -81,7 +81,7 @@ const Testimonials = () => {
             <article key={t.id} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5 flex flex-col">
               <div className="flex items-start justify-between gap-3 mb-3">
                 <div className="flex items-center gap-3 min-w-0">
-                  {t.image_url && !t.image_url.startsWith('data:') ? <SmartImage src={t.image_url} alt="" className="w-11 h-11 rounded-xl object-cover" /> : <span className="w-11 h-11 rounded-xl bg-[#1E3A8A] text-white font-bold flex items-center justify-center">{(t.user_name?.[0] || '?').toUpperCase()}</span>}
+                  {t.image_url && !t.image_url.startsWith('data:') ? <SmartImage src={t.image_url} alt="" sizes="64px" className="w-11 h-11 rounded-xl object-cover" /> : <span className="w-11 h-11 rounded-xl bg-[#1E3A8A] text-white font-bold flex items-center justify-center">{(t.user_name?.[0] || '?').toUpperCase()}</span>}
                   <div className="min-w-0"><p className="text-sm font-bold text-[#0F172A] truncate">{t.user_name}</p><p className="text-xs text-gray-500 truncate">{t.designation || 'Traveller'}</p></div>
                 </div>
                 <StatusBadge status={t.is_approved ? 'Approved' : 'Hidden'} />

@@ -5,12 +5,12 @@ import useSettingsStore from '../Store/SettingsStore';
 import PageHero from '../ui/PageHero';
 import { FAQS } from '../../data/siteContent';
 import { useSEO } from '../../lib/seo';
-import { useHeroImage } from '../../lib/useHeroImage';
+import { BANNERS } from '../../data/pageBanners';
 import { whatsappLink } from '../../lib/format';
 
 const ContactSupport = () => {
   const { settings } = useSettingsStore();
-  const heroImage = useHeroImage(/lumbini|kathmandu/i, { nepalOnly: true });
+  const heroImage = BANNERS.support;
   useSEO({
     title: 'Help & FAQ',
     description: 'Answers to common questions about booking, custom trips, flights, hotels, visas, refunds and payments with GoWin Travels.',
@@ -34,12 +34,12 @@ const ContactSupport = () => {
           {channels.map(({ Icon, label, value, href, note, external }) => (
             <a key={label} href={href} {...(external ? { target: '_blank', rel: 'noopener noreferrer' } : {})} className="flex items-center gap-4 bg-white rounded-2xl border border-gray-100 shadow-sm p-5 hover:shadow-md hover:-translate-y-0.5 transition-all">
               <span className="w-12 h-12 rounded-xl bg-[#1E3A8A]/8 text-[#1E3A8A] flex items-center justify-center flex-shrink-0"><Icon className="w-5 h-5" /></span>
-              <span className="min-w-0"><span className="block text-[10px] font-bold uppercase tracking-widest text-gray-400">{label}</span><span className="block font-bold text-[#0F172A] break-words">{value}</span>{note && <span className="block text-xs text-[#10B981] font-semibold mt-0.5">{note}</span>}</span>
+              <span className="min-w-0"><span className="block text-[10px] font-bold uppercase tracking-widest text-gray-500">{label}</span><span className="block font-bold text-[#0F172A] break-words">{value}</span>{note && <span className="block text-xs text-[#10B981] font-semibold mt-0.5">{note}</span>}</span>
             </a>
           ))}
           {settings.address && (
             <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5">
-              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-400 mb-2">Visit our office</p>
+              <p className="text-[10px] font-bold uppercase tracking-widest text-gray-500 mb-2">Visit our office</p>
               <p className="flex items-start gap-2 text-sm font-semibold text-[#0F172A]"><MapPin className="w-4 h-4 text-[#10B981] mt-0.5 flex-shrink-0" />{settings.address}</p>
               {settings.office_hours && <p className="flex items-start gap-2 text-sm text-gray-500 mt-2"><Clock className="w-4 h-4 text-[#10B981] mt-0.5 flex-shrink-0" />{settings.office_hours}</p>}
             </div>
