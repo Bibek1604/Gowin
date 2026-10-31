@@ -141,6 +141,7 @@ Remaining Best-Practices deduction (79): Wikimedia Commons sets a cookie on hot-
 * `npm run lint` — clean. `npm run build` — 66 pages prerendered from live data.
 * 27/27 end-to-end checks (`puppeteer`, writes intercepted so nothing reached production): search suggestions and results, empty state, country filter, package page indexable, mobile sticky bar, booking prefill from package, field validation, exactly one booking POST with complete payload and no read-back, success screen, honeypot drop, contact submit, cooldown, mobile menu inert/open, unknown package → 404 + noindex, keyboard focus.
 * Content-Security-Policy from `vercel.json` served locally on 7 routes incl. map iframe, login and admin: 0 violations.
+* **After deploy (production, 31 Oct):** all 23 routes return the expected status/title/canonical; security headers present; 27/27 end-to-end checks and 0 CSP violations on the live site (first run found the Cloudflare Web Analytics beacon blocked by the CSP — now allowed). Live Lighthouse mobile: home Perf 62 · LCP 4.5 s · CLS 0.002, package Perf 80 · LCP 3.9 s; desktop home Perf 98 · LCP 1.1 s; accessibility 100; SEO 92 only because of Cloudflare's managed robots.txt directive (section 4).
 * Screens checked at 375/390 and 1440 px: no horizontal overflow.
 * Not tested: admin create/update/delete on production (no admin login available in this session; admin code paths changed only in how packages are loaded), real email delivery, Search Console.
 

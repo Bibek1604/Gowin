@@ -20,7 +20,7 @@ The app is client-rendered, so without help every URL would return the same empt
 
 * Canonical origin: `https://www.gowintravels.com` (`VITE_SITE_URL` overrides it).
 * A package published **after** a deploy works for visitors at once (the 404 page runs the app) but is only prerendered and in the sitemap after the next build — use a Vercel deploy hook triggered by a Supabase webhook on `tour_packages` (see `docs/WEBSITE_AUDIT_2026-10-31.md`, section 5).
-* `vercel.json` (repo root): clean URLs, real 404s, app-only routes (`/admin`, `/login`, `/details/*`) rewritten to `app.html`, security headers (CSP etc.) and long-term caching for hashed assets. If you add a third-party script, image host or iframe, update the CSP there.
+* `vercel.json` (repo root): clean URLs, real 404s, app-only routes (`/admin`, `/login`, `/details/*`) rewritten to `/app` (the bare shell `app.html`; with `cleanUrls` the rewrite must target `/app`), security headers (CSP etc.; it allows the Cloudflare Web Analytics beacon that Cloudflare injects) and long-term caching for hashed assets. If you add a third-party script, image host or iframe, update the CSP there.
 * Inner-page banners use the bundled hero photos (`src/data/pageBanners.js`); keep the prerender in sync if you change them.
 
 ## Database
