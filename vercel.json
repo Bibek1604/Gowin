@@ -7,19 +7,19 @@
   "rewrites": [
     {
       "source": "/details/:path*",
-      "destination": "/app.html"
+      "destination": "/app"
     },
     {
       "source": "/admin",
-      "destination": "/app.html"
+      "destination": "/app"
     },
     {
       "source": "/admin/:path*",
-      "destination": "/app.html"
+      "destination": "/app"
     },
     {
       "source": "/login",
-      "destination": "/app.html"
+      "destination": "/app"
     }
   ],
   "headers": [
