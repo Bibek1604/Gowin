@@ -1,20 +1,26 @@
 import React, { useMemo } from 'react';
-import Hero from './Hero';
-import DestinationGrid from './DestinationGrid';
-import CategoryGrid from './CategoryGrid';
-import CountryShowcase from './CountryShowcase';
-import ServicesGrid from './ServicesGrid';
-import WhyChooseUs from './WhyChooseUs';
-import HowItWorks from './HowItWorks';
+import HeroVideo from '../Home/HeroVideo';
+import WhoWeAre from '../Home/WhoWeAre';
+import PopularTours from '../Home/PopularTours';
+import DayTours from '../Home/DayTours';
+import Pilgrimage from '../Home/Pilgrimage';
+import Wildlife from '../Home/Wildlife';
+import { Holidays, Seasons, ServicesHome, HowItWorksHome, GuidesHome, FaqHome, MobileBar } from '../Home/MoreSections';
 import Testimonials from './Testimonials';
-import CTA from './CTA';
 import usePlaceStore, { selectPublished, sortPlaces } from '../Store/PlaceStore';
 import useSettingsStore from '../Store/SettingsStore';
 import { useSEO, agencyJsonLd } from '../../lib/seo';
-import { isNepal } from '../../lib/format';
+import { whatsappLink } from '../../lib/format';
+import { homeSections } from '../../lib/homeData';
+import { DAY_TOUR_SLOTS, PILGRIMAGE_ORDER } from '../../data/homeContent';
 
+/**
+ * Home page (redesign v2). Every tour shown comes from the published
+ * packages in Supabase; each section uses a different card layout for a
+ * different kind of trip. Sections without enough real data are not rendered.
+ */
 const TourismHome = () => {
-  const { places, loaded } = usePlaceStore();
+  const { places } = usePlaceStore();
   const { settings } = useSettingsStore();
   useSEO({
     title: 'Nepal Tours, Holidays & Travel Services in Kathmandu',
@@ -23,34 +29,28 @@ const TourismHome = () => {
     jsonLd: agencyJsonLd(settings),
   });
 
-  const { nepal, world } = useMemo(() => {
-    const published = selectPublished(places);
-    return {
-      nepal: sortPlaces(published.filter(isNepal), 'featured').slice(0, 10),
-      world: sortPlaces(published.filter((p) => !isNepal(p)), 'featured').slice(0, 10),
-    };
-  }, [places]);
+  const s = useMemo(
+    () => homeSections(sortPlaces(selectPublished(places), 'featured'), { daySlots: DAY_TOUR_SLOTS, pilgrimageOrder: PILGRIMAGE_ORDER }),
+    [places],
+  );
+  const wa = whatsappLink(settings.whatsapp || settings.phone, 'Hello GoWin Travels, I would like to plan a trip.');
 
   return (
-    <main className="home-main bg-white text-[#0F172A]">
-      <Hero />
-      <DestinationGrid
-        id="nepal" label="Top 10 in Nepal" title="Explore" accent="Nepal"
-        subtitle="Kathmandu's heritage, Pokhara's lakes, Chitwan's jungle, Lumbini's sacred garden and the hill towns in between: our pick of ten Nepal experiences."
-        items={nepal} loading={!loaded} linkTo="/destinations/national" linkLabel="All Nepal tours" bg="bg-white"
-      />
-      <CategoryGrid />
-      <DestinationGrid
-        id="world" label="Top 10 international" title="World" accent="holidays"
-        subtitle="Ten holidays beyond Nepal: beaches, islands, cities and honeymoons, with flights, hotels and visas arranged from Kathmandu."
-        items={world} loading={!loaded} linkTo="/destinations/international" linkLabel="All holidays" bg="bg-[#F8FAFC]"
-      />
-      <CountryShowcase bg="bg-white" />
-      <ServicesGrid />
-      <WhyChooseUs />
-      <HowItWorks />
+    <main className="gh home-main">
+      <HeroVideo />
+      <WhoWeAre />
+      <PopularTours items={s.popular} />
+      <DayTours items={s.dayTours} />
+      <Pilgrimage items={s.pilgrimage} />
+      <Wildlife items={s.wildlife} />
+      <Holidays items={s.holidays} />
+      <Seasons nepal={s.nepal} />
+      <ServicesHome />
+      <HowItWorksHome />
+      <GuidesHome />
       <Testimonials />
-      <CTA />
+      <FaqHome whatsapp={wa} />
+      <MobileBar whatsapp={wa} />
     </main>
   );
 };

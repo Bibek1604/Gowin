@@ -10,6 +10,7 @@ import { iconFor } from '../../lib/icons';
 import { useSEO } from '../../lib/seo';
 import { BANNERS } from '../../data/pageBanners';
 import { isNepal } from '../../lib/format';
+import { slugify } from '../../lib/slugify';
 
 const TravelGuides = () => {
   const { places, loaded } = usePlaceStore();
@@ -25,7 +26,7 @@ const TravelGuides = () => {
           {NEPAL_TRAVEL_TIPS.map((tip, i) => {
             const Icon = iconFor(tip.icon);
             return (
-              <Reveal as="article" delay={(i % 3) * 0.07} key={tip.title} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6 hover:shadow-md transition-shadow">
+              <Reveal as="article" delay={(i % 3) * 0.07} key={tip.title} id={slugify(tip.title)} className="scroll-mt-28 bg-white rounded-2xl border border-gray-100 shadow-sm p-6 hover:shadow-md transition-shadow">
                 <span className="w-11 h-11 rounded-xl bg-[#1E3A8A]/8 text-[#1E3A8A] flex items-center justify-center mb-4"><Icon className="w-5 h-5" /></span>
                 <h2 className="text-base font-bold text-[#0F172A] mb-3">{tip.title}</h2>
                 <ul className="space-y-2">
