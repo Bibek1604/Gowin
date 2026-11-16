@@ -32,6 +32,17 @@ import { BUSINESS_FACTS } from '../src/data/businessFacts.js';
 // Kept in sync with src/components/Home/HeroVideo.jsx (that file is JSX, so it can't be imported here).
 const HERO_POSTER = { src: '/media/hero-poster.avif', srcSet: '/media/hero-poster-960.avif 960w, /media/hero-poster.avif 1920w' };
 const HERO_POSTER_ALT = 'Phewa Lake and the Annapurna range seen from Sarangkot above Pokhara';
+const HERO_TITLE = 'Nepal tours & world holidays, planned in |Kathmandu|';
+const LOGO_COLORS = ['#3E478A', '#2FA8DE', '#F0832A', '#E2332B', '#E9A23B', '#4E7A3A'];
+/** Same markup as <Kinetic> (src/components/Home/motion.jsx), so React's H1 paints identically and is not a new, later LCP. */
+const kineticHtml = (text) => {
+  let n = 0;
+  const parts = text.split('|').map((part, pi) => {
+    const words = part.split(/(\s+)/).map((w) => (/^\s+$/.test(w) ? ' ' : w ? `<span class="kw">${[...w].map((ch) => { const i = n; n += 1; return `<span class="kl" style="--i:${i};--lc:${LOGO_COLORS[i % LOGO_COLORS.length]}">${esc(ch)}</span>`; }).join('')}</span>` : '')).join('');
+    return pi % 2 ? `<span class="k-accent">${words}</span>` : `<span>${words}</span>`;
+  });
+  return `<span aria-hidden="true">${parts.join('')}</span>`;
+};
 const heroSubline = () => `Tell us your dates. We reply with a written quote${BUSINESS_FACTS.quoteReplyHours ? ` within ${BUSINESS_FACTS.quoteReplyHours} hours` : ''}. No payment until you approve it.`;
 const faqText = (f) => {
   let t = f.a;
@@ -116,8 +127,8 @@ const crumbsHtml = (crumbs) => `<nav aria-label="Breadcrumb" class="pr-crumbs"><
 // (and for anyone without JavaScript). Scoped to .pr-*.
 const STYLE = `<style data-prerender>.pr{overflow-x:clip;font-family:'DM Sans',system-ui,sans-serif;color:#0F172A;max-width:72rem;margin:0 auto;padding:0 1rem 3rem;line-height:1.6}.pr a{color:#1E3A8A}.pr-head{display:flex;flex-wrap:wrap;gap:.75rem 1.5rem;align-items:center;justify-content:space-between;padding:1rem 0;border-bottom:1px solid #E2E8F0}.pr-brand{font-weight:800;font-size:1.25rem;text-decoration:none}.pr-brand span{color:#10B981}.pr-head nav{display:flex;flex-wrap:wrap;gap:.25rem 1rem;font-size:.9rem}.pr h1{font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.15;margin:2rem 0 .75rem}.pr h2{font-size:1.35rem;margin:2rem 0 .5rem}.pr h3{font-size:1.05rem;margin:0}.pr ul.pr-cards{list-style:none;padding:0;display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(16rem,1fr))}.pr ul.pr-cards li{border:1px solid #E2E8F0;border-radius:.75rem;padding:1rem}.pr-facts{color:#475569;font-size:.85rem;margin:.25rem 0}.pr-crumbs ol{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem;padding:0;margin:1rem 0 0;font-size:.85rem}.pr-crumbs li+li:before{content:'›';margin-right:.5rem;color:#94A3B8}.pr img{max-width:100%;height:auto;border-radius:.75rem}.pr-foot{margin-top:3rem;padding-top:1rem;border-top:1px solid #E2E8F0;font-size:.85rem;color:#475569}.pr-hero{position:relative;width:100vw;margin:0 calc(50% - 50vw);min-height:88vh;display:flex;align-items:center;justify-content:center;background:#0B1220;overflow:hidden}.pr-overlay{position:relative}.pr-overlay .pr-head{position:absolute;top:0;left:1rem;right:1rem;z-index:3;border:0}.pr-overlay .pr-head a{color:#fff}.pr-banner{position:relative;width:100vw;margin:0 calc(50% - 50vw);min-height:400px;display:flex;align-items:flex-end;background:#0F172A;overflow:hidden}@media(min-width:640px){.pr-banner{min-height:440px}}.pr-banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0}.pr-banner:after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(11,18,32,.95),rgba(30,58,138,.6),rgba(11,18,32,.3))}.pr-banner-text{position:relative;z-index:1;width:100%;max-width:72rem;margin:0 auto;padding:7rem 1rem 2.5rem;color:rgba(255,255,255,.8)}.pr-banner-text h1{color:#fff;margin-top:.5rem}.pr-banner-text a,.pr-banner-text .pr-crumbs{color:rgba(255,255,255,.75)}.pr-cover{display:block;width:100vw;max-width:none!important;margin:0 calc(50% - 50vw);height:420px;object-fit:cover;border-radius:0!important;background:#0F172A}@media(min-width:640px){.pr-cover{height:460px}}@media(min-width:1024px){.pr-cover{height:540px}}.pr-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0}.pr-hero:after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(11,18,32,.9),rgba(30,58,138,.6),rgba(11,18,32,.45))}.pr-hero-text{position:relative;z-index:1;max-width:48rem;padding:7rem 1rem 6rem;text-align:center;color:#fff}.pr-hero-text h1{color:#fff;margin-top:0}.pr-hero-text p{color:rgba(255,255,255,.85)}.pr-cta{display:inline-block;background:#047857;color:#fff!important;padding:.6rem 1.1rem;border-radius:.75rem;text-decoration:none;font-weight:600;margin:.25rem .5rem .25rem 0}</style>`;
 
-// Only the 700 weight of Playfair (the hero H1) is preloaded, on the home page.
-const PLAYFAIR_700 = fs.readdirSync(path.join(dist, 'assets')).find((f) => /^playfair-display-latin-700-normal-.*\.woff2$/.test(f)) || null;
+// Only the display face of the hero H1 (Bricolage Grotesque, latin, weight+width axes) is preloaded, on the home page.
+const DISPLAY_FONT = fs.readdirSync(path.join(dist, 'assets')).find((f) => /^bricolage-grotesque-latin-wdth-normal-.*\.woff2$/.test(f)) || null;
 
 // ---------- template ----------
 const template = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
@@ -149,7 +160,7 @@ function render({ route, title, description, image, type = 'website', noindex = 
   if (route !== '/') html = html.replace(/\s*<link rel="preload" as="image"[^>]*href="\/media\/hero-poster[^>]*>/, '');
   const extra = [
     noindex ? '' : `<link rel="canonical" href="${esc(url)}" />`,
-    fontPreload && PLAYFAIR_700 ? `<link rel="preload" as="font" type="font/woff2" href="/assets/${PLAYFAIR_700}" crossorigin />` : '',
+    fontPreload && DISPLAY_FONT ? `<link rel="preload" as="font" type="font/woff2" href="/assets/${DISPLAY_FONT}" crossorigin />` : '',
     preload ? `<link rel="preload" as="image" href="${esc(preload.src)}"${preload.srcSet ? ` imagesrcset="${esc(preload.srcSet)}" imagesizes="100vw"` : ''} fetchpriority="high" />` : '',
     jsonLd ? `<script type="application/ld+json" data-prerender>${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>` : '',
     // the page's own record, so the app renders it at once instead of a loading skeleton
@@ -187,7 +198,7 @@ add('/', {
   overlay: true,
   fontPreload: true,
   body: `<section class="gh-hero" aria-labelledby="hero-title"><div class="gh-hero-media"><img src="${HERO_POSTER.src}" srcset="${HERO_POSTER.srcSet}" sizes="100vw" width="1920" height="1080" alt="${esc(HERO_POSTER_ALT)}" fetchpriority="high" decoding="sync" /></div>
-<div class="gh-wrap"><div class="gh-hero-inner"><span class="gh-watermark" aria-hidden="true">NEPAL</span><h1 id="hero-title">Nepal tours &amp; world holidays, planned in Kathmandu</h1><div class="gh-rule" aria-hidden="true"></div>
+<div class="gh-wrap"><div class="gh-hero-inner"><span class="gh-watermark" aria-hidden="true">NEPAL</span><h1 id="hero-title" class="kinetic" aria-label="${esc(HERO_TITLE.replace(/\|/g, ''))}">${kineticHtml(HERO_TITLE)}</h1><div class="gh-rule" aria-hidden="true"></div>
 <p class="gh-hero-sub">${esc(heroSubline())}</p><div class="gh-hero-ctas">${a('/booking', 'Plan my trip', ' class="gh-pill white"')}${a('/destinations', 'View tours', ' class="gh-pill ghost"')}</div></div></div></section>
 <h2>A Kathmandu team that plans every trip in writing.</h2><p>We are based in Shankhamul, Kathmandu, and arrange Nepal tours, international holidays, flights, hotels and visa help. Every trip starts with a written quote that lists the itinerary, the price and what it includes. You pay only after you approve it.</p><p>${a('/about', 'Meet our team')}</p>
 ${section('Popular Nepal tours', H.popular, ['/destinations/national', 'All Nepal tours'])}
