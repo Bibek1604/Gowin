@@ -6,6 +6,7 @@ import usePlaceStore, { selectPublished } from '../Store/PlaceStore';
 import useSettingsStore from '../Store/SettingsStore';
 import useSubscriberStore from '../Store/SubscriberStore';
 import { placePath, whatsappLink } from '../../lib/format';
+import { BUSINESS_FACTS as F, hasFact } from '../../data/businessFacts';
 
 const Footer = () => {
   const { places } = usePlaceStore();
@@ -19,6 +20,13 @@ const Footer = () => {
   const nepal = published.filter((p) => p.destination_type === 'National').slice(0, 5);
   const world = published.filter((p) => p.destination_type !== 'National').slice(0, 5);
   const wa = whatsappLink(settings.whatsapp || settings.phone);
+  // Credentials row: only facts the owner has supplied (src/data/businessFacts.js).
+  const creds = [
+    hasFact(F.tourismLicenceNo) && ['Dept. of Tourism licence', F.tourismLicenceNo],
+    hasFact(F.companyRegNo) && ['Company reg.', F.companyRegNo],
+    hasFact(F.panNo) && ['PAN', F.panNo],
+    hasFact(F.memberships) && ['Member of', F.memberships.join(', ')],
+  ].filter(Boolean);
 
   const onSubscribe = async (e) => {
     e.preventDefault();
@@ -105,7 +113,12 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-white/10 mt-12 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/70">
+        {creds.length > 0 && (
+          <dl className="border-t border-white/10 mt-12 pt-6 flex flex-wrap gap-x-8 gap-y-2 text-xs text-white/70" aria-label="Registration and licences">
+            {creds.map(([k, v]) => <div key={k} className="flex gap-1.5"><dt>{k}</dt><dd className="m-0 text-white font-semibold">{v}</dd></div>)}
+          </dl>
+        )}
+        <div className={`border-t border-white/10 ${creds.length ? 'mt-6' : 'mt-12'} pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/70`}>
           <p>© {new Date().getFullYear()} {settings.business_name}. Kathmandu, Nepal.</p>
           <nav className="flex flex-wrap justify-center gap-4" aria-label="Legal">
             <Link to="/terms" className="hover:text-white/80">Terms &amp; Conditions</Link>
