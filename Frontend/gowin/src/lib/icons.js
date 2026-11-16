@@ -1,14 +1,14 @@
 import {
   Map, Globe, Sparkles, Plane, FileCheck, ShieldCheck, MapPin, Wallet, MessageCircle,
   Search, CalendarCheck, PlaneTakeoff, Sun, Car, Luggage, Heart, Compass, Mountain,
-  TreePalm, Binoculars, Landmark, Waves, Users, Castle, Camera, Tent,
+  TreePalm, Binoculars, Landmark, Waves, Users, Castle, Camera, Tent, Hotel, FileText, Headphones,
 } from 'lucide-react';
 
 /** Lucide icons referenced by name from static content files. */
 export const ICONS = {
   Map, Globe, Sparkles, Plane, FileCheck, ShieldCheck, MapPin, Wallet, MessageCircle,
   Search, CalendarCheck, PlaneTakeoff, Sun, Car, Luggage, Heart, Compass, Mountain,
-  TreePalm, Binoculars, Landmark, Waves, Users, Castle, Camera, Tent,
+  TreePalm, Binoculars, Landmark, Waves, Users, Castle, Camera, Tent, Hotel, FileText, Headphones,
 };
 
 export const iconFor = (name, fallback = Compass) => ICONS[name] || fallback;

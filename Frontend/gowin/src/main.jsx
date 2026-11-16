@@ -6,7 +6,14 @@ import '@fontsource/dm-sans/latin-700.css';
 import '@fontsource/plus-jakarta-sans/latin-500.css';
 import '@fontsource/plus-jakarta-sans/latin-700.css';
 import '@fontsource/plus-jakarta-sans/latin-800.css';
+// Home v2: Playfair Display (headings) + Inter (body, UI and all numbers).
+import '@fontsource/inter/latin-400.css';
+import '@fontsource/inter/latin-500.css';
+import '@fontsource/inter/latin-600.css';
+import '@fontsource/playfair-display/latin-600.css';
+import '@fontsource/playfair-display/latin-700.css';
 import './index.css';
+import './home.css';
 
 const rootEl = document.getElementById('root');
 
