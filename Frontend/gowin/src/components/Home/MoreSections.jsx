@@ -9,20 +9,23 @@ import { slugify } from '../../lib/slugify';
 import { SEASONS, HOME_SERVICES, HOME_STEPS, HOME_GUIDES, HOME_FAQS } from '../../data/homeContent';
 import { NEPAL_TRAVEL_TIPS } from '../../data/siteContent';
 import { BUSINESS_FACTS as F } from '../../data/businessFacts';
+import { Kinetic, LogoStripes, useTilt } from './motion';
+
+const Tilt = ({ className, children }) => { const ref = useTilt(5); return <article ref={ref} className={`gh-tilt ${className}`}>{children}</article>; };
 
 /* ---------- 7. Holidays from Kathmandu ---------- */
 export function Holidays({ items }) {
   if (!items.length) return null;
   return (
     <Section id="holidays" labelledBy="hol-title" tone="off">
-      <SectionHead id="hol-title" eyebrow="Holidays from Kathmandu" title="International holidays for travellers from Nepal" lead="Hotels and sightseeing arranged abroad, with flights from Kathmandu and visa paperwork handled by the same team." to="/destinations/international" />
+      <SectionHead id="hol-title" eyebrow="Holidays from Kathmandu" title="International holidays for |travellers from Nepal|" lead="Hotels and sightseeing arranged abroad, with flights from Kathmandu and visa paperwork handled by the same team." to="/destinations/international" />
       <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 list-none p-0 m-0">
         {items.map((p, n) => {
           const npr = nprPrice(p);
           const usd = priceOf(p);
           return (
             <li key={p.id} className="rv" style={{ '--i': n % 3 }}>
-              <article className="gh-card hoverable h-full">
+              <Tilt className="gh-card hoverable h-full">
                 <div className="gh-media"><TourImage place={p} sizes="(min-width: 1024px) 380px, (min-width: 640px) 46vw, 92vw" /></div>
                 <div className="flex flex-col flex-1 p-6">
                   <p className="m-0 text-[12px] font-semibold tracking-[.14em] uppercase text-[#475569] flex items-center gap-1.5"><MapPin className="w-3.5 h-3.5" aria-hidden="true" />{p.location}</p>
@@ -39,7 +42,7 @@ export function Holidays({ items }) {
                     <span className="gh-chip green"><FileCheck aria-hidden="true" />Visa help available</span>
                   </div>
                 </div>
-              </article>
+              </Tilt>
             </li>
           );
         })}
@@ -66,7 +69,7 @@ export function Seasons({ nepal }) {
   };
   return (
     <Section id="best-time" labelledBy="season-title">
-      <SectionHead id="season-title" eyebrow="Best time to visit Nepal" title="What each season is like" to="/guides" cta="Read the guide" />
+      <SectionHead id="season-title" eyebrow="Best time to visit Nepal" title="What each |season| is like" to="/guides" cta="Read the guide" />
       <div role="tablist" aria-label="Seasons" className="gh-tabs rv" style={{ '--i': 1 }}>
         {SEASONS.map((x, n) => (
           <button key={x.id} id={`season-tab-${x.id}`} type="button" role="tab" className="gh-tab" aria-selected={n === i} aria-controls="season-panel" tabIndex={n === i ? 0 : -1}
@@ -76,7 +79,7 @@ export function Seasons({ nepal }) {
         ))}
       </div>
       <div id="season-panel" role="tabpanel" aria-labelledby={`season-tab-${s.id}`} className="grid lg:grid-cols-2 gap-10 lg:gap-14 items-start rv" style={{ '--i': 2 }}>
-        <div className="gh-card !rounded-[24px] aspect-[16/11] lg:aspect-auto lg:h-full lg:min-h-[480px]">
+        <div className="gh-card gh-season-img !rounded-[24px] aspect-[16/11] lg:aspect-auto lg:h-full lg:min-h-[480px]">
           <MediaImage key={s.id} base={s.image} alt="" className="absolute inset-0 w-full h-full object-cover" />
         </div>
         <div>
@@ -112,18 +115,18 @@ export function Seasons({ nepal }) {
 export function ServicesHome() {
   return (
     <Section id="services" labelledBy="svc-title" tone="off">
-      <SectionHead id="svc-title" eyebrow="Services" title="Tickets, visas, insurance and hotels" to="/services" />
+      <SectionHead id="svc-title" eyebrow="Services" title="Tickets, visas, insurance and |hotels|" to="/services" />
       <ul className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 list-none p-0 m-0">
         {HOME_SERVICES.map((s, n) => {
           const Icon = iconFor(s.icon);
           return (
             <li key={s.title} className="rv" style={{ '--i': n }}>
-              <article className="gh-card hoverable h-full p-7">
-                <span className="w-14 h-14 rounded-2xl bg-[#1E3A8A] text-white flex items-center justify-center mb-6"><Icon className="w-6 h-6" aria-hidden="true" /></span>
+              <Tilt className="gh-card hoverable h-full p-7">
+                <span className="w-14 h-14 rounded-2xl text-white flex items-center justify-center mb-6" style={{ background: ['#3E478A', '#2FA8DE', '#F0832A', '#E2332B'][n % 4] }}><Icon className="w-6 h-6" aria-hidden="true" /></span>
                 <h3 className="text-[22px] m-0"><Link to={s.to} className="text-[#0F172A] after:absolute after:inset-0 after:content-[''] after:rounded-[20px]">{s.title}</Link></h3>
                 <p className="mt-2 mb-6 text-[15px] leading-relaxed text-[#475569]">{s.desc}</p>
                 <span className="mt-auto text-[12px] font-semibold uppercase tracking-[.14em] text-[#1E3A8A] inline-flex items-center gap-1.5" aria-hidden="true">Learn more <ArrowRight className="w-4 h-4" /></span>
-              </article>
+              </Tilt>
             </li>
           );
         })}
@@ -137,15 +140,16 @@ export function HowItWorksHome() {
   const reply = F.quoteReplyHours ? `We reply with a written quote within ${F.quoteReplyHours} hours.` : 'We reply during office hours, Sun–Fri, 9 am – 6 pm NPT.';
   return (
     <Section id="how-it-works" labelledBy="how-title">
-      <SectionHead id="how-title" eyebrow="How it works" title="From first message to your trip, in four steps" />
-      <ol className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 list-none p-0 m-0">
+      <SectionHead id="how-title" eyebrow="How it works" title="From first message to your trip, in |four steps|" />
+      <ol className="relative grid sm:grid-cols-2 lg:grid-cols-4 gap-5 list-none p-0 m-0">
+        <li aria-hidden="true" className="hidden lg:block gh-steps-line" />
         {HOME_STEPS.map((s, n) => {
           const Icon = iconFor(s.icon);
           return (
             <li key={s.num} className="rv" style={{ '--i': n }}>
               <article className="relative h-full rounded-[20px] border border-[#E2E8F0] bg-white p-7 overflow-hidden">
-                <span className="num absolute right-5 top-3 text-[64px] font-bold leading-none text-[#1E3A8A]/[.08]" aria-hidden="true">{s.num}</span>
-                <span className="w-12 h-12 rounded-full bg-[#ECFDF5] text-[#047857] flex items-center justify-center mb-6"><Icon className="w-5 h-5" aria-hidden="true" /></span>
+                <span className="num gh-stepnum absolute right-5 top-3 text-[64px] font-extrabold leading-none" aria-hidden="true">{s.num}</span>
+                <span className="relative z-[1] w-12 h-12 rounded-full bg-white border-2 border-[#E2E8F0] text-[#3E478A] flex items-center justify-center mb-6"><Icon className="w-5 h-5" aria-hidden="true" /></span>
                 <p className="num m-0 text-[12px] font-semibold tracking-[.18em] text-[#047857]">STEP {s.num}</p>
                 <h3 className="text-[22px] mt-1 mb-0">{s.title}</h3>
                 <p className="mt-2 mb-0 text-[15px] leading-relaxed text-[#475569]">{s.desc}</p>
@@ -166,19 +170,19 @@ export function GuidesHome() {
   if (!tips.length) return null;
   return (
     <Section id="guides" labelledBy="guides-title" tone="off">
-      <SectionHead id="guides-title" eyebrow="Travel tips & guides" title="Practical notes before you go" to="/guides" />
+      <SectionHead id="guides-title" eyebrow="Travel tips & guides" title="Practical notes |before you go|" to="/guides" />
       <ul className="grid md:grid-cols-3 gap-6 list-none p-0 m-0">
         {tips.map((t, n) => {
           const Icon = iconFor(t.icon);
           return (
             <li key={t.title} className="rv" style={{ '--i': n }}>
-              <article className="gh-card hoverable h-full p-7">
-                <span className="w-12 h-12 rounded-2xl bg-[#EEF2FF] text-[#1E3A8A] flex items-center justify-center mb-6"><Icon className="w-5 h-5" aria-hidden="true" /></span>
+              <Tilt className="gh-card hoverable h-full p-7">
+                <span className="w-12 h-12 rounded-2xl bg-[#EEF2FF] text-[#3E478A] flex items-center justify-center mb-6"><Icon className="w-5 h-5" aria-hidden="true" /></span>
                 <p className="m-0 text-[12px] font-semibold tracking-[.18em] uppercase text-[#047857]">Guide</p>
                 <h3 className="text-[24px] leading-snug mt-1 mb-0"><Link to={`/guides#${slugify(t.title)}`} className="text-[#0F172A] after:absolute after:inset-0 after:content-[''] after:rounded-[20px]">{t.title}</Link></h3>
                 <p className="mt-3 mb-6 text-[15px] leading-relaxed text-[#475569]">{t.points[0]}</p>
                 <span className="mt-auto text-[12px] font-semibold uppercase tracking-[.14em] text-[#1E3A8A] inline-flex items-center gap-1.5" aria-hidden="true">Read more <ArrowRight className="w-4 h-4" /></span>
-              </article>
+              </Tilt>
             </li>
           );
         })}
@@ -201,8 +205,8 @@ export function FaqHome({ whatsapp }) {
     <Section id="faq" labelledBy="faq-title">
       <div className="grid lg:grid-cols-[1.6fr_1fr] gap-12 lg:gap-16 items-start">
         <div>
-          <span className="gh-eyebrow rv">FAQ</span>
-          <h2 id="faq-title" className="gh-title rv mb-10" style={{ '--i': 1, maxWidth: '24ch' }}>Asked by every traveller. Answered by our Kathmandu team.</h2>
+          <span className="gh-eyebrow rv"><LogoStripes />FAQ</span>
+          <Kinetic as="h2" id="faq-title" className="gh-title rv mb-10" style={{ '--i': 1, maxWidth: '24ch' }} text="Asked by every traveller. Answered by our |Kathmandu team.|" />
           <ul className="gh-faq rv" style={{ '--i': 2 }}>
             {HOME_FAQS.map((f, n) => {
               const on = open === n;

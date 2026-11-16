@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Pause, Play } from 'lucide-react';
 import { BUSINESS_FACTS } from '../../data/businessFacts';
+import { Kinetic, Watermark } from './motion';
 
 export const HERO_POSTER = { src: '/media/hero-poster.avif', srcSet: '/media/hero-poster-960.avif 960w, /media/hero-poster.avif 1920w' };
+export const HERO_TITLE = 'Nepal tours & world holidays, planned in |Kathmandu|';
 export const HERO_POSTER_ALT = 'Phewa Lake and the Annapurna range seen from Sarangkot above Pokhara';
 
 /** Hero sub-line; the reply-time promise appears only once the owner has set a real number. */
@@ -66,8 +68,9 @@ export default function HeroVideo() {
       </div>
       <div className="gh-wrap">
         <div className="gh-hero-inner">
-          <span className="gh-watermark" aria-hidden="true">NEPAL</span>
-          <h1 id="hero-title">Nepal tours &amp; world holidays, planned in Kathmandu</h1>
+          <Watermark text="NEPAL" />
+          {/* No on-load wave here: the H1 is the LCP element and must paint exactly like the prerendered one. */}
+          <Kinetic as="h1" id="hero-title" text={HERO_TITLE} />
           <div className="gh-rule" aria-hidden="true" />
           <p className="gh-hero-sub">{heroSubline()}</p>
           <div className="gh-hero-ctas">

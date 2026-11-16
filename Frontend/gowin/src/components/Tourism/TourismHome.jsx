@@ -7,6 +7,7 @@ import Pilgrimage from '../Home/Pilgrimage';
 import Wildlife from '../Home/Wildlife';
 import { Holidays, Seasons, ServicesHome, HowItWorksHome, GuidesHome, FaqHome, MobileBar } from '../Home/MoreSections';
 import Testimonials from './Testimonials';
+import { ScrollProgress, PlaceMarquee } from '../Home/motion';
 import usePlaceStore, { selectPublished, sortPlaces } from '../Store/PlaceStore';
 import useSettingsStore from '../Store/SettingsStore';
 import { useSEO, agencyJsonLd } from '../../lib/seo';
@@ -33,11 +34,15 @@ const TourismHome = () => {
     () => homeSections(sortPlaces(selectPublished(places), 'featured'), { daySlots: DAY_TOUR_SLOTS, pilgrimageOrder: PILGRIMAGE_ORDER }),
     [places],
   );
+  // Place names for the marquee: first part of each published Nepal tour's location, de-duplicated.
+  const placeNames = useMemo(() => [...new Set(s.nepal.map((p) => String(p.location || '').split(/[,–-]/)[0].trim()).filter(Boolean))].slice(0, 14), [s.nepal]);
   const wa = whatsappLink(settings.whatsapp || settings.phone, 'Hello GoWin Travels, I would like to plan a trip.');
 
   return (
     <main className="gh home-main">
+      <ScrollProgress />
       <HeroVideo />
+      <PlaceMarquee places={placeNames} />
       <WhoWeAre />
       <PopularTours items={s.popular} />
       <DayTours items={s.dayTours} />

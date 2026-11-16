@@ -49,7 +49,7 @@ export default function DayTours({ items }) {
 
   return (
     <Section id="day-tours" labelledBy="day-title" tone="off">
-      <SectionHead id="day-title" eyebrow="Kathmandu Valley day tours" title="Temples, palace squares and a mountain sunrise" to="/destinations/national" extra={pauseBtn} />
+      <SectionHead id="day-title" eyebrow="Kathmandu Valley day tours" title="Temples, palace squares and a |mountain sunrise|" to="/destinations/national" extra={pauseBtn} />
       <div className="grid lg:grid-cols-[1.35fr_1fr] gap-8 lg:gap-14 items-stretch" onMouseEnter={stop} onFocusCapture={stop} onTouchStart={stop}>
         {/* mobile: chips above the card */}
         <div className="gh-chips-row lg:hidden" role="tablist" aria-label="Day tours">

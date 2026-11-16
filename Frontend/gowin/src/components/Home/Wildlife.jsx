@@ -14,7 +14,7 @@ export default function Wildlife({ items }) {
 
   return (
     <Section id="wildlife" labelledBy="wild-title" tone="dark">
-      <SectionHead id="wild-title" eyebrow="Wildlife" title="Jungle safaris in the national parks of the Terai" to="/destinations/national" />
+      <SectionHead id="wild-title" eyebrow="Wildlife" title="Jungle safaris in the national parks of the |Terai|" to="/destinations/national" />
       <div className="gh-banner rv" style={{ '--i': 2 }}>
         {items.map((t, n) => (
           <div key={t.id} className="gh-layer" style={{ opacity: n === i ? 1 : 0 }} aria-hidden={n !== i}>

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, BadgeCheck, Star } from 'lucide-react';
 import { Section } from './ui';
+import { Kinetic, LogoStripes } from './motion';
 import { BUSINESS_FACTS as F, hasFact } from '../../data/businessFacts';
 
 /** Owner photos when supplied, otherwise two of the site's own Kathmandu Valley photos (described as what they show). */
@@ -11,7 +12,7 @@ const PHOTOS = [
 ];
 
 const Photo = ({ p, className }) => (
-  <div className={`absolute overflow-hidden rounded-[20px] shadow-[0_24px_48px_-16px_rgba(15,23,42,.35)] border-[6px] border-white bg-gray-200 ${className}`}>
+  <div className={`gh-who-photo absolute overflow-hidden rounded-[20px] shadow-[0_24px_48px_-16px_rgba(15,23,42,.35)] border-[6px] border-white bg-gray-200 ${className}`}>
     {p.src ? <img src={p.src} alt={p.alt} width="600" height="450" loading="lazy" className="w-full h-full object-cover" /> : (
       <picture>
         <source type="image/avif" srcSet={`${p.base}-600.avif`} />
@@ -37,8 +38,9 @@ export default function WhoWeAre() {
     <Section id="who-we-are" labelledBy="who-title" tone="off">
       <div className="grid lg:grid-cols-2 gap-14 lg:gap-20 items-center">
         <div className="rv relative h-[380px] sm:h-[480px] max-w-[560px] w-full mx-auto lg:mx-0">
-          <Photo p={PHOTOS[0]} className="left-0 top-0 w-[72%] h-[72%] -rotate-3" />
-          <Photo p={PHOTOS[1]} className="right-0 bottom-0 w-[62%] h-[62%] rotate-3" />
+          <span className="absolute -left-6 -top-6 w-40 h-40 rounded-full opacity-25 blur-2xl" style={{ background: 'var(--logo-grad)' }} aria-hidden="true" />
+          <Photo p={PHOTOS[0]} className="left-0 top-0 w-[72%] h-[72%] -rotate-3 gh-float" />
+          <Photo p={PHOTOS[1]} className="right-0 bottom-0 w-[62%] h-[62%] rotate-3 gh-float b" />
           {hasFact(F.tourismLicenceNo) && (
             <div className="absolute left-4 bottom-6 sm:left-8 z-10 flex items-center gap-3 bg-white rounded-2xl shadow-[0_12px_32px_-12px_rgba(15,23,42,.35)] px-4 py-3 max-w-[260px]">
               <BadgeCheck className="w-7 h-7 text-[#047857] flex-shrink-0" aria-hidden="true" />
@@ -48,8 +50,8 @@ export default function WhoWeAre() {
         </div>
 
         <div>
-          <span className="gh-eyebrow rv">Who we are</span>
-          <h2 id="who-title" className="gh-title rv" style={{ '--i': 1 }}>A Kathmandu team that plans every trip in writing.</h2>
+          <span className="gh-eyebrow rv"><LogoStripes />Who we are</span>
+          <Kinetic as="h2" id="who-title" className="gh-title rv" style={{ '--i': 1 }} text="A Kathmandu team that plans every trip |in writing.|" />
           <div className="rv mt-6 space-y-3 text-[16px] leading-relaxed text-[#475569] max-w-[54ch]" style={{ '--i': 2 }}>
             <p>We are based in Shankhamul, Kathmandu, and arrange Nepal tours, international holidays, flights, hotels and visa help.</p>
             <p>Every trip starts with a written quote that lists the itinerary, the price and what it includes.</p>

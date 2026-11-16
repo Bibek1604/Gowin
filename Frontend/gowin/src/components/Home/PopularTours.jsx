@@ -4,12 +4,14 @@ import { ArrowRight, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
 import { Section, SectionHead, TourImage, Specs, FromPrice } from './ui';
 import { specsOf, priceOf } from '../../lib/homeData';
 import { placePath } from '../../lib/format';
+import { useTilt } from './motion';
 
 /** Tour card: photo on top, category + price badges, spec rows, price and a single link (whole card is clickable). */
 export function TourCard({ place, cta = 'Explore tour', eager = false }) {
   const price = priceOf(place);
+  const tilt = useTilt();
   return (
-    <article className="gh-card hoverable h-full">
+    <article ref={tilt} className="gh-card hoverable gh-tilt h-full">
       <div className="gh-media">
         <TourImage place={place} eager={eager} />
         {place.categories?.name && <span className="gh-badge" style={{ left: 14, top: 14 }}>{place.categories.name}</span>}
@@ -77,7 +79,7 @@ export default function PopularTours({ items }) {
 
   return (
     <Section id="popular-tours" labelledBy="popular-title" className="!pb-[56px] lg:!pb-[96px] overflow-hidden">
-      <SectionHead id="popular-title" eyebrow="Popular Nepal tours" title="Multi-day tours across Nepal" to="/destinations/national" extra={arrows} />
+      <SectionHead id="popular-title" eyebrow="Popular Nepal tours" title="Multi-day tours across |Nepal|" to="/destinations/national" extra={arrows} />
       <div className="rv" style={{ '--i': 2 }} role="region" aria-roledescription="carousel" aria-label="Popular Nepal tours" onKeyDown={onKey}>
         <p className="sr-only">Use the left and right arrow keys to move between tours.</p>
         <ul id="popular-track" ref={track} className="gh-track list-none m-0 -mx-4 sm:mx-[calc(50%-50vw)]" tabIndex={0} aria-label="Tours, scrollable">

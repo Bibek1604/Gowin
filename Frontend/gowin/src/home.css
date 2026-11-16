@@ -1,9 +1,11 @@
+/* Animatable proximity value for kinetic letters (k-wave keyframes). */
+@property --p { syntax: '<number>'; inherits: true; initial-value: 0; }
 /* ============================================================
    Home page v2 — tokens, primitives and motion.
-   Brand colours are the existing GoWin navy + green (index.css);
-   headings Playfair Display, everything else Inter.
-   Numbers (prices, stats, step numbers) always use Inter: Playfair's
-   old-style figures sit at uneven heights.
+   Colours: the GoWin logo (indigo G, sky-blue plane swoosh, orange→red
+   ring, gold lettering, the small stripe set) plus the site navy/green.
+   Type: Bricolage Grotesque (variable weight + width) for display,
+   Manrope (variable) for text, UI and numbers.
    ============================================================ */
 :root {
   --gh-navy: #1E3A8A;
@@ -16,8 +18,15 @@
   --gh-soft: #475569;        /* 7.6:1 on white */
   --gh-line: #E2E8F0;
   --gh-off: #F8F7F4;         /* off-white section background */
-  --gh-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
-  --gh-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --gh-serif: 'Bricolage Grotesque Variable', 'Bricolage Grotesque', system-ui, sans-serif;
+  --gh-sans: 'Manrope Variable', 'Manrope', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --logo-indigo: #3E478A;
+  --logo-sky: #2FA8DE;
+  --logo-orange: #F0832A;
+  --logo-red: #E2332B;
+  --logo-gold: #E9A23B;
+  --logo-green: #4E7A3A;
+  --logo-grad: linear-gradient(100deg, var(--logo-indigo) 0%, var(--logo-sky) 30%, var(--logo-orange) 58%, var(--logo-red) 78%, var(--logo-gold) 100%);
   --gh-ease: cubic-bezier(.2, .7, .2, 1);
   --gh-radius: 20px;
   --gh-shadow: 0 1px 2px rgba(15, 23, 42, .04), 0 12px 32px -12px rgba(15, 23, 42, .18);
@@ -33,12 +42,12 @@
 .gh-hero::after { content: ''; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to top, rgba(11, 18, 32, .92) 0%, rgba(11, 18, 32, .55) 40%, rgba(11, 18, 32, .15) 75%, rgba(11, 18, 32, .45) 100%); }
 .gh-hero-inner { position: relative; width: 100%; padding-top: 120px; padding-bottom: 64px; }
 @media (min-width: 1024px) { .gh-hero-inner { padding-bottom: 96px; } }
-.gh-watermark { position: absolute; left: -0.04em; bottom: 0.18em; z-index: -1; font-family: var(--gh-serif); font-weight: 700; font-size: clamp(120px, 22vw, 360px); line-height: .8; letter-spacing: -0.02em; color: #fff; opacity: .08; pointer-events: none; user-select: none; animation: gh-wm 1.6s var(--gh-ease) both .2s; }
-@keyframes gh-wm { from { opacity: 0; transform: translateY(16px); } to { opacity: .08; transform: none; } }
-.gh-hero .gh-hero-inner h1 { font-family: var(--gh-serif); font-weight: 700; font-size: clamp(38px, 4.6vw + 14px, 76px); line-height: 1.04; letter-spacing: -0.015em; margin: 0; max-width: 13.5ch; color: #fff; }
-.gh-rule { width: 64px; height: 2px; background: #fff; margin: 28px 0 22px; opacity: .9; }
-.gh-hero-sub { max-width: 46ch; font-size: 17px; line-height: 1.6; color: rgba(255, 255, 255, .88); margin: 0 0 30px; }
-.gh-hero-ctas { display: flex; flex-wrap: wrap; gap: 12px; }
+.gh-watermark { position: absolute; left: -0.03em; bottom: 0.16em; z-index: -1; font-family: var(--gh-serif); font-weight: var(--wm-w, 800); font-stretch: calc(var(--wm-s, 100) * 1%); font-size: clamp(120px, 23vw, 380px); line-height: .8; letter-spacing: -0.04em; background: var(--logo-grad); background-size: 200% 100%; background-position: var(--wm-x, 0%) 0; -webkit-background-clip: text; background-clip: text; color: transparent; opacity: .16; pointer-events: none; user-select: none; transition: font-weight .5s var(--gh-ease), font-stretch .5s var(--gh-ease), background-position .8s var(--gh-ease); animation: gh-wm 1.6s var(--gh-ease) both .2s; }
+@keyframes gh-wm { from { opacity: 0; transform: translateY(16px); } to { opacity: .16; transform: none; } }
+.gh-hero .gh-hero-inner h1 { font-family: var(--gh-serif); font-weight: 750; font-stretch: 92%; font-size: clamp(40px, 4.8vw + 14px, 82px); line-height: 1; letter-spacing: -0.035em; margin: 0; max-width: 13.5ch; color: #fff; }
+.gh-rule { width: 72px; height: 3px; border-radius: 3px; background: var(--logo-grad); animation: gh-grow .9s var(--gh-ease) both .3s; transform-origin: left; margin: 28px 0 22px; opacity: .9; }
+.gh-hero-sub { animation: gh-up .8s var(--gh-ease) both .45s;  max-width: 46ch; font-size: 17px; line-height: 1.6; color: rgba(255, 255, 255, .88); margin: 0 0 30px; }
+.gh-hero-ctas { animation: gh-up .8s var(--gh-ease) both .6s;  display: flex; flex-wrap: wrap; gap: 12px; }
 .gh-hero-pause { position: absolute; right: 16px; bottom: 24px; width: 44px; height: 44px; border-radius: 999px; border: 1.5px solid rgba(255, 255, 255, .7); background: rgba(11, 18, 32, .35); color: #fff; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 @media (min-width: 640px) { .gh-hero-pause { right: 24px; bottom: 32px; } }
 .gh-hero-pause svg { width: 18px; height: 18px; }
@@ -50,8 +59,8 @@
 .gh :is(h1, h2, h3) :is(a, span:not(.num)) { font-family: inherit; }
 .gh picture { display: contents; }
 .gh :is(.gh-layer, .gh-panel) img { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
-.gh h2 { font-weight: 600; }
-.gh h3 { font-weight: 600; }
+.gh h2 { font-weight: 700; font-stretch: 94%; letter-spacing: -0.03em; }
+.gh h3 { font-weight: 650; letter-spacing: -0.015em; }
 .gh .num { font-family: var(--gh-sans) !important; font-variant-numeric: tabular-nums lining-nums; }
 
 /* ---------- layout ---------- */
@@ -67,7 +76,7 @@
 @media (min-width: 1024px) { .gh-head { margin-bottom: 56px; } }
 .gh-eyebrow { display: block; font-size: 12px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--gh-green-ink); margin-bottom: 12px; }
 .dark .gh-eyebrow { color: var(--gh-green-on-dark); }
-.gh-title { font-size: clamp(30px, 2.2vw + 22px, 48px); line-height: 1.12; font-weight: 600; max-width: 22ch; margin: 0; }
+.gh-title { font-size: clamp(32px, 2.4vw + 22px, 52px); line-height: 1.04; font-weight: 700; max-width: 22ch; margin: 0; }
 .gh-lead { margin: 14px 0 0; max-width: 60ch; font-size: 16px; line-height: 1.65; color: var(--gh-soft); }
 .dark .gh-lead { color: rgba(255, 255, 255, .78); }
 
@@ -102,7 +111,7 @@
 .gh-media img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .5s var(--gh-ease); }
 @media (hover: hover) and (pointer: fine) {
   .gh-card.hoverable:hover { transform: translateY(-4px); box-shadow: var(--gh-shadow-lg); }
-  .gh-card.hoverable:hover .gh-media img, .gh-zoom:hover img { transform: scale(1.04); }
+  .gh-card.hoverable:hover .gh-media .gh-uncut-fg, .gh-card.hoverable:hover .gh-media .gh-img-fill { transform: scale(1.04); }
 }
 .gh-badge { position: absolute; z-index: 2; display: inline-flex; align-items: center; min-height: 28px; padding: 0 12px; border-radius: 999px; font-size: 12px; font-weight: 600; letter-spacing: .04em; background: rgba(255, 255, 255, .94); color: var(--gh-navy-dk); }
 .gh-badge.dark { background: var(--gh-navy-dk); color: #fff; }
@@ -126,6 +135,9 @@
 .gh-rv-on .rv { opacity: 0; transform: translateY(24px); transition: opacity .6s var(--gh-ease), transform .6s var(--gh-ease); transition-delay: calc(var(--i, 0) * 80ms); }
 .gh-rv-on.is-in .rv { opacity: 1; transform: none; }
 
+@keyframes gh-grow { from { transform: scaleX(0); } to { transform: none; } }
+@keyframes gh-up { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: none; } }
+
 /* ---------- carousel (popular tours) ---------- */
 .gh-track { display: flex; gap: 20px; overflow-x: auto; scroll-snap-type: x mandatory; scroll-behavior: smooth; padding: 12px calc(50% - min(42vw, 190px)) 28px; scrollbar-width: none; overscroll-behavior-x: contain; }
 .gh-track::-webkit-scrollbar { display: none; }
@@ -144,7 +156,7 @@
 .gh-feature::after { content: ''; position: absolute; inset: 0; background: linear-gradient(to top, rgba(11, 18, 32, .94) 8%, rgba(11, 18, 32, .5) 50%, rgba(11, 18, 32, .05) 100%); }
 .gh-feature-body { position: relative; z-index: 1; padding: 28px; width: 100%; }
 @media (min-width: 640px) { .gh-feature-body { padding: 40px; } }
-.gh-quote { font-family: var(--gh-serif); font-style: italic; font-size: 18px; line-height: 1.5; color: rgba(255, 255, 255, .9); margin: 10px 0 22px; max-width: 48ch; }
+.gh-quote { font-family: var(--gh-sans); font-style: normal; font-weight: 500; font-size: 18px; line-height: 1.5; color: rgba(255, 255, 255, .9); margin: 10px 0 22px; max-width: 48ch; }
 .gh-numlist { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--gh-line); }
 .gh-numrow { display: flex; align-items: center; gap: 18px; width: 100%; min-height: 72px; padding: 14px 8px; border: 0; border-bottom: 1px solid var(--gh-line); background: none; text-align: left; cursor: pointer; color: var(--gh-ink); transition: background-color .2s, padding .3s var(--gh-ease); }
 .gh-numrow .n { font-size: 14px; font-weight: 600; color: var(--gh-soft); width: 28px; }
@@ -228,8 +240,97 @@
 @media (prefers-reduced-motion: reduce) {
   .gh *, .gh *::before, .gh *::after, .gh-bar { transition: none !important; animation: none !important; scroll-behavior: auto !important; }
   .gh-rv-on .rv { opacity: 1; transform: none; }
-  .gh-watermark { opacity: .08; }
+  .gh-watermark { opacity: .16; }
   .gh-slide:not(.active) { transform: none; }
 }
 
+
+/* ---------- uncut photos: whole picture over a blurred copy of itself ---------- */
+.gh-uncut { position: absolute; inset: 0; display: block; overflow: hidden; background: #0B1220; }
+.gh-uncut .gh-uncut-bg { position: absolute; inset: -8%; width: 116%; height: 116%; max-width: none; object-fit: cover; filter: blur(22px) saturate(1.25) brightness(.85); transform: scale(1.05); }
+.gh-uncut .gh-uncut-fg { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: contain; transition: transform .6s var(--gh-ease); filter: drop-shadow(0 10px 24px rgba(0, 0, 0, .25)); }
+.gh-media .gh-img-fill, .gh :is(.gh-layer, .gh-panel) .gh-img-fill { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+.gh-card .gh-media { aspect-ratio: 5 / 4; }
+
+/* ---------- kinetic letters (transform + colour only: no reflow) ---------- */
+.kinetic .kw { display: inline-block; white-space: nowrap; }
+.kinetic .kl { display: inline-block; transform: translateY(calc(var(--p) * -0.14em)) scale(calc(1 + var(--p) * .12)) rotate(calc(var(--p) * -4deg)); color: color-mix(in oklab, currentColor, var(--lc) calc(var(--p) * 100%)); transition: transform .35s var(--gh-ease), color .35s ease; }
+.kinetic.k-live .kl { transition-duration: .12s; }
+.k-wave .kl { animation: k-wave 1.4s var(--gh-ease) both; animation-delay: calc(var(--i) * 35ms + .3s); }
+@keyframes k-wave { 0% { --p: 0; } 40% { --p: .9; } 100% { --p: 0; } }
+.k-accent .kl { color: transparent; background: var(--logo-grad); background-size: 400% 100%; -webkit-background-clip: text; background-clip: text; animation: k-flow 8s linear infinite; animation-delay: calc(var(--i) * -0.12s); }
+.dark .k-accent .kl, .on-photo .k-accent .kl, .gh-hero .k-accent .kl { background-image: linear-gradient(100deg, var(--logo-sky), var(--logo-gold), var(--logo-orange), #fff, var(--logo-sky)); }
+@keyframes k-flow { from { background-position: 0% 0; } to { background-position: 400% 0; } }
+
+/* ---------- tilt cards ---------- */
+.gh-tilt { transform: perspective(900px) rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)); transition: transform .5s var(--gh-ease), box-shadow .5s var(--gh-ease); }
+.gh-tilt::after { content: ''; position: absolute; inset: 0; border-radius: inherit; pointer-events: none; opacity: 0; transition: opacity .4s; background: radial-gradient(circle at var(--gx, 50%) var(--gy, 0%), rgba(255, 255, 255, .35), transparent 45%); z-index: 3; }
+@media (hover: hover) and (pointer: fine) { .gh-tilt:hover::after { opacity: 1; } .gh-tilt:hover { transition-duration: .15s; } }
+
+/* ---------- logo stripes before eyebrows ---------- */
+.gh-eyebrow { display: inline-flex; align-items: center; }
+.gh-stripes { display: inline-grid; gap: 2px; width: 18px; margin-right: 10px; }
+.gh-stripes i { display: block; height: 2px; border-radius: 2px; transform-origin: left; }
+.gh-stripes i:nth-child(1) { background: var(--logo-gold); width: 100%; }
+.gh-stripes i:nth-child(2) { background: #B8BEC6; width: 80%; }
+.gh-stripes i:nth-child(3) { background: var(--logo-sky); width: 100%; }
+.gh-stripes i:nth-child(4) { background: var(--logo-green); width: 70%; }
+.gh-stripes i:nth-child(5) { background: var(--logo-indigo); width: 90%; }
+.dark .gh-stripes i:nth-child(5) { background: #fff; }
+.is-in .gh-stripes i { animation: gh-grow .7s var(--gh-ease) both; }
+.is-in .gh-stripes i:nth-child(2) { animation-delay: .06s; }
+.is-in .gh-stripes i:nth-child(3) { animation-delay: .12s; }
+.is-in .gh-stripes i:nth-child(4) { animation-delay: .18s; }
+.is-in .gh-stripes i:nth-child(5) { animation-delay: .24s; }
+
+/* ---------- pills: arrow slides, sheen ---------- */
+.gh-pill svg { transition: transform .3s var(--gh-ease); }
+.gh-pill:hover svg { transform: translateX(4px); }
+.gh-pill.solid { background-image: linear-gradient(100deg, var(--gh-navy), var(--logo-indigo) 50%, var(--gh-navy)); background-size: 200% 100%; background-position: 100% 0; transition: background-position .6s var(--gh-ease), transform .25s; }
+.gh-pill.solid:hover { background-position: 0 0; }
+
+/* ---------- scroll progress ---------- */
+.gh-progress { position: fixed; z-index: 120; top: 0; left: 0; right: 0; height: 3px; background: var(--logo-grad); transform: scaleX(0); transform-origin: left; pointer-events: none; }
+
+/* ---------- place marquee ---------- */
+.gh-marquee { display: flex; overflow: hidden; background: #fff; border-bottom: 1px solid var(--gh-line); padding: 26px 0; -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+.gh-marquee-track { display: flex; flex-shrink: 0; margin: 0; padding: 0; list-style: none; animation: gh-marq 48s linear infinite; }
+.gh-marquee:hover .gh-marquee-track { animation-play-state: paused; }
+.gh-marquee li { display: inline-flex; align-items: center; gap: 28px; padding-right: 28px; font-family: var(--gh-serif); font-weight: 750; font-stretch: 85%; font-size: clamp(30px, 4vw, 56px); line-height: 1.1; letter-spacing: -0.03em; color: var(--lc); white-space: nowrap; transition: font-weight .4s var(--gh-ease), font-stretch .4s var(--gh-ease); }
+.gh-marquee li.outline { color: transparent; -webkit-text-stroke: 1.5px var(--lc); }
+@media (hover: hover) { .gh-marquee li:hover { font-weight: 300; font-stretch: 100%; } }
+.gh-marquee .dot { width: 12px; height: 12px; border-radius: 999px; background: var(--logo-grad); }
+@keyframes gh-marq { to { transform: translateX(-100%); } }
+
+/* ---------- image reveal, float, step line ---------- */
+.gh-rv-on .rv-img { clip-path: inset(0 0 100% 0 round 20px); transition: clip-path 1s var(--gh-ease); transition-delay: calc(var(--i, 0) * 80ms); }
+.gh-rv-on.is-in .rv-img { clip-path: inset(0 0 0 0 round 20px); }
+.gh-float { animation: gh-float 7s ease-in-out infinite; }
+.gh-float.b { animation-delay: -3.5s; }
+@keyframes gh-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -10px; } }
+.gh-steps-line { position: absolute; left: 28px; right: 28px; top: 52px; height: 2px; background: var(--logo-grad); transform: scaleX(0); transform-origin: left; transition: transform 1.6s var(--gh-ease) .3s; }
+.is-in .gh-steps-line, .gh-sec:not(.gh-rv-on) .gh-steps-line { transform: none; }
+.gh-stepnum { background: var(--logo-grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+
+@media (prefers-reduced-motion: reduce) {
+  .gh-marquee-track { animation: none; flex-wrap: wrap; }
+  .gh-marquee-track[aria-hidden] { display: none; }
+  .kinetic .kl, .k-accent .kl { animation: none !important; transform: none !important; }
+  .gh-tilt { transform: none !important; }
+  .gh-rv-on .rv-img { clip-path: none; }
 }
+
+}
+
+/* Image sizing lives outside @layer: index.css has an unlayered `img { height: auto }`
+   that would otherwise win over layered rules and stop photos filling their frames. */
+.gh .gh-uncut .gh-uncut-bg { position: absolute; inset: -8%; width: 116%; height: 116%; max-width: none; object-fit: cover; }
+.gh .gh-uncut .gh-uncut-fg { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: contain; }
+.gh .gh-img-fill { position: absolute; inset: 0; width: 100%; height: 100%; max-width: none; object-fit: cover; }
+.gh .gh-season-img img, .gh-who-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+/* LCP: Chrome discounts images that cover the entire viewport as backgrounds,
+   which made the late-mounting H1 the LCP element. Keeping the poster a few
+   pixels short of the viewport lets the (preloaded) poster count. The strip
+   below it is hidden under the hero's dark gradient. */
+.gh-hero .gh-hero-media img, .pr .gh-hero .gh-hero-media img { inset: 0 0 auto 0; height: min(100%, calc(100svh - 6px)); }

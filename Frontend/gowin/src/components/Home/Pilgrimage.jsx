@@ -15,7 +15,7 @@ export default function Pilgrimage({ items }) {
 
   return (
     <Section id="pilgrimage" labelledBy="pilgrim-title">
-      <SectionHead id="pilgrim-title" eyebrow="Pilgrimage tours" title="Sacred sites of Nepal, with transport and stays arranged" to="/destinations/national" />
+      <SectionHead id="pilgrim-title" eyebrow="Pilgrimage tours" title="|Sacred sites| of Nepal, with transport and stays arranged" to="/destinations/national" />
 
       {/* desktop: expanding panels */}
       <div className="gh-panels hidden md:flex rv" style={{ '--i': 2 }}>
