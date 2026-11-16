@@ -18,9 +18,9 @@
     "media:links": "python -I scripts/build-photo-links.py"
   },
   "dependencies": {
+    "@fontsource-variable/bricolage-grotesque": "^5.3.0",
+    "@fontsource-variable/manrope": "^5.3.0",
     "@fontsource/dm-sans": "^5.3.0",
-    "@fontsource/inter": "^5.3.0",
-    "@fontsource/playfair-display": "^5.3.0",
     "@fontsource/plus-jakarta-sans": "^5.3.0",
     "@supabase/supabase-js": "^2.99.0",
     "@tailwindcss/vite": "^4.1.8",
