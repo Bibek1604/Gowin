@@ -21,13 +21,16 @@ const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  // Home (v2): transparent over the hero video, solid navy after 80px.
+  const home = location.pathname === '/';
+  const onDark = home;
 
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 12);
+    const onScroll = () => setScrolled(window.scrollY > (home ? 80 : 12));
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
-  }, []);
+  }, [home]);
 
   useEffect(() => { setOpen(false); }, [location.pathname]);
 
@@ -37,11 +40,16 @@ const Navbar = () => {
   const wa = whatsappLink(settings.whatsapp || settings.phone, 'Hello GoWin Travels, I would like to plan a trip.');
 
   const linkCls = ({ isActive }) =>
-    `px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors ${isActive ? 'bg-[#1E3A8A] text-white' : 'text-gray-600 hover:text-[#1E3A8A] hover:bg-[#1E3A8A]/5'}`;
+    `px-3.5 py-2 rounded-lg text-sm font-semibold transition-colors ${onDark
+      ? (isActive ? 'bg-white/15 text-white' : 'text-white/90 hover:text-white hover:bg-white/10')
+      : (isActive ? 'bg-[#1E3A8A] text-white' : 'text-gray-600 hover:text-[#1E3A8A] hover:bg-[#1E3A8A]/5')}`;
+  const headerBg = home
+    ? (scrolled ? 'bg-[#1E3A8A] shadow-[0_2px_20px_rgba(15,23,42,0.25)]' : 'bg-transparent')
+    : (scrolled ? 'bg-white/95 backdrop-blur-md shadow-[0_2px_20px_rgba(15,23,42,0.08)]' : 'bg-white');
 
   return (
     <>
-      <header className={`fixed top-0 inset-x-0 z-[100] transition-all duration-300 ${scrolled ? 'bg-white/95 backdrop-blur-md shadow-[0_2px_20px_rgba(15,23,42,0.08)]' : 'bg-white'}`}>
+      <header className={`fixed top-0 inset-x-0 z-[100] transition-all duration-300 ${headerBg}`}>
         <div className="h-0.5 w-full flex" aria-hidden="true">
           <span className="flex-1 bg-[#3B82F6]" /><span className="flex-1 bg-gray-200" /><span className="flex-1 bg-[#EF4444]" /><span className="flex-1 bg-[#10B981]" /><span className="flex-1 bg-[#F59E0B]" />
         </div>
@@ -49,8 +57,8 @@ const Navbar = () => {
           <Link to="/" className="flex items-center gap-2.5 flex-shrink-0">
             <img src={gowinLogo} alt="" width="40" height="40" className="w-10 h-10 rounded-xl object-cover border border-gray-100 shadow-sm" />
             <span className="leading-none">
-              <span className="block text-lg font-black text-[#1E3A8A] tracking-tight">GoWin <span className="font-light text-[#1E3A8A]">Travels</span></span>
-              <span className="hidden sm:block text-[9px] font-bold uppercase tracking-[0.2em] text-[#047857]">Nepal · Worldwide</span>
+              <span className={`block text-lg font-black tracking-tight ${onDark ? 'text-white' : 'text-[#1E3A8A]'}`}>GoWin <span className="font-light">Travels</span></span>
+              <span className={`hidden sm:block text-[9px] font-bold uppercase tracking-[0.2em] ${onDark ? 'text-[#34D399]' : 'text-[#047857]'}`}>Nepal · Worldwide</span>
             </span>
           </Link>
 
@@ -93,13 +101,13 @@ const Navbar = () => {
 
           <div className="flex items-center gap-2">
             {wa && (
-              <a href={wa} target="_blank" rel="noopener noreferrer" className="hidden md:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold text-[#1E3A8A] hover:bg-[#1E3A8A]/5 transition-colors">
-                <MessageCircle className="w-4 h-4 text-[#10B981]" /> WhatsApp
+              <a href={wa} target="_blank" rel="noopener noreferrer" className={`hidden md:inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-semibold transition-colors ${onDark ? 'text-white hover:bg-white/10' : 'text-[#1E3A8A] hover:bg-[#1E3A8A]/5'}`}>
+                <MessageCircle className={`w-4 h-4 ${onDark ? 'text-[#34D399]' : 'text-[#10B981]'}`} /> WhatsApp
               </a>
             )}
             <Link to="/booking" className="hidden sm:inline-flex btn-primary !py-2.5 !px-4 text-sm">Plan a Trip</Link>
             <button type="button" aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} onClick={() => setOpen((v) => !v)}
-              className="lg:hidden w-10 h-10 rounded-xl bg-gray-50 text-[#1E3A8A] flex items-center justify-center hover:bg-gray-100 transition-colors">
+              className={`lg:hidden w-11 h-11 rounded-xl flex items-center justify-center transition-colors ${onDark ? 'bg-white/10 text-white hover:bg-white/20' : 'bg-gray-50 text-[#1E3A8A] hover:bg-gray-100'}`}>
               {open ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
             </button>
           </div>
