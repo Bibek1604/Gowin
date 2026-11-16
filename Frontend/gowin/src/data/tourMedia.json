@@ -1,179 +1,335 @@
 {
- "amsterdam-canal-discovery": [
-  600
- ],
- "bali-island-retreat": [
-  600
- ],
- "banaue-rice-terraces": [
-  600
- ],
- "bandipur-tansen-heritage-trail": [
-  600,
-  1200
- ],
- "bangkok-temple-city-tour": [
-  600
- ],
- "barcelona-culture-beach": [
-  600
- ],
- "bardiya-wilderness-safari": [
-  600,
-  1200
- ],
- "begnas-rupa-lakes": [
-  600,
-  1200
- ],
- "bhaktapur-durbar-square-tour": [
-  600,
-  1200
- ],
- "bhote-koshi-bungee-jump": [
-  600,
-  1200
- ],
- "bohol-chocolate-hills": [
-  600
- ],
- "cape-town-adventure": [
-  600
- ],
- "chitwan-jungle-safari": [
-  600,
-  1200
- ],
- "coron-kayangan-lake": [
-  600
- ],
- "dubai-desert-skyline": [
-  600
- ],
- "dubrovnik-coastal-charm": [
-  600
- ],
- "egypt-pyramids-nile-cruise": [
-  600
- ],
- "el-nido-big-lagoon": [
-  600
- ],
- "everest-mountain-flight": [
-  600,
-  1200
- ],
- "great-wall-of-china-tour": [
-  600
- ],
- "iceland-northern-lights": [
-  600
- ],
- "ilam-tea-garden-escape": [
-  600,
-  1200
- ],
- "janakpur-temple-tour": [
-  600,
-  1200
- ],
- "kathmandu-valley-heritage-tour": [
-  600,
-  1200
- ],
- "kayaking-phewa-lake": [
-  600,
-  1200
- ],
- "kenya-safari": [
-  600
- ],
- "kyoto-cultural-journey": [
-  600
- ],
- "lumbini-buddha-circuit": [
-  600,
-  1200
- ],
- "machu-picchu-sacred-valley": [
-  600
- ],
- "maldives-overwater-villa": [
-  600
- ],
- "manila-heritage": [
-  600
- ],
- "muktinath-pilgrimage-tour": [
-  600,
-  1200
- ],
- "nagarkot-dhulikhel-sunrise": [
-  600,
-  1200
- ],
- "nepal-golden-triangle": [
-  600,
-  1200
- ],
- "new-york-city-highlights": [
-  600
- ],
- "paragliding-pokhara": [
-  600,
-  1200
- ],
- "paris-romance-getaway": [
-  600
- ],
- "petra-jordan-desert": [
-  600
- ],
- "phewa-lake-boating": [
-  600,
-  1200
- ],
- "phuket-beach-paradise": [
-  600
- ],
- "pokhara-honeymoon-escape": [
-  600,
-  1200
- ],
- "pokhara-sarangkot-escape": [
-  600,
-  1200
- ],
- "queenstown-adventure-escape": [
-  600
- ],
- "rara-lake-wilderness": [
-  600,
-  1200
- ],
- "rome-colosseum-vatican": [
-  600
- ],
- "santorini-luxury-escape": [
-  600
- ],
- "siargao-island": [
-  600
- ],
- "singapore-city-escape": [
-  600
- ],
- "swiss-alps-adventure": [
-  600
- ],
- "sydney-harbour-explorer": [
-  600
- ],
- "trishuli-rafting": [
-  600,
-  1200
- ],
- "venice-canal-romance": [
-  600
- ]
+ "amsterdam-canal-discovery": {
+  "w": [
+   600
+  ],
+  "ar": 0.795
+ },
+ "bali-island-retreat": {
+  "w": [
+   600
+  ],
+  "ar": 0.6669
+ },
+ "banaue-rice-terraces": {
+  "w": [
+   600
+  ],
+  "ar": 1.2048
+ },
+ "bandipur-tansen-heritage-trail": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.4696
+ },
+ "bangkok-temple-city-tour": {
+  "w": [
+   600
+  ],
+  "ar": 0.6667
+ },
+ "barcelona-culture-beach": {
+  "w": [
+   600
+  ],
+  "ar": 1.4995
+ },
+ "bardiya-wilderness-safari": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.6909
+ },
+ "begnas-rupa-lakes": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.5006
+ },
+ "bhaktapur-durbar-square-tour": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.4995
+ },
+ "bhote-koshi-bungee-jump": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.5059
+ },
+ "bohol-chocolate-hills": {
+  "w": [
+   600
+  ],
+  "ar": 1.7778
+ },
+ "cape-town-adventure": {
+  "w": [
+   600
+  ],
+  "ar": 1.4995
+ },
+ "chitwan-jungle-safari": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.5006
+ },
+ "coron-kayangan-lake": {
+  "w": [
+   600
+  ],
+  "ar": 0.6663
+ },
+ "dubai-desert-skyline": {
+  "w": [
+   600
+  ],
+  "ar": 1.4995
+ },
+ "dubrovnik-coastal-charm": {
+  "w": [
+   600
+  ],
+  "ar": 1.5553
+ },
+ "egypt-pyramids-nile-cruise": {
+  "w": [
+   600
+  ],
+  "ar": 1.4925
+ },
+ "el-nido-big-lagoon": {
+  "w": [
+   600
+  ],
+  "ar": 1.7778
+ },
+ "everest-mountain-flight": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.8391
+ },
+ "great-wall-of-china-tour": {
+  "w": [
+   600
+  ],
+  "ar": 1.3333
+ },
+ "iceland-northern-lights": {
+  "w": [
+   600
+  ],
+  "ar": 1.5006
+ },
+ "ilam-tea-garden-escape": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.4995
+ },
+ "janakpur-temple-tour": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 2.3881
+ },
+ "kathmandu-valley-heritage-tour": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.7798
+ },
+ "kayaking-phewa-lake": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.7778
+ },
+ "kenya-safari": {
+  "w": [
+   600
+  ],
+  "ar": 1.5006
+ },
+ "kyoto-cultural-journey": {
+  "w": [
+   600
+  ],
+  "ar": 1.7778
+ },
+ "lumbini-buddha-circuit": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.4995
+ },
+ "machu-picchu-sacred-valley": {
+  "w": [
+   600
+  ],
+  "ar": 1.4995
+ },
+ "maldives-overwater-villa": {
+  "w": [
+   600
+  ],
+  "ar": 0.8
+ },
+ "manila-heritage": {
+  "w": [
+   600
+  ],
+  "ar": 0.665
+ },
+ "muktinath-pilgrimage-tour": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.6
+ },
+ "nagarkot-dhulikhel-sunrise": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.3333
+ },
+ "nepal-golden-triangle": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.4206
+ },
+ "new-york-city-highlights": {
+  "w": [
+   600
+  ],
+  "ar": 1.4995
+ },
+ "paragliding-pokhara": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.7778
+ },
+ "paris-romance-getaway": {
+  "w": [
+   600
+  ],
+  "ar": 0.7488
+ },
+ "petra-jordan-desert": {
+  "w": [
+   600
+  ],
+  "ar": 1.4995
+ },
+ "phewa-lake-boating": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 2.1405
+ },
+ "phuket-beach-paradise": {
+  "w": [
+   600
+  ],
+  "ar": 1.5009
+ },
+ "pokhara-honeymoon-escape": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.5006
+ },
+ "pokhara-sarangkot-escape": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.6223
+ },
+ "queenstown-adventure-escape": {
+  "w": [
+   600
+  ],
+  "ar": 1.5667
+ },
+ "rara-lake-wilderness": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.7778
+ },
+ "rome-colosseum-vatican": {
+  "w": [
+   600
+  ],
+  "ar": 1.4995
+ },
+ "santorini-luxury-escape": {
+  "w": [
+   600
+  ],
+  "ar": 1.4427
+ },
+ "siargao-island": {
+  "w": [
+   600
+  ],
+  "ar": 1.3356
+ },
+ "singapore-city-escape": {
+  "w": [
+   600
+  ],
+  "ar": 1.4995
+ },
+ "swiss-alps-adventure": {
+  "w": [
+   600
+  ],
+  "ar": 1.3545
+ },
+ "sydney-harbour-explorer": {
+  "w": [
+   600
+  ],
+  "ar": 1.4995
+ },
+ "trishuli-rafting": {
+  "w": [
+   600,
+   1200
+  ],
+  "ar": 1.5006
+ },
+ "venice-canal-romance": {
+  "w": [
+   600
+  ],
+  "ar": 0.7501
+ }
 }

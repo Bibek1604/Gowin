@@ -2,37 +2,55 @@ import React, { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Clock, CalendarDays, MapPin, Gauge } from 'lucide-react';
 import TOUR_MEDIA from '../../data/tourMedia.json';
+import { Kinetic, LogoStripes } from './motion';
 import { coverImage, coverAlt } from '../../lib/format';
 import { responsiveImage } from '../../lib/images';
 
 /**
- * A package's cover photo. Uses the self-hosted AVIF/WebP copy from
- * public/media/tours when scripts/build-tour-media.py has made one, otherwise
- * the remote photo with responsive variants.
- *  variant 'card' → 600×450, 'wide' → 1200×750 (with 600 for small screens)
+ * A package's cover photo, never cropped. Uses the self-hosted AVIF/WebP copy
+ * from public/media/tours (scripts/build-tour-media.py) when there is one,
+ * otherwise the remote photo with responsive variants.
+ *
+ * Cards show the whole photo ("contain") over a blurred copy of itself, so a
+ * portrait or panoramic picture is never cut. Wide backgrounds (feature card,
+ * banner, panels) fill the frame unless the photo is portrait, in which case
+ * they get the same uncut treatment.
+ *   variant 'card' → 600w, 'wide' → 600w + 1200w
  */
-export function TourImage({ place, variant = 'card', sizes, eager = false, className = '', alt }) {
-  const widths = TOUR_MEDIA[place?.slug] || [];
+export function TourImage({ place, variant = 'card', sizes, eager = false, className = '', alt, fit }) {
+  const m = TOUR_MEDIA[place?.slug];
+  const widths = m?.w || [];
+  const ar = m?.ar || 1.5;
   const wide = variant === 'wide' && widths.includes(1200);
-  const [w, h] = wide ? [1200, 750] : [600, 450];
+  const mode = fit || (variant === 'card' || ar < 1.2 ? 'uncut' : 'fill');
+  const w = wide ? 1200 : 600;
+  const h = Math.round(w / ar);
   const altText = alt ?? coverAlt(place);
-  const common = { width: w, height: h, alt: altText, loading: eager ? 'eager' : 'lazy', decoding: 'async', className };
+  let sources = null;
+  let src;
   if (widths.includes(600)) {
     const base = `/media/tours/${place.slug}`;
     const set = (ext) => (wide ? `${base}-600.${ext} 600w, ${base}-1200.${ext} 1200w` : `${base}-600.${ext} 600w`);
     const sz = sizes || (wide ? '(min-width: 1024px) 60vw, 100vw' : '(min-width: 768px) 380px, 82vw');
-    return (
-      <picture>
-        <source type="image/avif" srcSet={set('avif')} sizes={sz} />
-        <source type="image/webp" srcSet={set('webp')} sizes={sz} />
-        <img src={`${base}-600.webp`} {...common} />
-      </picture>
-    );
+    sources = (<><source type="image/avif" srcSet={set('avif')} sizes={sz} /><source type="image/webp" srcSet={set('webp')} sizes={sz} /></>);
+    src = `${base}-600.webp`;
+  } else {
+    const url = coverImage(place);
+    if (!url) return <span className={`block w-full h-full bg-gradient-to-br from-[#3E478A] to-[#0B1220] ${className}`} aria-hidden="true" />;
+    const r = responsiveImage(url);
+    src = r.src;
+    sources = r.srcSet ? <source srcSet={r.srcSet} sizes={sizes || '(min-width: 768px) 600px, 100vw'} /> : null;
   }
-  const url = coverImage(place);
-  if (!url) return <span className={`block w-full h-full bg-gradient-to-br from-[#1E3A8A] to-[#0B1220] ${className}`} aria-hidden="true" />;
-  const r = responsiveImage(url);
-  return <img src={r.src} srcSet={r.srcSet} sizes={sizes || '(min-width: 768px) 600px, 100vw'} {...common} />;
+  const img = (cls, a, extra = {}) => (
+    <picture>{sources}<img src={src} width={w} height={h} alt={a} loading={eager ? 'eager' : 'lazy'} decoding="async" className={cls} {...extra} /></picture>
+  );
+  if (mode === 'fill') return img(`gh-img-fill ${className}`, altText);
+  return (
+    <span className={`gh-uncut ${className}`}>
+      {img('gh-uncut-bg', '', { 'aria-hidden': true })}
+      {img('gh-uncut-fg', altText)}
+    </span>
+  );
 }
 
 /** Season / static photo under public/media (pass the path without extension). */
@@ -51,8 +69,8 @@ export function SectionHead({ id, eyebrow, title, lead, to, cta = 'View all', ex
   return (
     <div className={`gh-head ${className}`}>
       <div className="rv">
-        {eyebrow && <span className="gh-eyebrow">{eyebrow}</span>}
-        <h2 id={id} className="gh-title">{title}</h2>
+        {eyebrow && <span className="gh-eyebrow"><LogoStripes />{eyebrow}</span>}
+        <Kinetic as="h2" id={id} className="gh-title" text={title} />
         {lead && <p className="gh-lead">{lead}</p>}
       </div>
       <div className="rv flex items-center gap-3" style={{ '--i': 1 }}>

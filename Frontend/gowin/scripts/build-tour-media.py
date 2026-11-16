@@ -3,8 +3,11 @@
 Reads every published package from Supabase (the same source the site uses),
 downloads its cover photo once and writes, under public/media/tours/:
 
-  <slug>-600.avif / .webp    600x450 (4:3)  - cards        (all packages)
-  <slug>-1200.avif / .webp  1200x750 (16:10) - feature/banner (Nepal packages)
+  <slug>-600.avif / .webp    600 px wide  - cards          (all packages)
+  <slug>-1200.avif / .webp  1200 px wide - feature/banner (Nepal packages)
+
+Photos are only resized, never cropped: the whole picture is kept and the
+components decide how to frame it (cards show it uncut over a blurred fill).
 
 and src/data/tourMedia.json, which the components read to decide whether a
 local copy exists. Packages added later simply fall back to the remote photo
@@ -80,7 +83,7 @@ def main():
         if not slug or not src:
             continue
         nepal = p.get('destination_type') == 'National'
-        sizes = [(600, 450)] + ([(1200, 750)] if nepal else [])
+        sizes = [600] + ([1200] if nepal else [])
         try:
             data = get(big_variant(src))
             img = Image.open(io.BytesIO(data))
@@ -89,15 +92,16 @@ def main():
             print(f'skip {slug}: {ex}', file=sys.stderr)
             continue
         widths = []
-        for w, h in sizes:
+        for w in sizes:
             if img.width < w * 0.8:
                 continue  # never upscale a small original into a blurry banner
-            im = cover(img, w, h)
+            im = img.convert('RGB')
+            im = im.resize((w, round(im.height * w / im.width)), Image.LANCZOS)
             im.save(OUT / f'{slug}-{w}.avif', quality=52, speed=6)
             im.save(OUT / f'{slug}-{w}.webp', quality=72, method=6)
             widths.append(w)
         if widths:
-            manifest[slug] = widths
+            manifest[slug] = {'w': widths, 'ar': round(img.width / img.height, 4)}
             print(f'{slug}: {widths}')
     MANIFEST.write_text(json.dumps(dict(sorted(manifest.items())), indent=1) + '\n', encoding='utf8')
     print(f'{len(manifest)} packages -> {MANIFEST.relative_to(ROOT)}')
