@@ -25,7 +25,20 @@ import { DEFAULT_SITE_URL, SITE_NAME, homeGraph, tripGraph, listGraph, pageGraph
 import { SERVICES, FAQS, NEPAL_TRAVEL_TIPS, WHY_CHOOSE_US, HOW_IT_WORKS, DEFAULT_SETTINGS } from '../src/data/siteContent.js';
 import { formatPrice, isNepal, countryFromLocation, phoneDigits, packageTitle } from '../src/lib/format.js';
 import { responsiveImage } from '../src/lib/images.js';
-import { HERO_SLIDES } from '../src/data/heroSlides.js';
+import { homeSections } from '../src/lib/homeData.js';
+import { DAY_TOUR_SLOTS, PILGRIMAGE_ORDER, SEASONS, HOME_SERVICES, HOME_STEPS, HOME_FAQS } from '../src/data/homeContent.js';
+import { BUSINESS_FACTS } from '../src/data/businessFacts.js';
+
+// Kept in sync with src/components/Home/HeroVideo.jsx (that file is JSX, so it can't be imported here).
+const HERO_POSTER = { src: '/media/hero-poster.avif', srcSet: '/media/hero-poster-960.avif 960w, /media/hero-poster.avif 1920w' };
+const HERO_POSTER_ALT = 'Phewa Lake and the Annapurna range seen from Sarangkot above Pokhara';
+const heroSubline = () => `Tell us your dates. We reply with a written quote${BUSINESS_FACTS.quoteReplyHours ? ` within ${BUSINESS_FACTS.quoteReplyHours} hours` : ''}. No payment until you approve it.`;
+const faqText = (f) => {
+  let t = f.a;
+  if (f.licence && BUSINESS_FACTS.tourismLicenceNo) t += ` ${f.licence.replace('{licence}', BUSINESS_FACTS.tourismLicenceNo)}`;
+  if (f.reply && BUSINESS_FACTS.quoteReplyHours) t += ` ${f.reply.replace('{reply}', BUSINESS_FACTS.quoteReplyHours)}`;
+  return t;
+};
 import { BANNERS, BANNER_FOR_ROUTE } from '../src/data/pageBanners.js';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -103,6 +116,9 @@ const crumbsHtml = (crumbs) => `<nav aria-label="Breadcrumb" class="pr-crumbs"><
 // (and for anyone without JavaScript). Scoped to .pr-*.
 const STYLE = `<style data-prerender>.pr{overflow-x:clip;font-family:'DM Sans',system-ui,sans-serif;color:#0F172A;max-width:72rem;margin:0 auto;padding:0 1rem 3rem;line-height:1.6}.pr a{color:#1E3A8A}.pr-head{display:flex;flex-wrap:wrap;gap:.75rem 1.5rem;align-items:center;justify-content:space-between;padding:1rem 0;border-bottom:1px solid #E2E8F0}.pr-brand{font-weight:800;font-size:1.25rem;text-decoration:none}.pr-brand span{color:#10B981}.pr-head nav{display:flex;flex-wrap:wrap;gap:.25rem 1rem;font-size:.9rem}.pr h1{font-family:'Plus Jakarta Sans',system-ui,sans-serif;font-size:clamp(1.8rem,5vw,2.8rem);line-height:1.15;margin:2rem 0 .75rem}.pr h2{font-size:1.35rem;margin:2rem 0 .5rem}.pr h3{font-size:1.05rem;margin:0}.pr ul.pr-cards{list-style:none;padding:0;display:grid;gap:1rem;grid-template-columns:repeat(auto-fill,minmax(16rem,1fr))}.pr ul.pr-cards li{border:1px solid #E2E8F0;border-radius:.75rem;padding:1rem}.pr-facts{color:#475569;font-size:.85rem;margin:.25rem 0}.pr-crumbs ol{list-style:none;display:flex;flex-wrap:wrap;gap:.5rem;padding:0;margin:1rem 0 0;font-size:.85rem}.pr-crumbs li+li:before{content:'›';margin-right:.5rem;color:#94A3B8}.pr img{max-width:100%;height:auto;border-radius:.75rem}.pr-foot{margin-top:3rem;padding-top:1rem;border-top:1px solid #E2E8F0;font-size:.85rem;color:#475569}.pr-hero{position:relative;width:100vw;margin:0 calc(50% - 50vw);min-height:88vh;display:flex;align-items:center;justify-content:center;background:#0B1220;overflow:hidden}.pr-overlay{position:relative}.pr-overlay .pr-head{position:absolute;top:0;left:1rem;right:1rem;z-index:3;border:0}.pr-overlay .pr-head a{color:#fff}.pr-banner{position:relative;width:100vw;margin:0 calc(50% - 50vw);min-height:400px;display:flex;align-items:flex-end;background:#0F172A;overflow:hidden}@media(min-width:640px){.pr-banner{min-height:440px}}.pr-banner img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0}.pr-banner:after{content:'';position:absolute;inset:0;background:linear-gradient(0deg,rgba(11,18,32,.95),rgba(30,58,138,.6),rgba(11,18,32,.3))}.pr-banner-text{position:relative;z-index:1;width:100%;max-width:72rem;margin:0 auto;padding:7rem 1rem 2.5rem;color:rgba(255,255,255,.8)}.pr-banner-text h1{color:#fff;margin-top:.5rem}.pr-banner-text a,.pr-banner-text .pr-crumbs{color:rgba(255,255,255,.75)}.pr-cover{display:block;width:100vw;max-width:none!important;margin:0 calc(50% - 50vw);height:420px;object-fit:cover;border-radius:0!important;background:#0F172A}@media(min-width:640px){.pr-cover{height:460px}}@media(min-width:1024px){.pr-cover{height:540px}}.pr-hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:0}.pr-hero:after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(11,18,32,.9),rgba(30,58,138,.6),rgba(11,18,32,.45))}.pr-hero-text{position:relative;z-index:1;max-width:48rem;padding:7rem 1rem 6rem;text-align:center;color:#fff}.pr-hero-text h1{color:#fff;margin-top:0}.pr-hero-text p{color:rgba(255,255,255,.85)}.pr-cta{display:inline-block;background:#047857;color:#fff!important;padding:.6rem 1.1rem;border-radius:.75rem;text-decoration:none;font-weight:600;margin:.25rem .5rem .25rem 0}</style>`;
 
+// Only the 700 weight of Playfair (the hero H1) is preloaded, on the home page.
+const PLAYFAIR_700 = fs.readdirSync(path.join(dist, 'assets')).find((f) => /^playfair-display-latin-700-normal-.*\.woff2$/.test(f)) || null;
+
 // ---------- template ----------
 const template = fs.readFileSync(path.join(dist, 'index.html'), 'utf8');
 if (!template.includes('<div id="root"></div>')) throw new Error('prerender: dist/index.html has no empty #root — was it already prerendered?');
@@ -113,7 +129,7 @@ const setMeta = (html, attr, key, content) => {
   return re.test(html) ? html.replace(re, tag) : html.replace('</head>', `  ${tag}\n</head>`);
 };
 
-function render({ route, title, description, image, type = 'website', noindex = false, jsonLd, body, preload, overlay = false, data }) {
+function render({ route, title, description, image, type = 'website', noindex = false, jsonLd, body, preload, overlay = false, data, fontPreload = false }) {
   const fullTitle = title ? `${title} | ${SITE_NAME}` : `${SITE_NAME} — Nepal Tours & World Holidays`;
   const desc = trim160(description || settings.meta_description);
   const url = `${SITE}${route === '/' ? '/' : route}`;
@@ -130,9 +146,10 @@ function render({ route, title, description, image, type = 'website', noindex = 
   html = setMeta(html, 'name', 'twitter:description', desc);
   html = setMeta(html, 'name', 'twitter:image', img);
   // the hero photo is only preloaded on the home page
-  if (route !== '/') html = html.replace(/\s*<link rel="preload" as="image" href="\/hero\/[^>]*>/, '');
+  if (route !== '/') html = html.replace(/\s*<link rel="preload" as="image"[^>]*href="\/media\/hero-poster[^>]*>/, '');
   const extra = [
     noindex ? '' : `<link rel="canonical" href="${esc(url)}" />`,
+    fontPreload && PLAYFAIR_700 ? `<link rel="preload" as="font" type="font/woff2" href="/assets/${PLAYFAIR_700}" crossorigin />` : '',
     preload ? `<link rel="preload" as="image" href="${esc(preload.src)}"${preload.srcSet ? ` imagesrcset="${esc(preload.srcSet)}" imagesizes="100vw"` : ''} fetchpriority="high" />` : '',
     jsonLd ? `<script type="application/ld+json" data-prerender>${JSON.stringify(jsonLd).replace(/</g, '\\u003c')}</script>` : '',
     // the page's own record, so the app renders it at once instead of a loading skeleton
@@ -157,23 +174,31 @@ function withBanner(route, opts) {
 const add = (route, opts, file) => pages.push({ route, file: file || (route === '/' ? 'index.html' : `${route.slice(1)}.html`), html: render({ route, ...withBanner(route, opts) }) });
 
 // ---------- home ----------
-const HERO = HERO_SLIDES[0];
+// Same hero markup and classes as src/components/Home/HeroVideo.jsx (styles come from the
+// bundled home.css), so the poster is the largest paint before React starts and nothing moves.
+const H = homeSections(places, { daySlots: DAY_TOUR_SLOTS, pilgrimageOrder: PILGRIMAGE_ORDER });
+const facts = (p) => [p.duration, p.details?.best_time ? `best ${p.details.best_time}` : '', formatPrice(p.price) ? `from ${formatPrice(p.price)}` : ''].filter(Boolean).join(' · ');
+const tripList = (items) => `<ul class="pr-cards">${items.map((p) => `<li><h3>${a(placeHref(p), p.title)}</h3><p class="pr-facts">${esc(facts(p))}</p></li>`).join('')}</ul>`;
+const section = (title, items, more) => (items.length ? `<h2>${esc(title)}</h2>${tripList(items)}${more ? `<p>${a(more[0], more[1])}</p>` : ''}` : '');
 add('/', {
   title: 'Nepal Tours, Holidays & Travel Services in Kathmandu',
   description: settings.meta_description || 'GoWin International Travel & Tourism: Nepal heritage tours, pilgrimages, wildlife safaris and lakeside escapes, international holiday packages, flights, hotels and visa assistance from Kathmandu.',
   jsonLd: homeGraph(SITE, settings),
   overlay: true,
-  // Same photo and headline as the React hero, so the largest paint happens with the static HTML.
-  body: `<section class="pr-hero"><img src="${HERO.image}" srcset="${HERO.image.replace(/\.webp$/, '-960.webp')} 960w, ${HERO.image} 1920w" sizes="100vw" width="1920" height="1080" alt="${esc(HERO.alt)}" fetchpriority="high" decoding="sync" />
-<div class="pr-hero-text"><h1>Nepal tours &amp; world holidays, planned in Kathmandu</h1>
-<p>Heritage tours, wildlife safaris, pilgrimages and lakeside escapes across Nepal, plus international holidays, flights, hotels and visa help. Tell us your dates and we reply with a written quote.</p>
-<p>${a('/destinations', 'Browse tours', ' class="pr-cta"')}${a('/booking', 'Plan a custom trip', ' class="pr-cta"')}</p></div></section>
-${nepal.length ? `<h2>Top tours in Nepal</h2><ul class="pr-cards">${nepal.slice(0, 10).map(card).join('')}</ul><p>${a('/destinations/national', 'All Nepal tours')}</p>` : ''}
-${categories.length ? `<h2>Travel styles</h2>${list(categories.map((c) => c.name))}` : ''}
-${world.length ? `<h2>International holidays</h2><ul class="pr-cards">${world.slice(0, 10).map(card).join('')}</ul><p>${a('/destinations/international', 'All international holidays')}</p>` : ''}
-<h2>Our services</h2><ul>${SERVICES.map((s) => `<li><strong>${a(s.link, s.title)}</strong> — ${esc(s.short)}</li>`).join('')}</ul>
-<h2>Why travel with GoWin</h2><ul>${WHY_CHOOSE_US.map((w) => `<li><strong>${esc(w.title)}</strong> — ${esc(w.desc)}</li>`).join('')}</ul>
-<h2>How booking works</h2><ol>${HOW_IT_WORKS.map((h) => `<li><strong>${esc(h.title)}</strong> — ${esc(h.desc)}</li>`).join('')}</ol>`,
+  fontPreload: true,
+  body: `<section class="gh-hero" aria-labelledby="hero-title"><div class="gh-hero-media"><img src="${HERO_POSTER.src}" srcset="${HERO_POSTER.srcSet}" sizes="100vw" width="1920" height="1080" alt="${esc(HERO_POSTER_ALT)}" fetchpriority="high" decoding="sync" /></div>
+<div class="gh-wrap"><div class="gh-hero-inner"><span class="gh-watermark" aria-hidden="true">NEPAL</span><h1 id="hero-title">Nepal tours &amp; world holidays, planned in Kathmandu</h1><div class="gh-rule" aria-hidden="true"></div>
+<p class="gh-hero-sub">${esc(heroSubline())}</p><div class="gh-hero-ctas">${a('/booking', 'Plan my trip', ' class="gh-pill white"')}${a('/destinations', 'View tours', ' class="gh-pill ghost"')}</div></div></div></section>
+<h2>A Kathmandu team that plans every trip in writing.</h2><p>We are based in Shankhamul, Kathmandu, and arrange Nepal tours, international holidays, flights, hotels and visa help. Every trip starts with a written quote that lists the itinerary, the price and what it includes. You pay only after you approve it.</p><p>${a('/about', 'Meet our team')}</p>
+${section('Popular Nepal tours', H.popular, ['/destinations/national', 'All Nepal tours'])}
+${section('Kathmandu Valley day tours', H.dayTours)}
+${section('Pilgrimage tours', H.pilgrimage)}
+${section('Wildlife safaris', H.wildlife)}
+${section('Holidays from Kathmandu', H.holidays, ['/destinations/international', 'All international holidays'])}
+<h2>Best time to visit Nepal</h2><ul>${SEASONS.map((x) => `<li><strong>${esc(x.name)} (${esc(x.months)})</strong> — ${esc(x.summary)}</li>`).join('')}</ul><p>${a('/guides', 'Nepal travel tips')}</p>
+<h2>Services</h2><ul>${HOME_SERVICES.map((x) => `<li><strong>${a(x.to, x.title)}</strong> — ${esc(x.desc)}</li>`).join('')}</ul>
+<h2>How it works</h2><ol>${HOME_STEPS.map((x) => `<li><strong>${esc(x.title)}</strong> — ${esc(x.desc)}</li>`).join('')}</ol><p>${a('/booking', 'Start your enquiry')}</p>
+<h2>Asked by every traveller. Answered by our Kathmandu team.</h2><dl>${HOME_FAQS.map((f) => `<dt><strong>${esc(f.q)}</strong></dt><dd>${esc(faqText(f))}</dd>`).join('')}</dl>`,
 });
 
 // ---------- listings ----------
